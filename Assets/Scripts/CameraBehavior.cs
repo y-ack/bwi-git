@@ -6,18 +6,29 @@ using UnityEngine;
 public class CameraBehavior : MonoBehaviour
 {
     public Transform follow;
-
-	public float smoothSpeed = 0.125f;
+    public Vector3 offset;
+	private float smoothSpeed = 3f;
 	public Vector3 p;
-
-	void LateUpdate()
+    public Vector3 minValues, maxValue;
+	void Update()
     {
-        p.x =  follow.position.x;
-        p.y =  follow.position.y;
-        p.z = -10f;
-    //transform.position = p;
-    Vector3 smoothedPosition = Vector3.Lerp(transform.position, p, smoothSpeed);
-		transform.position = smoothedPosition;
+        minValues.x = 5.76f;
+        minValues.y = 3.52f;
+        minValues.z = -10;
+
+        maxValue.x = 13.28f;
+        maxValue.y = 8.8f;
+        maxValue.z = -10;
+        Vector3 targetPosition = follow.position + offset;
+        //Verify if the targetPosition is out of bound or not
+        //Limit it to the min and max values
+        Vector3 boundPosition = new Vector3(
+            Mathf.Clamp(targetPosition.x, minValues.x, maxValue.x),
+            Mathf.Clamp(targetPosition.y, minValues.y, maxValue.y),
+            Mathf.Clamp(targetPosition.z, minValues.z, maxValue.z));
+
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, boundPosition, smoothSpeed * Time.fixedDeltaTime);
+        transform.position = smoothPosition;
     }
 
 }

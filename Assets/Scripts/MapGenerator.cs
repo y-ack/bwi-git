@@ -25,11 +25,9 @@ public class MapGenerator : MonoBehaviour
 
     public int[,] cavePoints;
 
-    [Range(0,100)]
-    public int width = 60;
+    public int width;
 
-    [Range(0,100)]
-    public int height = 40;
+    public int height;
 
     [Range(0,5)]
     public int smoothCycles;
@@ -137,7 +135,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < width; ++x)
             {
-                if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
+                if (x <= 1 || y <= 1 || x >= width - 2 || y >= height - 2)
                     {
                     cavePoints[x, y] = 1;
                     }
