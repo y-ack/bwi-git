@@ -7,8 +7,9 @@ public class Spawner : MonoBehaviour
     public GameObject enemy = null;
     public GameObject player = null;
     public Grid mGrid;
+    public Camera cam = null;
     private MapGenerator currentLevel;
-    private float spawnRadius = 3.2f;
+    private float spawnRadius = 20f;
     private int ranX = 0;
     private int ranY = 0;
     private bool playerSpawned = false;
@@ -16,12 +17,14 @@ public class Spawner : MonoBehaviour
     private void Start() 
     {
         currentLevel = mGrid.GetComponent<MapGenerator>();
+
         StartCoroutine(SpawnPlayer()); 
         StartCoroutine(SpawnObj(0, enemy, 10));   
     }
     public IEnumerator SpawnObj(int TileType, GameObject stuff, int cap)
     {  
-        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(TileType);        
+        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(TileType);  
+      
         if (spawnPool == null)
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
@@ -29,17 +32,19 @@ public class Spawner : MonoBehaviour
 
         while(cap > 0)
         { 
-            ranX = Random.Range(0,currentLevel.width);
-            ranY = Random.Range(0,currentLevel.height);
+            ranX = Random.Range(2,currentLevel.width);
+            ranY = Random.Range(2,currentLevel.height);
             if (currentLevel.cavePoints[ranX,ranY] == TileType)
             {
                 Vector2 p = player.transform.position;    
-                if( Mathf.Pow(ranX * currentLevel.tileSize - p.x,2f) +
-                    Mathf.Pow(ranY * currentLevel.tileSize - p.y,2f) > Mathf.Pow(spawnRadius,2f))
+                //if(Mathf.Pow(ranX * currentLevel.tileSize - p.x,2f) +
+                    //Mathf.Pow(ranY * currentLevel.tileSize - p.y,2f) > Mathf.Pow(spawnRadius,2f))
+                    if( (Mathf.Pow(ranX - p.x,2) + Mathf.Pow(ranY - p.y,2)) > Mathf.Pow(spawnRadius,2))
                     {
                         GameObject e = Instantiate(stuff, Vector3.zero, stuff.transform.rotation) as GameObject;                
-                        e.transform.localPosition = new Vector3((ranX * currentLevel.tileSize) + currentLevel.tileOffset,
-                                                                (ranY * currentLevel.tileSize) + currentLevel.tileOffset, 0);
+                        //e.transform.localPosition = new Vector3((ranX * currentLevel.tileSize) + currentLevel.tileOffset,
+                                                                //(ranY * currentLevel.tileSize) + currentLevel.tileOffset, 0);
+                        e.transform.localPosition = new Vector3(ranX, ranY, 0);
                         cap--;      
                     }
             }
@@ -55,12 +60,13 @@ public class Spawner : MonoBehaviour
             }
         while (playerSpawned == false)
         {           
-            ranX = Random.Range(0,currentLevel.width);
-            ranY = Random.Range(0,currentLevel.height);
+            ranX = Random.Range(2,currentLevel.width);
+            ranY = Random.Range(2,currentLevel.height);
             if (currentLevel.cavePoints[ranX,ranY] == 0)
             {             
-                player.transform.localPosition = new Vector3((ranX * currentLevel.tileSize) + currentLevel.tileOffset,
-                                                                (ranY * currentLevel.tileSize) + currentLevel.tileOffset, 0);
+                //player.transform.localPosition = new Vector3((ranX * currentLevel.tileSize) + currentLevel.tileOffset,
+                                                                //(ranY * currentLevel.tileSize) + currentLevel.tileOffset, 0);
+                player.transform.localPosition = new Vector3(ranX, ranY, 0);
                 playerSpawned = true;    
             }
         }

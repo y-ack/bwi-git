@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;  // Required to work with UI, e.g., Text
 
 public class MapGenerator : MonoBehaviour
 {
     public GameObject player; 
-    public GameObject spawner;
     public Tilemap layer0;
     public Tilemap layer1;
     public Tilemap layer2;
@@ -48,39 +46,24 @@ public class MapGenerator : MonoBehaviour
         generateNewGrid();
     }
     private void Start()
-    {       
-        
+    {      
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.Space))
         { 
-            allGeneration();        
-            generateNewGrid();           
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        { 
-            forrestGeneration();        
-            generateNewGrid();           
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        { 
-            mazeGeneration();        
-            generateNewGrid();           
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        { 
-            mountainGeneration();        
-            generateNewGrid();           
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        { 
-            optimizedGeneration();        
+            demoGeneration();        
             generateNewGrid();           
         }
     }
-
+    public void demoGeneration()
+    {
+        xscale = 7;
+        yscale = 7;
+        threshold = 0.35f;
+        smoothCycles = 4;
+    }
     //All possible generation result
     public void allGeneration()
     {   
@@ -122,9 +105,7 @@ public class MapGenerator : MonoBehaviour
 
         cavePoints = new int[width, height];
         seed = Random.Range(0,200f);
-        //allGeneration();
-        mountainGeneration();
-        //forrestGeneration();
+        demoGeneration();
         layer0.ClearAllTiles();
         layer1.ClearAllTiles();
         layer2.ClearAllTiles();
@@ -176,8 +157,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }  
         ProcessMap();
-        generateTile();  
-        GameObject s = Instantiate(spawner) as GameObject;    
+        generateTile();   
     }
 
     public List<List<Coord>> GetRegions(int tileType) {
