@@ -45,9 +45,9 @@ public class MapGenerator : MonoBehaviour
     private int wallThresholdSize = 10;
     private int deadZoneArea = 1000;
     private int floraCount = 0;
-    private int floraCap = 100;
+    private int floraCap = 150;
     private int obstacleCount = 0; 
-    private int obstacleCap = 20;
+    private int obstacleCap = 30;
     
     private void Awake() 
     {
@@ -60,8 +60,7 @@ public class MapGenerator : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-        { 
-            demoGeneration();        
+        {     
             generateNewGrid();           
         }
     }
@@ -72,6 +71,7 @@ public class MapGenerator : MonoBehaviour
         threshold = 0.35f;
         smoothCycles = 4;
     }
+
     //All possible generation result
     public void allGeneration()
     {   
@@ -110,16 +110,15 @@ public class MapGenerator : MonoBehaviour
     }
     public void generateNewGrid()
     {
-
         cavePoints = new int[width, height];
         seed = Random.Range(0,200f);
-        demoGeneration();
+        demoGeneration(); 
+
         layer0.ClearAllTiles();
+        layer0a.ClearAllTiles();
         layer1.ClearAllTiles();
         layer2.ClearAllTiles();
-        //Debug.Log("newSeed: " + seed);
-        //Debug.Log("newThreshold: " + threshold);
-
+        layer2a.ClearAllTiles();
         for (int y = 0; y < height; ++y)
         {
             for (int x = 0; x < width; ++x)
@@ -301,15 +300,15 @@ public class MapGenerator : MonoBehaviour
         layer0.SetTile(new Vector3Int(x, y, 0), grass);  
         layer1.SetTile(new Vector3Int(x, y - 1, 0), wall);
         layer2.SetTile(new Vector3Int(x, y, 0), wallTop);
+        
     }
     public void setFlora(int x, int y)
     {
-        layer0a.SetTile(new Vector3Int(x, y, 0), flora); 
-        
+        layer0a.SetTile(new Vector3Int(x, y, 0), flora);         
     }
     public void setObstacle(int x, int y)
     {
-        layer1.SetTile(new Vector3Int(x, y, 0), obstacle);    
+        layer2a.SetTile(new Vector3Int(x, y, 0), obstacle);    
     }
    
     public int GetNeighbors(int pointX, int pointY)
