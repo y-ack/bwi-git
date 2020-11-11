@@ -11,7 +11,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         rbody = GetComponent<Rigidbody2D>();
         rbody.gravityScale = 0;
-        moveSpeed = 5f;
+        moveSpeed = 15f;
     }
 
     // Update is called once per frame
