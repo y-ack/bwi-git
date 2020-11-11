@@ -7,11 +7,15 @@ public class MapGenerator : MonoBehaviour
 {
     public GameObject player; 
     public Tilemap layer0;
+    public Tilemap layer0a;
     public Tilemap layer1;
     public Tilemap layer2;
+    public Tilemap layer2a;
     public TileBase grass;
+    public TileBase flora;
     public TileBase wall;
     public TileBase wallTop;
+    public TileBase obstacle;
     public float seed;
     public float threshold;
 
@@ -40,6 +44,10 @@ public class MapGenerator : MonoBehaviour
     public float tileOffset = 0.16f;
     private int wallThresholdSize = 10;
     private int deadZoneArea = 1000;
+    private int floraCount = 0;
+    private int floraCap = 100;
+    private int obstacleCount = 0; 
+    private int obstacleCap = 20;
     
     private void Awake() 
     {
@@ -248,22 +256,39 @@ public class MapGenerator : MonoBehaviour
             {
                 if(cavePoints[x,y] == 0)
                 {
-                    setFloor(x,y);
+                    setFloor(x,y);                    
                 }
                 if (cavePoints[x,y] == 1)
                 {
-                    //setWall(x,y - 1);
-                    //setFloor(x,y - 1);
+
                     setTopWall(x,y);
                 }
-                //Check if the tile should be grass (0) or wall (1)
-                //Debug.Log("x: " + x + ", y: " + y + ", [x,y] = " + cavePoints[x,y]);
+            }
+        }
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int randX = Random.Range(1,width);
+                int randY = Random.Range(1,height);
+                if (cavePoints[randX,randY] == 0 && floraCount <= floraCap)
+                {
+                    setFlora(randX,randY);
+                    floraCount++;
+                }
+                randX = Random.Range(1,width);
+                randY = Random.Range(1,height);
+                if (cavePoints[randX,randY] == 0 && obstacleCount <= obstacleCap)
+                {
+                    setObstacle(randX,randY);
+                    obstacleCount++;
+                }
             }
         }
     }
     public void setFloor(int x, int y)
     {
-        layer0.SetTile(new Vector3Int(x, y, 0), grass);    
+        layer0.SetTile(new Vector3Int(x, y, 0), grass);           
     }
     public void setWall(int x,int y)
     {
@@ -277,6 +302,16 @@ public class MapGenerator : MonoBehaviour
         layer1.SetTile(new Vector3Int(x, y - 1, 0), wall);
         layer2.SetTile(new Vector3Int(x, y, 0), wallTop);
     }
+    public void setFlora(int x, int y)
+    {
+        layer0a.SetTile(new Vector3Int(x, y, 0), flora); 
+        
+    }
+    public void setObstacle(int x, int y)
+    {
+        layer1.SetTile(new Vector3Int(x, y, 0), obstacle);    
+    }
+   
     public int GetNeighbors(int pointX, int pointY)
     {
 

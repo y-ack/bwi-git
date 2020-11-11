@@ -37,13 +37,9 @@ public class Spawner : MonoBehaviour
             if (currentLevel.cavePoints[ranX,ranY] == TileType)
             {
                 Vector2 p = player.transform.position;    
-                //if(Mathf.Pow(ranX * currentLevel.tileSize - p.x,2f) +
-                    //Mathf.Pow(ranY * currentLevel.tileSize - p.y,2f) > Mathf.Pow(spawnRadius,2f))
-                    if( (Mathf.Pow(ranX - p.x,2) + Mathf.Pow(ranY - p.y,2)) > Mathf.Pow(spawnRadius,2))
+                    if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
                     {
                         GameObject e = Instantiate(stuff, Vector3.zero, stuff.transform.rotation) as GameObject;                
-                        //e.transform.localPosition = new Vector3((ranX * currentLevel.tileSize) + currentLevel.tileOffset,
-                                                                //(ranY * currentLevel.tileSize) + currentLevel.tileOffset, 0);
                         e.transform.localPosition = new Vector3(ranX, ranY, 0);
                         cap--;      
                     }
@@ -64,8 +60,6 @@ public class Spawner : MonoBehaviour
             ranY = Random.Range(2,currentLevel.height);
             if (currentLevel.cavePoints[ranX,ranY] == 0)
             {             
-                //player.transform.localPosition = new Vector3((ranX * currentLevel.tileSize) + currentLevel.tileOffset,
-                                                                //(ranY * currentLevel.tileSize) + currentLevel.tileOffset, 0);
                 player.transform.localPosition = new Vector3(ranX, ranY, 0);
                 playerSpawned = true;    
             }
