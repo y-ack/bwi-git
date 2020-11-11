@@ -5,6 +5,7 @@ using Unity.Transforms;
 using Unity.Rendering;
 //using Unity.Mathematics;
 using UnityEngine;
+using Unity.Collections;
 
 public class Spawner2 : MonoBehaviour
 {
@@ -47,7 +48,8 @@ public class Spawner2 : MonoBehaviour
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
         } 
-
+        int counter = 0;
+        NativeArray<Entity> bubbleArray = new NativeArray<Entity>(cap, Allocator.Temp);
         while(cap > 0)
         { 
             ranX = Random.Range(2,currentLevel.width);
@@ -57,13 +59,15 @@ public class Spawner2 : MonoBehaviour
                 Vector2 p = player.transform.position;    
                     if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
                     {
-                        Entity myEntity = entityManager.Instantiate(entityPrefab);
-                        entityManager.SetComponentData(myEntity, new Translation
+
+                        bubbleArray[counter] = entityManager.Instantiate(entityPrefab);
+                        entityManager.SetComponentData(bubbleArray[counter], new Translation
                         {
                             Value = new Vector3(ranX, ranY, 0)
                         });
                         //GameObject e = Instantiate(stuff, Vector3.zero, stuff.transform.rotation) as GameObject;                
                         //e.transform.localPosition = new Vector3(ranX, ranY, 0);
+                        counter++;
                         cap--;      
                     }
             }
@@ -75,6 +79,7 @@ public class Spawner2 : MonoBehaviour
         });
         */
     }
+    bubbleArray.Dispose();
 }
 
 public IEnumerator SpawnPlayer()
