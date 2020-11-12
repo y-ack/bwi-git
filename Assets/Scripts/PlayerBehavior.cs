@@ -7,12 +7,26 @@ public class PlayerBehavior : MonoBehaviour
     Rigidbody2D rbody;
     private float moveSpeed;
     Vector2 mousePos;
-    public Camera cam;
+
     Vector2 movementVector;
+
+    public Camera cam;
+
+    private Vector3 moveDir;
+
+    private bool isDashButtonDown;
+    private float DashAmount = 5f;
+    private float dashCoolDown = 5f;
+    private float dashAfterSec = 0;
+
     // Start is called before the first frame update
+    private void Awake() {
+        rbody = GetComponent<Rigidbody2D>();
+    }
     void Start()
     {
-        rbody = GetComponent<Rigidbody2D>();
+        cam = Camera.main;
+
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
         moveSpeed = 10f;
@@ -28,15 +42,40 @@ public class PlayerBehavior : MonoBehaviour
         rbody.angularVelocity = 0f;  
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        
+        moveDir = new Vector3(Input.GetAxis("Horizontal"),
+            Input.GetAxis("Vertical")).normalized;
+    
 
+
+
+        if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
+        {   
+            isDashButtonDown = true;
+        }
+        if (dashAfterSec > 0)
+        {
+            dashAfterSec -=Time.deltaTime;
+        }
     }
     void FixedUpdate()
     {
-        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+        //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+        rbody.velocity = moveDir * moveSpeed;
         Vector2 lookDir = mousePos - rbody.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rbody.rotation = angle;
+
+        if(isDashButtonDown == true)
+        {
+            Dashing();
+            isDashButtonDown = false;
+            dashAfterSec = dashCoolDown;
+        }
+
+    }
+    public void Dashing()
+    {
+        rbody.MovePosition(transform.position + moveDir * DashAmount);
     }
 
 
