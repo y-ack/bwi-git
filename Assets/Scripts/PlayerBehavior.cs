@@ -24,12 +24,11 @@ public class PlayerBehavior : MonoBehaviour
         // Get user's current movement input     
         movementVector = new Vector2(Input.GetAxis("Horizontal"),
             Input.GetAxis("Vertical"));
-        //rbody.isKinematic = false;
         rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.deltaTime);
-        //rbody.velocity = Vector3.zero;   
         rbody.angularVelocity = 0f;  
-        //transform.localRotation = Quaternion.identity;
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        
 
     }
     void FixedUpdate()
@@ -39,4 +38,10 @@ public class PlayerBehavior : MonoBehaviour
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rbody.rotation = angle;
     }
+
+
+
+
+
+
 }

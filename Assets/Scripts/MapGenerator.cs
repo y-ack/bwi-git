@@ -44,12 +44,13 @@ public class MapGenerator : MonoBehaviour
     public float tileOffset = 0.16f;
     private int wallThresholdSize = 10;
     private int deadZoneArea = 1000;
-    private int floraCount = 0;
-    private int floraMin = 100;
-    private int floraCap = 150;
-    private int obstacleCount = 0; 
-    private int obstacleMin = 10;
-    private int obstacleCap = 30;
+    int floraMin = 50;
+    int floraMax = 100;
+    int obstacleMin = 10;
+    int obstacleMax = 30;
+
+    int obstacleCap = 50;
+    int floraCap = 150;
     
     private void Awake() 
     {
@@ -253,7 +254,8 @@ public class MapGenerator : MonoBehaviour
 
 
     public void generateTile()
-    {
+    {        
+        //Generating tiles
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -269,29 +271,51 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+
+        //Generating flora and obstacle
+        //starting count for flora and obstacle
+        int floraCount = Random.Range(floraMin, floraMax);
+        int obstacleCount = Random.Range(obstacleMin, obstacleMax);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                int randX = Random.Range(1,width);
-                int randY = Random.Range(1,height);
-                int floraNum = Random.Range(floraMin, floraCap);
-                int obstacleNum = Random.Range(obstacleMin, obstacleCap);
-                while (floraMin <= floraCap && obstacleMin <= obstacleCap)
-                {                   
-                    if (cavePoints[randX,randY] == 0 && floraCount <= floraCap)
+ 
+
+                Debug.Log("floraMin: "+ floraMin + ", obstacleMin: " + obstacleMin);
+                while (floraCount <= floraCap)
+                {           
+                    int randX = Random.Range(2,width - 2);
+                    int randY = Random.Range(2,height - 2);        
+                    if (cavePoints[randX,randY] == 0)
                     {
                         setFlora(randX,randY);
                         floraCount++;
+                        
                     }
-                    randX = Random.Range(1,width);
-                    randY = Random.Range(1,height);
-                    if (cavePoints[randX,randY] == 0 && obstacleCount <= obstacleCap)
+                     //just for safety.
+                    if(floraCount > floraCap)
+                    {
+                        break;
+                    }
+                }
+                while (obstacleCount <= obstacleCap)
+                {
+                    int randX = Random.Range(2,width - 2);
+                    int randY = Random.Range(2,height - 2);
+                    if (cavePoints[randX,randY] == 0)
                     {
                         setObstacle(randX,randY);
                         obstacleCount++;
                     }
+
+                    //just for safety.
+                    if (obstacleCount > obstacleCap)
+                    {
+                        break;
+                    }
                 }
+                Debug.Log("floraCount: "+ floraCount + ", obstacleCount: " +obstacleCount);
             }
         }
     }
