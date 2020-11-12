@@ -46,8 +46,6 @@ public class PlayerBehavior : MonoBehaviour
             Input.GetAxis("Vertical")).normalized;
     
 
-
-
         if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
         {   
             isDashButtonDown = true;
@@ -68,14 +66,15 @@ public class PlayerBehavior : MonoBehaviour
         if(isDashButtonDown == true)
         {
             Dashing();
-            isDashButtonDown = false;
-            dashAfterSec = dashCoolDown;
+           
         }
 
     }
     public void Dashing()
     {
         rbody.MovePosition(transform.position + moveDir * DashAmount);
+        isDashButtonDown = false;
+        dashAfterSec = dashCoolDown;
     }
 
 
