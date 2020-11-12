@@ -45,8 +45,10 @@ public class MapGenerator : MonoBehaviour
     private int wallThresholdSize = 10;
     private int deadZoneArea = 1000;
     private int floraCount = 0;
+    private int floraMin = 100;
     private int floraCap = 150;
     private int obstacleCount = 0; 
+    private int obstacleMin = 10;
     private int obstacleCap = 30;
     
     private void Awake() 
@@ -59,8 +61,11 @@ public class MapGenerator : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {     
+        if (Input.GetKeyDown(KeyCode.R))
+        {    
+            //TODO: 
+            //Flora and obstacle are not generated in the new grid
+
             generateNewGrid();           
         }
     }
@@ -270,17 +275,22 @@ public class MapGenerator : MonoBehaviour
             {
                 int randX = Random.Range(1,width);
                 int randY = Random.Range(1,height);
-                if (cavePoints[randX,randY] == 0 && floraCount <= floraCap)
-                {
-                    setFlora(randX,randY);
-                    floraCount++;
-                }
-                randX = Random.Range(1,width);
-                randY = Random.Range(1,height);
-                if (cavePoints[randX,randY] == 0 && obstacleCount <= obstacleCap)
-                {
-                    setObstacle(randX,randY);
-                    obstacleCount++;
+                int floraNum = Random.Range(floraMin, floraCap);
+                int obstacleNum = Random.Range(obstacleMin, obstacleCap);
+                while (floraMin <= floraCap && obstacleMin <= obstacleCap)
+                {                   
+                    if (cavePoints[randX,randY] == 0 && floraCount <= floraCap)
+                    {
+                        setFlora(randX,randY);
+                        floraCount++;
+                    }
+                    randX = Random.Range(1,width);
+                    randY = Random.Range(1,height);
+                    if (cavePoints[randX,randY] == 0 && obstacleCount <= obstacleCap)
+                    {
+                        setObstacle(randX,randY);
+                        obstacleCount++;
+                    }
                 }
             }
         }
