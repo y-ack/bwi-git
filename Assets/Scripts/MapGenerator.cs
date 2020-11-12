@@ -64,8 +64,6 @@ public class MapGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {    
-            //TODO: 
-            //Flora and obstacle are not generated in the new grid
 
             generateNewGrid();           
         }
