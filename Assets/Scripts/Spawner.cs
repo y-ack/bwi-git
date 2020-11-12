@@ -18,8 +18,8 @@ public class Spawner : MonoBehaviour
     {
         currentLevel = mGrid.GetComponent<MapGenerator>();
 
-        //StartCoroutine(SpawnPlayer()); 
-        //StartCoroutine(SpawnObj(0, enemy, 10));   
+        StartCoroutine(SpawnPlayer()); 
+        StartCoroutine(SpawnObj(0, enemy, 10));   
     }
     public IEnumerator SpawnObj(int TileType, GameObject stuff, int cap)
     {  

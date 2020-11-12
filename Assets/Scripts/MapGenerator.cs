@@ -51,6 +51,7 @@ public class MapGenerator : MonoBehaviour
     
     private void Awake() 
     {
+        generateNewGrid();
     }
     private void Start()
     {      
