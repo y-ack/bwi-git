@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject enemy = null;
+    public GameObject redBubble = null;
+    public GameObject yellowbubble = null;
+    public GameObject blueBubble = null;
     public GameObject player = null;
     public Grid mGrid;
     public Camera cam = null;
@@ -17,11 +19,11 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         currentLevel = mGrid.GetComponent<MapGenerator>();
-
+        GameObject[] bubbleColors = {redBubble, yellowbubble, blueBubble};
         StartCoroutine(SpawnPlayer()); 
-        StartCoroutine(SpawnObj(0, enemy, 10));   
+        StartCoroutine(SpawnObj(0, bubbleColors, 10));   
     }
-    public IEnumerator SpawnObj(int TileType, GameObject stuff, int cap)
+    public IEnumerator SpawnObj(int TileType, GameObject[] bubbleArray, int cap)
     {  
         spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(TileType);  
       
@@ -39,7 +41,8 @@ public class Spawner : MonoBehaviour
                 Vector2 p = player.transform.position;    
                     if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
                     {
-                        GameObject e = Instantiate(stuff, Vector3.zero, stuff.transform.rotation) as GameObject;                
+                        GameObject temp = bubbleArray[Random.Range(0, bubbleArray.Length)];
+                        GameObject e = Instantiate(temp, Vector3.zero, temp.transform.rotation) as GameObject;                
                         e.transform.localPosition = new Vector3(ranX, ranY, 0);
                         cap--;      
                     }

@@ -29,7 +29,7 @@ public class PlayerBehavior : MonoBehaviour
 
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
-        moveSpeed = 10f;
+        moveSpeed = 20f;
     }
 
     // Update is called once per frame
@@ -54,6 +54,26 @@ public class PlayerBehavior : MonoBehaviour
         {
             dashAfterSec -=Time.deltaTime;
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = transform.localRotation;
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/net") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = transform.localRotation;
+        }
+    }
+    public void SetCapture(){
+        GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = transform.localRotation;
     }
     void FixedUpdate()
     {
