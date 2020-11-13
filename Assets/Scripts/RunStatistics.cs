@@ -1,4 +1,8 @@
-﻿// the statistics data class.
+﻿using System;
+using System.Collections.Generic;
+
+//
+// the statistics data class.
 // access it with e.g.
 // RunStatistics.Instance.bubblesCleared++
 //
@@ -18,10 +22,8 @@ public class RunStatistics : Singleton<RunStatistics>
     public int totalScore;
     public int bubblesCleared;
 
-    public int bubblesChainClearedRed;
-    public int bubblesChainClearedBlue;
-    public int bubblesChainClearedYellow;
-    public int bubblesChainClearedOther;
+    // index with BubbleColor.red etc. int value;
+    public int[] bubblesChainCleared = new int[BubbleColor.count];
     // Total Chain Clears: calculate when displaying
     // Clears Per Minute: calculate when displaying
 

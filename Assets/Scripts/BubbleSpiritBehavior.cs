@@ -2,19 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//pseudo enum
+public struct BubbleColor
+{
+
+    public const int red = 0,
+        blue = 1,
+        yellow = 2,
+        rainbow = 3,
+        garbage = 4;
+    public const int count = garbage;    
+    // match function that ignores 'garbage' block color
+    // and matches any color against 'rainbow'
+    public static bool match(int a, int b)
+    {
+        return (a != 4 || b != 4)
+            && (a == b
+                || (a == 3 || b == 3));
+    }
+}
+
+
 public class BubbleSpiritBehavior : MonoBehaviour
 {
-    public enum BubbleColor
-    {
-        red = 0,
-        blue,
-        yellow,
-        rainbow
-    }
 
     public GameObject testingInitialParent; //don't use this for production spawning
     private GridLayout parentGrid; // this one is ok to keep, since it's just cached
-    public BubbleColor color;
+    public int color;
     public Vector3Int gridPosition;
     //BubbleBulletPattern; //maybe an array
     bool cleared; //set this when cleared/matched so that recursive flood fill works
@@ -28,6 +42,8 @@ public class BubbleSpiritBehavior : MonoBehaviour
         // should this be in start or moved to a separate UpdateParent()?
         parentGrid = transform.parent.GetComponent<GridLayout>();
         UpdateGridPosition();
+
+        ChainClear();
     }
 
     void Update()
@@ -85,13 +101,10 @@ public class BubbleSpiritBehavior : MonoBehaviour
         }
         
         Clear();
-
+        RunStatistics.Instance.bubblesChainCleared[color]++;
         // TODO[DEMO] check neighbors, call ChainClear if color matches
         //            currently don't have a way to check neighbors.
         //            store and query the parent BubbleUnit array?
-        // TODO[ALPHA] if color is a struct with a match method, can move
-        //             responsibility for doing match check to color type
-        
-        
+
     }
 }
