@@ -291,7 +291,7 @@ public class MapGenerator : MonoBehaviour
                         floraCount++;
                         
                     }
-                     //just for safety.
+                    //just for safety.
                     if(floraCount > floraCap)
                     {
                         break;
