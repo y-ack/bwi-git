@@ -11,14 +11,15 @@ public class TempEnemyBehavior : MonoBehaviour
     private float directionChangeTime = 3f;
     private float characterVelocity = 5f;
     private float lerpSpeed = 0.005f;
+    private float moveTimer;
     List<List<MapGenerator.Coord>> validCoords;
-    private bool canMove = false;
     private MapGenerator currentLevel;
     private Vector2 movementDirection;
     private Vector2 movementPerSecond;
     // Start is called before the first frame update
     void Start()
     {
+        moveTimer = 0f;
         rbody = GetComponent<Rigidbody2D>();
         theGrid = GameObject.Find("Grid");
         currentLevel = theGrid.GetComponent<MapGenerator>();
@@ -30,6 +31,7 @@ public class TempEnemyBehavior : MonoBehaviour
             Debug.Log("Unable to find wall tile in BubbleBehavior!");
         } 
     }
+
     void calcuateNewMovementVector()
     {     
         //create a random direction vector with the magnitude of 1, later multiply it with the velocity of the enemy
@@ -69,21 +71,35 @@ public class TempEnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if the changeTime was reached, calculate a new movement vector  
-        if (Time.time - latestDirectionChangeTime > directionChangeTime)
+        if(GameManager.theManager.canMove == true)
         {
-            directionChangeTime = Random.Range(3f,6f);
-            latestDirectionChangeTime = Time.time; 
-            StartCoroutine(BubbleWander());
-        }
-        //[1] This will fix the bug where bubbles keep bashing their heads to the wall. 
-        rbody.MovePosition(rbody.position + movementDirection * characterVelocity * Time.deltaTime);
+            moveTimer += Time.smoothDeltaTime;
+            // If the timer reaches direction time, calculate a new movement vector
+            if (moveTimer > directionChangeTime)
+            {
+                directionChangeTime = directionChangeTime = Random.Range(3f, 6f);
+                moveTimer = 0f;
+                StartCoroutine(BubbleWander());
+            }
+            //[1] This will fix the bug where bubbles keep bashing their heads to the wall. 
+            rbody.MovePosition(rbody.position + movementDirection * characterVelocity * Time.deltaTime);
 
-        //[2] This is for moving bubble when we don't use rigid body but need to fix the bug where bubbles trying to move toward walls.
-        //Vector3 p = new Vector3(transform.position.x + movementDirection.x,transform.position.y + movementDirection.y,transform.position.z);
-        //transform.position = Vector3.Lerp(transform.position, p, lerpSpeed);
-        
+            //[2] This is for moving bubble when we don't use rigid body but need to fix the bug where bubbles trying to move toward walls.
+            //Vector3 p = new Vector3(transform.position.x + movementDirection.x,transform.position.y + movementDirection.y,transform.position.z);
+            //transform.position = Vector3.Lerp(transform.position, p, lerpSpeed);
+        }
+
+        /*
+         * //if the changeTime was reached, calculate a new movement vector  
+         * if (Time.time - latestDirectionChangeTime > directionChangeTime)
+         * {
+         * directionChangeTime = Random.Range(3f,6f);
+         * latestDirectionChangeTime = Time.time; 
+         * StartCoroutine(BubbleWander());
+         * }
+         * */
     }
+
     IEnumerator BubbleWander()
     {
         yield return StartCoroutine(Wait());
@@ -109,6 +125,7 @@ public class TempEnemyBehavior : MonoBehaviour
         //taken mostly verbatim from class collision example
         if (collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "Capture")
         {
+            GameManager.theManager.bubbleCleared();
             destroySelf();
         }
         if (collision.gameObject.tag == "Wall Top" || collision.gameObject.tag == "Wall")

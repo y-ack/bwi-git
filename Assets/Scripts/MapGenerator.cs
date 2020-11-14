@@ -48,13 +48,12 @@ public class MapGenerator : MonoBehaviour
     int floraMax = 100;
     int obstacleMin = 10;
     int obstacleMax = 30;
-
     int obstacleCap = 50;
     int floraCap = 150;
     
     private void Awake() 
     {
-        generateNewGrid();
+     
     }
     private void Start()
     {      
@@ -65,7 +64,7 @@ public class MapGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {    
 
-            generateNewGrid();           
+            //generateNewGrid();           
         }
     }
     public void demoGeneration()

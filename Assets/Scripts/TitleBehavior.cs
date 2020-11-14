@@ -153,7 +153,7 @@ public class TitleBehavior : MonoBehaviour
             hideEmpty(); // Now we can hide the empty canvas group since there are save data
 
             // Get the data for the SaveList
-            GameObject saveData = savedListUI.transform.Find("Saved Data").gameObject;
+            GameObject saveData = savedListUI.transform.Find("saveDataContent").gameObject;
 
             // Loop used to go through the saveFile array
             for (int i = 0; i < saveFile.Length; i++)
@@ -162,7 +162,7 @@ public class TitleBehavior : MonoBehaviour
                 PlayerData sData = SaveSystem.loadPlayer(saveFile[i].ToString());
 
                 // instantiate new SaveData object
-                GameObject e = Instantiate(Resources.Load("Prefabs/SaveData") as
+                GameObject e = Instantiate(Resources.Load("Prefabs/dataButton") as
                                    GameObject);
                 TitleButton eControl = e.GetComponent<TitleButton>(); // create a loadDataControl Behavior
                 eControl.setPath(saveFile[i].ToString());// set save path string

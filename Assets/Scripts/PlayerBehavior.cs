@@ -14,7 +14,6 @@ public class PlayerBehavior : MonoBehaviour
 
     private Vector3 moveDir;
 
-    private bool canMove;
     private bool isDashButtonDown;
     private float DashAmount = 5f;
     private float dashCoolDown = 5f;
@@ -34,7 +33,6 @@ public class PlayerBehavior : MonoBehaviour
     // Start is called before the first frame update
     private void Awake() {
         rbody = GetComponent<Rigidbody2D>();
-        canMove = false;
     }
 
     void Start()
@@ -49,7 +47,7 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canMove == true)
+        if (GameManager.theManager.canMove == true)
         {
             movementVector = new Vector2(Input.GetAxis("Horizontal"),
                                      Input.GetAxis("Vertical"));
@@ -92,9 +90,10 @@ public class PlayerBehavior : MonoBehaviour
             }
         }   
     }
+
     void FixedUpdate()
     {
-        if(canMove == true)
+        if(GameManager.theManager.canMove == true)
         {
             //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
             rbody.velocity = moveDir * moveSpeed;
@@ -159,11 +158,6 @@ public class PlayerBehavior : MonoBehaviour
         rbody.MovePosition(transform.position + moveDir * DashAmount);
         isDashButtonDown = false;
         dashAfterSec = dashCoolDown;
-    }
-
-    public void setMove(bool iMove)
-    {
-        canMove = iMove;
     }
 
     public void countdownCooldown()

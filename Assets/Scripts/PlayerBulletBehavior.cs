@@ -16,7 +16,10 @@ public class PlayerBulletBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
+        if(GameManager.theManager.canMove == true)
+        {
+            transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision){        

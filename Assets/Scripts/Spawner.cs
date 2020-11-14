@@ -18,11 +18,17 @@ public class Spawner : MonoBehaviour
     List<List<MapGenerator.Coord>> spawnPool;
     private void Start()
     {
-        currentLevel = mGrid.GetComponent<MapGenerator>();
-        GameObject[] bubbleColors = {redBubble, yellowbubble, blueBubble};
-        StartCoroutine(SpawnPlayer()); 
-        StartCoroutine(SpawnObj(0, bubbleColors, 10));   
+         
     }
+
+    public void spawnWorld()
+    {
+        currentLevel = mGrid.GetComponent<MapGenerator>();
+        GameObject[] bubbleColors = { redBubble, yellowbubble, blueBubble };
+        StartCoroutine(SpawnPlayer());
+        StartCoroutine(SpawnObj(0, bubbleColors, 10));
+    }
+
     public IEnumerator SpawnObj(int TileType, GameObject[] bubbleArray, int cap)
     {  
         spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(TileType);  
@@ -44,6 +50,7 @@ public class Spawner : MonoBehaviour
                         GameObject temp = bubbleArray[Random.Range(0, bubbleArray.Length)];
                         GameObject e = Instantiate(temp, Vector3.zero, temp.transform.rotation) as GameObject;                
                         e.transform.localPosition = new Vector3(ranX, ranY, 0);
+                        GameManager.theManager.addBubble();
                         cap--;      
                     }
             }

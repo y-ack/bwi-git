@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager theManager = null;
     public PlayerBehavior mPlayer = null;
     public Spawner gameSpawner;
     public MapGenerator mapGenerator;
@@ -24,8 +25,8 @@ public class GameManager : MonoBehaviour
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
-
     private int bubbleCounter = 0;
+    public bool canMove;
 
     private enum gameState
     {
@@ -39,6 +40,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (!theManager)
+        {
+            theManager = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
 
@@ -67,6 +77,19 @@ public class GameManager : MonoBehaviour
         {
             currentState = gameState.PAUSE;
             showMenu();
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+            saveGame();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            currentState = gameState.LOSE;
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            currentState = gameState.CLEARED;
         }
     }
 
@@ -117,11 +140,17 @@ public class GameManager : MonoBehaviour
      * */
     private void loadSequence()
     {
+        RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
+        RunStatistics.Instance.time = 0f;
+        RunStatistics.Instance.bubblesCleared = 0;
+        mapGenerator.generateNewGrid();
+        gameSpawner.spawnWorld();
         currentState = gameState.RUN;
-        mPlayer.setMove(true);
+        canMove = true;
         
     }
+
     /*
      * pauseSequence method, run when ESC is pressed. All objects cannot move.
      * Used to show the main menu of the game
@@ -129,7 +158,7 @@ public class GameManager : MonoBehaviour
     private void pauseSequence()
     {
         showMenu();
-        mPlayer.setMove(false);
+        canMove = false;
     }
 
     /*
@@ -139,8 +168,14 @@ public class GameManager : MonoBehaviour
     private void runSequence()
     {
         buttonControl();
-        RunStatistics.Instance.time += Time.deltaTime;
-        mPlayer.setMove(true);
+        RunStatistics.Instance.time += Time.smoothDeltaTime;
+        canMove = true;
+
+        if(bubbleCounter == 0)
+        {
+            RunStatistics.Instance.stagesCleared++;
+            currentState = gameState.CLEARED;
+        }
     }
 
     /*
@@ -148,8 +183,9 @@ public class GameManager : MonoBehaviour
      * */
     private void loseSequence()
     {
+        updateLost();
         showLost();
-        mPlayer.setMove(false);
+        canMove = false;
     }
 
     /*
@@ -158,15 +194,17 @@ public class GameManager : MonoBehaviour
      * */
     private void clearedSequence()
     {
-        RunStatistics.Instance.stagesCleared++;
+        updateResult();
         showResult();
-        mPlayer.setMove(false);
+        canMove = false;
     }
 
     // nextSequence method, used to create a new stage for player
     private void nextSequence()
     {
+        hideResult();
         mapGenerator.generateNewGrid();
+        gameSpawner.spawnWorld();
         currentState = gameState.RUN;
     }
 
@@ -178,7 +216,10 @@ public class GameManager : MonoBehaviour
         SaveSystem.savePlayer();
     }
 
-
+    public void addBubble()
+    {
+        bubbleCounter++;
+    }
 
     public void bubbleCleared()
     {
@@ -193,11 +234,8 @@ public class GameManager : MonoBehaviour
     // Method used to restart the run from the beginning
     public void restartLevel()
     {
-
+        hideLost();
         currentState = gameState.LOAD;
-        /*
-         * 
-         * */
     }
 
     // Method Used to show the menu screen
@@ -235,9 +273,9 @@ public class GameManager : MonoBehaviour
     // Method used to show the result screen
     private void showResult()
     {
-        resultScreenGroup.alpha = 0f;
-        resultScreenGroup.blocksRaycasts = false;
-        resultScreenGroup.interactable = false;
+        resultScreenGroup.alpha = 1f;
+        resultScreenGroup.blocksRaycasts = true;
+        resultScreenGroup.interactable = true;
     }
 
     // Method used to hide the result screen
@@ -270,19 +308,42 @@ public class GameManager : MonoBehaviour
     // Method for button to change game state to NEXT
     public void setNextSequence()
     {
+        hideResult();
         currentState = gameState.NEXT;
     }
 
     // Method used to update the result screen. 
     private void updateResult()
     {
+        GameObject statisticBG = resultScreenUI.transform.Find("Statistic Background").gameObject;
+        GameObject scoreText = statisticBG.transform.Find("ScoreText").gameObject;
+        GameObject stageText = statisticBG.transform.Find("StageText").gameObject;
+        GameObject timeText = statisticBG.transform.Find("TimeText").gameObject;
+        GameObject clearText = statisticBG.transform.Find("ClearText").gameObject;
+        GameObject chainText = statisticBG.transform.Find("ChainText").gameObject;
 
+        scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
+        stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
+        timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
+        clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
+        chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
     }
 
     // Method used to update the lost screen.
     private void updateLost()
     {
+        GameObject statisticBG = lostScreenUI.transform.Find("Statistic Background").gameObject;
+        GameObject scoreText = statisticBG.transform.Find("ScoreText").gameObject;
+        GameObject stageText = statisticBG.transform.Find("StageText").gameObject;
+        GameObject timeText = statisticBG.transform.Find("TimeText").gameObject;
+        GameObject clearText = statisticBG.transform.Find("ClearText").gameObject;
+        GameObject chainText = statisticBG.transform.Find("ChainText").gameObject;
 
+        scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
+        stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
+        timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
+        clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
+        chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
     }
     #endregion
 
