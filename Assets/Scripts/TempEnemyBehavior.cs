@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class TempEnemyBehavior : MonoBehaviour
 {
+    
+    public GameObject theGrid = null;
+    Rigidbody2D rbody;
     private float latestDirectionChangeTime;
     private readonly float directionChangeTime = 3f;
     private float characterVelocity = 2f;
+
+    List<List<MapGenerator.Coord>> validCoords;
+    private bool moveDone = false;
+    private MapGenerator currentLevel;
     private Vector2 movementDirection;
     private Vector2 movementPerSecond;
     // Start is called before the first frame update
     void Start()
     {
+        rbody = GetComponent<Rigidbody2D>();
+        theGrid = GameObject.Find("Grid");
+        currentLevel = theGrid.GetComponent<MapGenerator>();
         latestDirectionChangeTime = 0f;
         calcuateNewMovementVector();
     }
@@ -37,6 +47,8 @@ public class TempEnemyBehavior : MonoBehaviour
             latestDirectionChangeTime = Time.time;
             calcuateNewMovementVector();
         }
+        //rbody.MovePosition(rbody.position + movementDirection * movementPerSecond * Time.deltaTime);
+
         transform.position = new Vector2(transform.position.x + (movementPerSecond.x * Time.deltaTime), 
         transform.position.y + (movementPerSecond.y * Time.deltaTime));
         yield return new WaitForSeconds(2);

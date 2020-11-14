@@ -297,6 +297,7 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
+                /* Turn off for Demo.
                 while (obstacleCount <= obstacleCap)
                 {
                     int randX = Random.Range(2,width - 2);
@@ -313,6 +314,7 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
+                */
                 Debug.Log("floraCount: "+ floraCount + ", obstacleCount: " +obstacleCount);
             }
         }
