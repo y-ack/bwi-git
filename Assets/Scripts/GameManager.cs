@@ -25,15 +25,7 @@ public class GameManager : MonoBehaviour
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
 
-    private string profileName;
     private int bubbleCounter = 0;
-    private float cSessionTime;
-    private int cStageCleared;
-    private int cLevel;
-    private int cScore;
-    private int cBubbleCleared;
-    private int cBubbleMatched;
-    private int cBossMatched;
 
     private enum gameState
     {
@@ -49,7 +41,8 @@ public class GameManager : MonoBehaviour
     {
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
-        // Ideally, I want to clean this up so void start isn't as croweded
+
+        // Ideally, I want to clean this up so void start isn't as crowded
         mainMenuGroup = mainMenuUI.GetComponent<CanvasGroup>();
         lostScreenGroup = lostScreenUI.GetComponent<CanvasGroup>();
         resultScreenGroup = resultScreenUI.GetComponent<CanvasGroup>();
@@ -71,6 +64,19 @@ public class GameManager : MonoBehaviour
     private void buttonControl()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            currentState = gameState.PAUSE;
+            showMenu();
+        }
+    }
+
+    /*
+     * Will revisit
+     * 
+     * */
+    private void gamepadControl()
+    {
+        if (Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
             currentState = gameState.PAUSE;
             showMenu();
@@ -111,7 +117,7 @@ public class GameManager : MonoBehaviour
      * */
     private void loadSequence()
     {
-        loadGame();
+        RunStatistics.Instance.stagesCleared = 0;
         currentState = gameState.RUN;
         mPlayer.setMove(true);
         
@@ -133,6 +139,7 @@ public class GameManager : MonoBehaviour
     private void runSequence()
     {
         buttonControl();
+        RunStatistics.Instance.time += Time.deltaTime;
         mPlayer.setMove(true);
     }
 
@@ -151,6 +158,7 @@ public class GameManager : MonoBehaviour
      * */
     private void clearedSequence()
     {
+        RunStatistics.Instance.stagesCleared++;
         showResult();
         mPlayer.setMove(false);
     }
@@ -162,6 +170,26 @@ public class GameManager : MonoBehaviour
         currentState = gameState.RUN;
     }
 
+    #region Data Control
+
+    // Method use the save the player's progress
+    public void saveGame()
+    {
+        SaveSystem.savePlayer();
+    }
+
+
+
+    public void bubbleCleared()
+    {
+        RunStatistics.Instance.bubblesCleared++;
+        RunStatistics.Instance.totalScore += 5;
+        bubbleCounter--;
+    }
+
+    #endregion;
+
+    #region UI Control
     // Method used to restart the run from the beginning
     public void restartLevel()
     {
@@ -170,18 +198,6 @@ public class GameManager : MonoBehaviour
         /*
          * 
          * */
-    }
-
-    // Method used to load the player's progress
-    public void loadGame()
-    {
-
-    }
-
-    // Method use the save the player's progress
-    public void saveGame()
-    {
-
     }
 
     // Method Used to show the menu screen
@@ -268,4 +284,7 @@ public class GameManager : MonoBehaviour
     {
 
     }
+    #endregion
+
+
 }
