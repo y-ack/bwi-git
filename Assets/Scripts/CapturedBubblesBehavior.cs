@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaptureBulletBehavior : MonoBehaviour
+public class CapturedBubblesBehavior : MonoBehaviour
 {
-    static private PlayerBehavior ParentPlayer = null;
-    static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
-
     private const float bulletSpeed = 10f;
     // Start is called before the first frame update
     void Start()
@@ -23,18 +20,6 @@ public class CaptureBulletBehavior : MonoBehaviour
         if (collision.gameObject.name != "Player") 
         {        
             destroySelf();
-            if(collision.gameObject.tag == "RedBubble")
-            {
-                ParentPlayer.SetCapture(0);
-            }
-            if(collision.gameObject.tag == "BlueBubble")
-            {
-                ParentPlayer.SetCapture(1);
-            }
-            if(collision.gameObject.tag == "YellowBubble")
-            {
-                ParentPlayer.SetCapture(2);
-            }
         }
     }
     private void destroySelf()

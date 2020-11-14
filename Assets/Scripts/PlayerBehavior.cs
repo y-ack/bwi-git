@@ -19,6 +19,17 @@ public class PlayerBehavior : MonoBehaviour
     private float DashAmount = 5f;
     private float dashCoolDown = 5f;
     private float dashAfterSec = 0;
+    private float captureCoolDown = 8f;
+    private float captureAfterSec = 0;
+    private bool capturedBubble = false;
+
+    public enum CaptureState
+    {
+        RED,
+        BLUE,
+        YELLOW
+    };
+    private CaptureState currentState;
 
     // Start is called before the first frame update
     private void Awake() {
@@ -55,10 +66,7 @@ public class PlayerBehavior : MonoBehaviour
             {
                 isDashButtonDown = true;
             }
-            if (dashAfterSec > 0)
-            {
-                dashAfterSec -= Time.deltaTime;
-            }
+            countdownCooldown();
             if (Input.GetMouseButtonDown(0))
             {
                 GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
@@ -68,21 +76,22 @@ public class PlayerBehavior : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                GameObject e = Instantiate(Resources.Load("Prefabs/net") as
+                if(captureAfterSec <= 0)
+                {
+                    GameObject e = Instantiate(Resources.Load("Prefabs/net") as
                                        GameObject);
-                e.transform.localPosition = transform.localPosition;
-                e.transform.localRotation = transform.localRotation;
+                    e.transform.localPosition = transform.localPosition;
+                    e.transform.localRotation = transform.localRotation;
+                    captureAfterSec = captureCoolDown;
+                }
+                if(capturedBubble == true)
+                {
+                    spawnCapturedBubble();
+                    capturedBubble = false;
+                }
             }
         }   
     }
-
-    public void SetCapture(){
-        GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
-                                   GameObject);
-            e.transform.localPosition = transform.localPosition;
-            e.transform.localRotation = transform.localRotation;
-    }
-
     void FixedUpdate()
     {
         if(canMove == true)
@@ -101,6 +110,50 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
 
+    public void SetCapture(int inputState)
+    {
+        capturedBubble = true;
+        switch(inputState)
+        {
+            case 0:
+                currentState = CaptureState.RED;
+                break;
+            case 1:
+                currentState = CaptureState.BLUE;
+                break;
+            case 2:
+                currentState = CaptureState.YELLOW;
+                break;
+        }
+    }
+
+
+    public void spawnCapturedBubble()
+    {
+        GameObject f;
+        switch(currentState)
+        {
+            case CaptureState.RED:
+                f = Instantiate(Resources.Load("Prefabs/CapturedBubbles/CapturedRedBubble") as
+                    GameObject);
+                f.transform.localPosition = transform.localPosition;
+                f.transform.localRotation = transform.localRotation;
+                break;
+            case CaptureState.BLUE:
+                f = Instantiate(Resources.Load("Prefabs/CapturedBubbles/CapturedBlueBubble") as
+                    GameObject);
+                f.transform.localPosition = transform.localPosition;
+                f.transform.localRotation = transform.localRotation;
+                    break;
+            case CaptureState.YELLOW:
+                f = Instantiate(Resources.Load("Prefabs/CapturedBubbles/CapturedYellowBubble") as
+                    GameObject);
+                f.transform.localPosition = transform.localPosition;
+                f.transform.localRotation = transform.localRotation;
+                break;
+        }
+    }
+
     public void Dashing()
     {
         rbody.MovePosition(transform.position + moveDir * DashAmount);
@@ -113,7 +166,17 @@ public class PlayerBehavior : MonoBehaviour
         canMove = iMove;
     }
 
-
+    public void countdownCooldown()
+    {
+        if (dashAfterSec > 0)
+        {
+            dashAfterSec -= Time.deltaTime;
+        }
+        if (captureAfterSec > 0)
+        {
+            captureAfterSec -= Time.deltaTime;
+        }
+    }
 
 
 }
