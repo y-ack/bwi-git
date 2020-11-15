@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
-    private int bubbleCounter = 0;
+    public int bubbleCounter = 0;
     public bool canMove;
 
     private enum gameState
@@ -148,7 +148,6 @@ public class GameManager : MonoBehaviour
         gameSpawner.spawnWorld();
         currentState = gameState.RUN;
         canMove = true;
-        
     }
 
     /*

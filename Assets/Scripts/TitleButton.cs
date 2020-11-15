@@ -34,7 +34,7 @@ public class TitleButton : MonoBehaviour
 
         if (pName != "" && pName.Length >= 3 && pName.Length <= 6)
         {
-         RunStatistics.Instance.playerName = pName;
+         RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
          SceneManager.LoadScene("Main");
         }
         else

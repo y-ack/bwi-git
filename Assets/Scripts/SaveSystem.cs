@@ -18,6 +18,8 @@ public static class SaveSystem
         {
             RunStatistics.Instance.totalSaveNum++;
             saveNum = RunStatistics.Instance.totalSaveNum;
+            RunStatistics.Instance.saveNum = saveNum;
+
         }
         else // does exist
         {
