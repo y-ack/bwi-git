@@ -14,19 +14,23 @@ public class Spawner : MonoBehaviour
     private float spawnRadius = 20f;
     private int ranX = 0;
     private int ranY = 0;
+    private int bubbleCap;
+    //minBubble and maxBubble can be set based on the level difficulty.
+    private int minBubble = 10;
+    private int maxBubble = 20;
     private bool playerSpawned = false;
     List<List<MapGenerator.Coord>> spawnPool;
     private void Start()
     {
-         
     }
 
     public void spawnWorld()
     {
         currentLevel = mGrid.GetComponent<MapGenerator>();
         GameObject[] bubbleColors = { redBubble, yellowbubble, blueBubble };
+        bubbleCap = Random.Range(minBubble,maxBubble);
         StartCoroutine(SpawnPlayer());
-        StartCoroutine(SpawnObj(0, bubbleColors, 10));
+        StartCoroutine(SpawnObj(0, bubbleColors, bubbleCap));
     }
 
     public IEnumerator SpawnObj(int TileType, GameObject[] bubbleArray, int cap)
@@ -42,7 +46,11 @@ public class Spawner : MonoBehaviour
         { 
             ranX = Random.Range(2,currentLevel.width);
             ranY = Random.Range(2,currentLevel.height);
-            if (currentLevel.cavePoints[ranX,ranY] == TileType)
+            if (currentLevel.cavePoints[ranX,ranY] == TileType &&
+                currentLevel.cavePoints[ranX + 1,ranY] == TileType &&
+                currentLevel.cavePoints[ranX - 1,ranY] == TileType &&
+                currentLevel.cavePoints[ranX,ranY + 1] == TileType &&
+                currentLevel.cavePoints[ranX,ranY - 1] == TileType)
             {
                 Vector2 p = player.transform.position;    
                     if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
@@ -68,7 +76,11 @@ public class Spawner : MonoBehaviour
         {           
             ranX = Random.Range(2,currentLevel.width);
             ranY = Random.Range(2,currentLevel.height);
-            if (currentLevel.cavePoints[ranX,ranY] == 0)
+            if (currentLevel.cavePoints[ranX,ranY] == 0 &&
+                currentLevel.cavePoints[ranX + 1,ranY] == 0 &&
+                currentLevel.cavePoints[ranX - 1,ranY] == 0 &&
+                currentLevel.cavePoints[ranX,ranY + 1] == 0 &&
+                currentLevel.cavePoints[ranX,ranY - 1] == 0)
             {             
                 player.transform.localPosition = new Vector3(ranX, ranY, 0);
                 playerSpawned = true;    
