@@ -6,8 +6,10 @@ public class BubbleBulletPatternLinear : BubbleBulletPattern
 {
     public override void FireAt(float angle)
     {
-        var bullet = (BubbleBullet)Instantiate(bulletPrefab, this.transform, false);
+        var bullet = (BubbleBullet)Instantiate(bulletPrefab);
 
+
+        bullet.transform.position = transform.position;
         bullet.velocity = new Vector3(Mathf.Cos(angle),
                                       Mathf.Sin(angle),
                                       0) * velocityParameters[0];
