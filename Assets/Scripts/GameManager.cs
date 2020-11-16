@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private PlayerData playerData;
     private gameState currentState;
 
-    /*
+    /* 
      * Currently, Lost screen and result screen share the same format. 
      * Depends on the finalized design, will merge them if necessary.
      * 
@@ -27,6 +27,10 @@ public class GameManager : MonoBehaviour
     private CanvasGroup resultScreenGroup;
     public int bubbleCounter = 0;
     public bool canMove;
+    public bool isFocusing = false;
+    private float focusDuration = 2f;
+
+
 
     private enum gameState
     {
@@ -35,7 +39,8 @@ public class GameManager : MonoBehaviour
         RUN,
         LOSE,
         CLEARED,
-        NEXT
+        NEXT,
+        FOCUS
     }
 
     void Start()
@@ -68,6 +73,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         sequenceControl();
+        
     }
 
     // Method used to contain all the game's control.
@@ -92,6 +98,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             currentState = gameState.CLEARED;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            currentState = gameState.FOCUS;
+            //canFocus = true;
         }
     }
 
@@ -131,9 +142,57 @@ public class GameManager : MonoBehaviour
             case gameState.NEXT:
                 nextSequence();
                 break;
+            case gameState.FOCUS:
+                focusSequence();
+                break;
             default:
                 break;
         }
+    }
+    private void focusSequence()
+    {
+        if(focusDuration > 0)
+        {
+            focusing();
+        }
+        focusDuration -= Time.deltaTime;
+        if(focusDuration <= 0)
+        {
+            Time.timeScale = 1f;
+            isFocusing = false;
+            setRun();
+            focusDuration = 2f;
+        }
+        /*
+        if(focusAfterSecDuration > 0)
+        {
+            focusing();
+            focusAfterSecDuration -= Time.deltaTime;
+        }
+        if(focusAfterSecDuration <= 0)
+        {
+            focusAfterSecDuration = focusDuration;
+        }
+        */
+        /*
+        if (focusAfterSecDuration > 0)
+        {
+            focusAfterSecDuration -= Time.deltaTime;
+        }
+        */
+        /*
+        if(focusAfterSecDuration <= 0)
+        {
+            focusAfterSecDuration = focusDuration;
+        }
+        */
+    }
+
+    private void focusing()
+    {
+        Time.timeScale = 0.5f;
+        isFocusing = true;
+        //focusAfterSec = focusCoolDown;
     }
 
     /*
