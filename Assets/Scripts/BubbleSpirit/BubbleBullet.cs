@@ -30,7 +30,13 @@ public class BubbleBullet : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Player":
+            //reset game, lose game
+            //player hits bullet and dies
+            //stats
+                break;
             case "Wall":
+            case "Wall Top":
+                Debug.Log("Colliind Wall");
                 destroyYoSelf();
                 break;
             default:

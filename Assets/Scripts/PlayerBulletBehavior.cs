@@ -8,9 +8,11 @@ public class PlayerBulletBehavior : MonoBehaviour
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
 
     private const float bulletSpeed = 10f;
+    private float lifeSpan;
     // Start is called before the first frame update
     void Start()
     {
+        lifeSpan = 1.5f;
     }
 
     // Update is called once per frame
@@ -20,11 +22,22 @@ public class PlayerBulletBehavior : MonoBehaviour
         {
             transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
         }
+        lifeSpan -= Time.deltaTime;
+        if(lifeSpan <= 0)
+        {
+            destroySelf();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision){        
-            if (collision.gameObject.name != "Player") 
+        if (collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "YellowBubble") 
         {        
+            Debug.Log("Logging");
+            Destroy(collision.gameObject);
+            destroySelf();
+        }
+        if(collision.gameObject.tag != "Player")
+        {
             destroySelf();
         }
     }

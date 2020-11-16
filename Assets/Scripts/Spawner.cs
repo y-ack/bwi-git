@@ -56,8 +56,10 @@ public class Spawner : MonoBehaviour
                     if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
                     {
                         GameObject temp = bubbleArray[Random.Range(0, bubbleArray.Length)];
-                        GameObject e = Instantiate(temp, Vector3.zero, temp.transform.rotation) as GameObject;                
-                        e.transform.localPosition = new Vector3(ranX, ranY, 0);
+                        GameObject e = Instantiate(temp, Vector3.zero, temp.transform.rotation) as GameObject;
+                        TempEnemyBehavior bubble = e.GetComponent<TempEnemyBehavior>();                
+                        bubble.transform.localPosition = new Vector3(ranX, ranY, 0);
+                        bubble.SetState(0);
                         GameManager.theManager.addBubble();
                         cap--;      
                     }

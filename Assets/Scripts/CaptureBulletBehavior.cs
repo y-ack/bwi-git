@@ -19,21 +19,22 @@ public class CaptureBulletBehavior : MonoBehaviour
         transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision){        
+    private void OnCollisionEnter2D(Collision2D collision){        
         if (collision.gameObject.name != "Player") 
         {        
+            GameObject m = collision.gameObject;
             destroySelf();
             if(collision.gameObject.tag == "RedBubble")
             {
-                ParentPlayer.SetCapture(0);
+                ParentPlayer.SetCapture(0, m);
             }
             if(collision.gameObject.tag == "BlueBubble")
             {
-                ParentPlayer.SetCapture(1);
+                ParentPlayer.SetCapture(1, m);
             }
             if(collision.gameObject.tag == "YellowBubble")
             {
-                ParentPlayer.SetCapture(2);
+                ParentPlayer.SetCapture(2, m);
             }
         }
     }

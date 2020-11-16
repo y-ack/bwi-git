@@ -16,7 +16,19 @@ public class TempEnemyBehavior : MonoBehaviour
     private MapGenerator currentLevel;
     private Vector2 movementDirection;
     private Vector2 movementPerSecond;
+    private const float bulletSpeed = 10f;
+
+    public SpriteRenderer sprender;
     // Start is called before the first frame update
+
+    public enum BubbleState
+    {
+        PATROL,
+        CAPTURED,
+        SHOOTING
+    };
+    private BubbleState currentState;
+
     void Start()
     {
         moveTimer = 0f;
@@ -25,7 +37,8 @@ public class TempEnemyBehavior : MonoBehaviour
         currentLevel = theGrid.GetComponent<MapGenerator>();
         latestDirectionChangeTime = 0f;
         calcuateNewMovementVector();
-        currentLevel.GetRegions(1);      
+        currentLevel.GetRegions(1);    
+        sprender = gameObject.GetComponent<SpriteRenderer>();
         if (currentLevel == null)
         {
             Debug.Log("Unable to find wall tile in BubbleBehavior!");
@@ -71,8 +84,10 @@ public class TempEnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GameManager.theManager.canMove == true)
+        if(currentState == BubbleState.PATROL)
         {
+            if(GameManager.theManager.canMove == true)
+            {
             moveTimer += Time.smoothDeltaTime;
             // If the timer reaches direction time, calculate a new movement vector
             if (moveTimer > directionChangeTime)
@@ -87,6 +102,25 @@ public class TempEnemyBehavior : MonoBehaviour
             //[2] This is for moving bubble when we don't use rigid body but need to fix the bug where bubbles trying to move toward walls.
             //Vector3 p = new Vector3(transform.position.x + movementDirection.x,transform.position.y + movementDirection.y,transform.position.z);
             //transform.position = Vector3.Lerp(transform.position, p, lerpSpeed);
+            }
+        }
+        if(currentState == BubbleState.CAPTURED)
+        {
+            //sprender = gameObject.GetComponent<SpriteRenderer>();
+            sprender.enabled = false;
+            //transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
+        }
+        if (Input.GetMouseButtonDown(1))
+            {
+                if(currentState == BubbleState.CAPTURED)
+                {
+                    currentState = BubbleState.SHOOTING;
+                }
+            }
+        if(currentState == BubbleState.SHOOTING)
+        {
+            sprender.enabled = true;
+            transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
         }
 
         /*
@@ -121,24 +155,92 @@ public class TempEnemyBehavior : MonoBehaviour
  
 
 
-    private void OnTriggerEnter2D(Collider2D collision){
+    private void OnCollisionEnter2D(Collision2D collision){
         //taken mostly verbatim from class collision example
-        if (collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "Capture")
+        if (collision.gameObject.tag == "Bullet")
         {
             GameManager.theManager.bubbleCleared();
-            destroySelf();
+            DestroySelf();
         }
-        if (collision.gameObject.tag == "Wall Top" || collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Capture")
+        {
+            currentState = BubbleState.CAPTURED;
+        }
+
+        if (collision.gameObject.tag == "Wall Top" &&  currentState == BubbleState.SHOOTING || 
+            collision.gameObject.tag == "Wall"&&  currentState == BubbleState.SHOOTING)
+        {
+            DestroySelf();
+        }
+
+        if (collision.gameObject.tag == "Wall Top" &&  currentState == BubbleState.CAPTURED || 
+            collision.gameObject.tag == "Wall"&&  currentState == BubbleState.CAPTURED)
         {
             Debug.Log("Colliding wall");
             calcuateNewMovementVector();
         }
+
+        if(collision.gameObject.tag != "Player")
+        {
+            if(GetState() == BubbleState.SHOOTING)
+            {
+                DestroySelf();
+            }
+        }
+        if(collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "YellowBubble")
+        {
+            /*
+            FixedJoint joint = gameObject.AddComponent<FixedJoint>(); 
+            // sets joint position to point of contact
+            joint.anchor = collision.contacts[0].point; 
+            // conects the joint to the other object
+            joint.connectedBody = collision.contacts[0].otherCollider.transform.GetComponentInParent<Rigidbody>();
+            */
+            TempEnemyBehavior shotBubble = collision.gameObject.GetComponent<TempEnemyBehavior>();
+            if(shotBubble.GetState() == BubbleState.SHOOTING)
+            {
+                if (collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "Yellowbubble")
+                {
+                    DestroySelf();
+                }
+            }
+        }
+        /*
+        TempEnemyBehavior shotBubble = collision.gameObject.GetComponent<TempEnemyBehavior>();
+        if(shotBubble.GetState() == BubbleState.SHOOTING)
+        {
+            if (collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "Yellowbubble")
+            {
+                DestroySelf();
+            }
+        }
+        */
         
     }
-    private void destroySelf()
+    private void DestroySelf()
     {
         //ParentPlayer.eggDestroyed(this);
         //destroyed = true;
         Destroy(transform.gameObject);  // kills self
+    }
+    public void SetState(int stateNumber)
+    {
+        switch(stateNumber)
+        {
+            case 0:
+                break;
+                currentState = BubbleState.PATROL;
+            case 1:
+                currentState = BubbleState.CAPTURED;
+                break;
+            case 2:
+                currentState = BubbleState.SHOOTING;
+                break;
+        }
+    }
+
+    private BubbleState GetState()
+    {
+        return currentState;
     }
 }
