@@ -31,23 +31,26 @@ public abstract class BubbleBulletPattern : MonoBehaviour
 
     public void Update()
     {
-        lifetime -= Time.deltaTime;
-        if (lifetime <= 0)
+        if(GameManager.theManager.canMove == true)
         {
-            while (step < bulletCount && lifetime <= 0f)
+            lifetime -= Time.deltaTime;
+            if (lifetime <= 0)
             {
-                float angle = baseAngle + angleDelta * step;
-                FireAt(angle);
+                while (step < bulletCount && lifetime <= 0f)
+                {
+                    float angle = baseAngle + angleDelta * step;
+                    FireAt(angle);
 
-                ++step;
-                lifetime += delayTime;
+                    ++step;
+                    lifetime += delayTime;
+                }
+                if (lifetime <= 0f)
+                {
+                    step = 0;
+                    lifetime = patternCooldown;
+                    baseAngle += patternAngleDeltaAfter;
+                } //else {
             }
-            if (lifetime <= 0f)
-            {
-                step = 0;
-                lifetime = patternCooldown;
-                baseAngle += patternAngleDeltaAfter;
-            } //else {
         }
     }
     public void setPatternParameters(float[] v)

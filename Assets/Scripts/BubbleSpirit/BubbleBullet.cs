@@ -12,17 +12,20 @@ public class BubbleBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (accelerationTimeout > 0f)
+        if(GameManager.theManager.canMove == true)
         {
-            velocity += new Vector3(acceleration, acceleration, 0f) *
-                Mathf.Min(Time.deltaTime, accelerationTimeout);
-            accelerationTimeout -= Time.deltaTime;
+            if (accelerationTimeout > 0f)
+            {
+                velocity += new Vector3(acceleration, acceleration, 0f) *
+                    Mathf.Min(Time.deltaTime, accelerationTimeout);
+                accelerationTimeout -= Time.deltaTime;
+            }
+            transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                                                          Quaternion.Euler(0, 0, 90),
+                                                          angularVelocity *
+                                                          Time.smoothDeltaTime);
+            transform.position += velocity * Time.smoothDeltaTime;
         }
-        transform.rotation = Quaternion.RotateTowards(transform.rotation,
-                                                      Quaternion.Euler(0,0,90),
-                                                      angularVelocity *
-                                                      Time.smoothDeltaTime);
-        transform.position += velocity * Time.smoothDeltaTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -30,13 +33,12 @@ public class BubbleBullet : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Player":
-            //reset game, lose game
-            //player hits bullet and dies
-            //stats
+                Debug.Log("Hit PLayer");
+                destroyYoSelf();
                 break;
             case "Wall":
             case "Wall Top":
-                Debug.Log("Colliind Wall");
+                Debug.Log("Colliding Wall");
                 destroyYoSelf();
                 break;
             default:

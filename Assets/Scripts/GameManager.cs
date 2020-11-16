@@ -25,8 +25,10 @@ public class GameManager : MonoBehaviour
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
+    public GameObject[] currentBubbleSpirit;
     public int bubbleCounter = 0;
     public bool canMove;
+    public bool isInvincible = true;
     public bool isFocusing = false;
     private float focusDuration = 2f;
 
@@ -53,7 +55,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+ 
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
 
@@ -73,7 +75,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         sequenceControl();
-        
     }
 
     // Method used to contain all the game's control.
@@ -103,6 +104,17 @@ public class GameManager : MonoBehaviour
         {
             currentState = gameState.FOCUS;
             //canFocus = true;
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if(isInvincible == false)
+            {
+                isInvincible = true;
+            }
+            else
+            {
+                isInvincible = false;
+            }
         }
     }
 
@@ -149,6 +161,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
     private void focusSequence()
     {
         if(focusDuration > 0)
@@ -263,9 +276,22 @@ public class GameManager : MonoBehaviour
     private void nextSequence()
     {
         hideResult();
+        clearEnemy(); // Not necessary if everything runs well.
         mapGenerator.generateNewGrid();
         gameSpawner.spawnWorld();
         currentState = gameState.RUN;
+    }
+
+    private void clearEnemy()
+    {
+        for(int i = 0; i < currentBubbleSpirit.Length; i++)
+        {
+            if(currentBubbleSpirit[i] != null)
+            {
+                Destroy(currentBubbleSpirit[i]);
+            }
+        }
+        bubbleCounter = 0;
     }
 
     #region Data Control
@@ -283,9 +309,9 @@ public class GameManager : MonoBehaviour
 
     public void bubbleCleared()
     {
+        bubbleCounter--;
         RunStatistics.Instance.bubblesCleared++;
         RunStatistics.Instance.totalScore += 5;
-        bubbleCounter--;
     }
 
     #endregion;
@@ -295,6 +321,7 @@ public class GameManager : MonoBehaviour
     public void restartLevel()
     {
         hideLost();
+        clearEnemy();
         currentState = gameState.LOAD;
     }
 

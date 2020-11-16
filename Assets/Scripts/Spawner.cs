@@ -29,6 +29,7 @@ public class Spawner : MonoBehaviour
         currentLevel = mGrid.GetComponent<MapGenerator>();
         GameObject[] bubbleColors = { redBubble, yellowbubble, blueBubble };
         bubbleCap = Random.Range(minBubble,maxBubble);
+        GameManager.theManager.currentBubbleSpirit = new GameObject[bubbleCap];
         StartCoroutine(SpawnPlayer());
         StartCoroutine(SpawnObj(0, bubbleColors, bubbleCap));
     }
@@ -61,6 +62,7 @@ public class Spawner : MonoBehaviour
                         bubble.transform.localPosition = new Vector3(ranX, ranY, 0);
                         bubble.SetState(0);
                         GameManager.theManager.addBubble();
+                        GameManager.theManager.currentBubbleSpirit[cap-1] = e;
                         cap--;      
                     }
             }

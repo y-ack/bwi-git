@@ -84,10 +84,16 @@ public class TempEnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(currentState == BubbleState.PATROL)
+        // If The Gamemanager canMove = false, no in game object should be able to move.
+        if (GameManager.theManager.canMove == true){
+            stateControl();
+        }
+    }
+
+    private void stateControl()
+    {
+        if (currentState == BubbleState.PATROL)
         {
-            if(GameManager.theManager.canMove == true)
-            {
             moveTimer += Time.smoothDeltaTime;
             // If the timer reaches direction time, calculate a new movement vector
             if (moveTimer > directionChangeTime)
@@ -102,22 +108,21 @@ public class TempEnemyBehavior : MonoBehaviour
             //[2] This is for moving bubble when we don't use rigid body but need to fix the bug where bubbles trying to move toward walls.
             //Vector3 p = new Vector3(transform.position.x + movementDirection.x,transform.position.y + movementDirection.y,transform.position.z);
             //transform.position = Vector3.Lerp(transform.position, p, lerpSpeed);
-            }
         }
-        if(currentState == BubbleState.CAPTURED)
+        if (currentState == BubbleState.CAPTURED)
         {
             //sprender = gameObject.GetComponent<SpriteRenderer>();
             sprender.enabled = false;
             //transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
         }
         if (Input.GetMouseButtonDown(1))
+        {
+            if (currentState == BubbleState.CAPTURED)
             {
-                if(currentState == BubbleState.CAPTURED)
-                {
-                    currentState = BubbleState.SHOOTING;
-                }
+                currentState = BubbleState.SHOOTING;
             }
-        if(currentState == BubbleState.SHOOTING)
+        }
+        if (currentState == BubbleState.SHOOTING)
         {
             sprender.enabled = true;
             transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
@@ -139,8 +144,8 @@ public class TempEnemyBehavior : MonoBehaviour
         yield return StartCoroutine(Wait());
     }
     IEnumerator Wait()
-    {       
-        calcuateNewMovementVector();             
+    {
+        calcuateNewMovementVector();
         /*
         if (Time.time - latestDirectionChangeTime > directionChangeTime){
             latestDirectionChangeTime = Time.time;  
@@ -152,14 +157,10 @@ public class TempEnemyBehavior : MonoBehaviour
         yield return new WaitForSeconds(5);
     }
 
- 
-
-
     private void OnCollisionEnter2D(Collision2D collision){
         //taken mostly verbatim from class collision example
         if (collision.gameObject.tag == "Bullet")
         {
-            GameManager.theManager.bubbleCleared();
             DestroySelf();
         }
         if (collision.gameObject.tag == "Capture")
@@ -167,27 +168,27 @@ public class TempEnemyBehavior : MonoBehaviour
             currentState = BubbleState.CAPTURED;
         }
 
-        if (collision.gameObject.tag == "Wall Top" &&  currentState == BubbleState.SHOOTING || 
-            collision.gameObject.tag == "Wall"&&  currentState == BubbleState.SHOOTING)
+        if (collision.gameObject.tag == "Wall Top" && currentState == BubbleState.SHOOTING ||
+            collision.gameObject.tag == "Wall" && currentState == BubbleState.SHOOTING)
         {
             DestroySelf();
         }
 
-        if (collision.gameObject.tag == "Wall Top" &&  currentState == BubbleState.CAPTURED || 
-            collision.gameObject.tag == "Wall"&&  currentState == BubbleState.CAPTURED)
+        if (collision.gameObject.tag == "Wall Top" && currentState == BubbleState.CAPTURED ||
+            collision.gameObject.tag == "Wall" && currentState == BubbleState.CAPTURED)
         {
             Debug.Log("Colliding wall");
             calcuateNewMovementVector();
         }
 
-        if(collision.gameObject.tag != "Player")
+        if (collision.gameObject.tag != "Player")
         {
-            if(GetState() == BubbleState.SHOOTING)
+            if (GetState() == BubbleState.SHOOTING)
             {
                 DestroySelf();
             }
         }
-        if(collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "YellowBubble")
+        if (collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "YellowBubble")
         {
             /*
             FixedJoint joint = gameObject.AddComponent<FixedJoint>(); 
@@ -197,7 +198,7 @@ public class TempEnemyBehavior : MonoBehaviour
             joint.connectedBody = collision.contacts[0].otherCollider.transform.GetComponentInParent<Rigidbody>();
             */
             TempEnemyBehavior shotBubble = collision.gameObject.GetComponent<TempEnemyBehavior>();
-            if(shotBubble.GetState() == BubbleState.SHOOTING)
+            if (shotBubble.GetState() == BubbleState.SHOOTING)
             {
                 if (collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "Yellowbubble")
                 {
@@ -215,14 +216,16 @@ public class TempEnemyBehavior : MonoBehaviour
             }
         }
         */
-        
+
     }
     private void DestroySelf()
     {
         //ParentPlayer.eggDestroyed(this);
         //destroyed = true;
+        GameManager.theManager.bubbleCleared();
         Destroy(transform.gameObject);  // kills self
     }
+
     public void SetState(int stateNumber)
     {
         switch(stateNumber)

@@ -92,6 +92,7 @@ public class BubbleSpiritBehavior : MonoBehaviour
         transform.parent = null;
         //trigger animation, yield and delete
     }
+
     void ChainClear()
     {
         // recursive border case

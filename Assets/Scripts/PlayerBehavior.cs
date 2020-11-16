@@ -211,21 +211,25 @@ public class PlayerBehavior : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        switch (collision.gameObject.tag)
+        if(GameManager.theManager.isInvincible == false)
         {
-            case "EnemyBullet":
-            case "RedBubble":
-            case "BlueBubble":
-            case "YellowBubble":
-            //reset game, lose game
-            //player hits bullet and dies
-            //stats
-            //reset game, lose game
-            //player hits bullet and dies
-            //stats
-                break;
-            default:
-                break;
+            switch (collision.gameObject.tag)
+            {
+                case "EnemyBullet":
+                case "RedBubble":
+                case "BlueBubble":
+                case "YellowBubble":
+                    GameManager.theManager.setLose();
+                    //reset game, lose game
+                    //player hits bullet and dies
+                    //stats
+                    //reset game, lose game
+                    //player hits bullet and dies
+                    //stats
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
