@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
     public GameObject[] currentBubbleSpirit;
+    public GameObject[] currentBubbleProjectile;
     public int bubbleCounter = 0;
     public bool canMove;
     public bool isInvincible = true;
@@ -284,6 +285,8 @@ public class GameManager : MonoBehaviour
 
     private void clearEnemy()
     {
+        currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
+
         for(int i = 0; i < currentBubbleSpirit.Length; i++)
         {
             if(currentBubbleSpirit[i] != null)
@@ -291,6 +294,15 @@ public class GameManager : MonoBehaviour
                 Destroy(currentBubbleSpirit[i]);
             }
         }
+
+        for(int i = 0; i < currentBubbleProjectile.Length; i++)
+        {
+            if (currentBubbleProjectile[i] != null)
+            {
+                Destroy(currentBubbleProjectile[i]);
+            }
+        }
+
         bubbleCounter = 0;
     }
 

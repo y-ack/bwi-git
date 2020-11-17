@@ -34,6 +34,7 @@ public class PlayerBulletBehavior : MonoBehaviour
         {        
             Debug.Log("Logging");
             Destroy(collision.gameObject);
+            GameManager.theManager.bubbleCleared();
             destroySelf();
         }
         if(collision.gameObject.tag != "Player")
