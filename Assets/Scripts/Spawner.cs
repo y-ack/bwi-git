@@ -90,6 +90,7 @@ public class Spawner : MonoBehaviour
                 playerSpawned = true;    
             }
         }
+        playerSpawned = false;
         yield return new WaitForSeconds(3f);
     }
 }

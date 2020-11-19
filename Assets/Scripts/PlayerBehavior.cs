@@ -16,9 +16,9 @@ public class PlayerBehavior : MonoBehaviour
 
     private bool isDashButtonDown;
     private float DashAmount = 5f;
-    private float dashCoolDown = 5f;
+    private float dashCoolDown = 1f;
     private float dashAfterSec = 0;
-    private float captureCoolDown = 8f;
+    private float captureCoolDown = 1f;
     private float captureAfterSec = 0;
     private bool isCapturing = false;
 
