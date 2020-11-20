@@ -40,21 +40,21 @@ public class BubbleSpirit : MonoBehaviour
     public int color;
     private Vector3 launchDirection;
     public bool searched; // for parent path searching ... not impl yet.
-    
-    //BubbleBulletPattern; //maybe an array
+
+    public BubbleBulletPattern pattern; //maybe an array
     bool cleared;
 
     void Start()
     {
         // only for testing, instead set transform.parent to transform of
         // whatever bubble unit it's being added to at spawn
-        transform.parent = testingInitialParent.transform;
+        //transform.parent = testingInitialParent.transform;
 
         // should this be in start or moved to a separate UpdateParent()?
-        parentGrid = transform.parent.GetComponent<GridLayout>();
-        UpdateGridPosition();
+        //parentGrid = transform.parent.GetComponent<GridLayout>();
+        //UpdateGridPosition();
 
-        ChainClear();
+        //ChainClear();
     }
 
     void Update()
@@ -123,15 +123,25 @@ public class BubbleSpirit : MonoBehaviour
         SnapToGrid();
         newParentUnit.addBubble(this);
     }
+    
+    //        (-1, 1) ( 0, 1)
+    //    (-1, 0) ( 0, 0) ( 1, 0)
+    //        (-1,-1) ( 0,-1)
+    public void setParent(BubbleUnit newParentUnit, Vector2Int cell)
+    {
+        gridPosition = cell;
+        AdoptedBy(newParentUnit);
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         switch (state)
         {
             case State.NORMAL:
-                //a) player bullet: set cleared flag, unset parent transform
-                //                  trigger animation, delete/return to pool
-
+                if (other.gameObject.tag == "Bullet")
+                {
+                    Clear();
+                }
                 // handled by parent unit?: also maybe TODO[ALPHA]?
                 //b) wall: cannot pass through, bounces off
                 //c) flora: bounces off rocks, passes through bushes
@@ -140,6 +150,11 @@ public class BubbleSpirit : MonoBehaviour
 
             case State.LAUNCHED:
                 // hits a bubble: stick, get parent, add, and call trymatch
+                if (other.gameObject.tag == "BubbleSpirit")
+                {
+                    AdoptedBy(other.GetComponent<BubbleSpirit>().parentUnit);
+                    tryMatch();
+                }
                 break;
         }
     }
@@ -173,6 +188,8 @@ public class BubbleSpirit : MonoBehaviour
         transform.parent = null;
         parentUnit = null;
         //trigger animation, yield and delete
+        
+        Destroy(this, 1.0f);
     }
 
     public void ChainClear()
