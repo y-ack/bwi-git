@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //pseudo enum
+[Serializable]
 public struct BubbleColor
 {
+    public static const Texture2D redTexture;
+    public static const Texture2D blueTexture;
+    public static const Texture2D yellowTexture;
+    public static const Texture2D garbageTexture;
+
     public const int red = 0,
         blue = 1,
         yellow = 2,
         rainbow = 3,
         garbage = 4;
-    public const int count = garbage;    
+    public const int count = garbage + 1;
     // match function that ignores 'garbage' block color
     // and matches any color against 'rainbow'
     public static bool match(int a, int b)
@@ -18,6 +24,21 @@ public struct BubbleColor
         return (a != garbage || b != garbage)
             && (a == b
                 || (a == rainbow || b == rainbow));
+    }
+
+    public static Texture2D getTexture(int color)
+    {
+        switch (color)
+        {
+            case BubbleColor.red:
+                return redTexture;
+            case BubbleColor.blue:
+                return blueTexture;
+            case BubbleColor.yellow:
+                return yellowTexture;
+            default:
+                return garbageTexture; //well, no, but to help it compile
+        }
     }
 }
 
@@ -45,17 +66,7 @@ public class BubbleSpirit : MonoBehaviour
     bool cleared;
 
     void Start()
-    {
-        // only for testing, instead set transform.parent to transform of
-        // whatever bubble unit it's being added to at spawn
-        //transform.parent = testingInitialParent.transform;
-
-        // should this be in start or moved to a separate UpdateParent()?
-        //parentGrid = transform.parent.GetComponent<GridLayout>();
-        //UpdateGridPosition();
-
-        //ChainClear();
-    }
+    {    }
 
     void Update()
     {
@@ -78,23 +89,37 @@ public class BubbleSpirit : MonoBehaviour
         }
         // TODO[RETRO] add gleam animation for bubble spirits
     }
-    
-    public void tryLaunch(Vector3 direction)
+
+    // get colors from BubbleColor.red/blue/etc
+    public void SetColor(int bubbleColor)
+    {
+        if (bubbleColor >= BubbleColor.count)
+        {
+            Debug.LogError("bad bubble color!! got: " + bubbleColor, this);
+        }
+        color = bubbleColor;
+        SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+        sr.material.mainTexture = BubbleColor.getTexture(bubbleColor);
+    }
+
+    public bool tryLaunch(Vector3 direction)
     {
         if (state != State.CAPTURED)
         {
             Debug.LogWarning("tried to launch a spirit that isn't captured");
-            return;
+            return false;
         } else if
                 (Vector3.Distance(transform.position,
                                   transform.parent.position)
                  < 2.0f) {
             Debug.Log("not close enough to player for launch! wait on anim");
-            return;
+            return false;
+        } else
+        {
+            state = State.LAUNCHED;
+            launchDirection = direction;
+            return true;
         }
-
-        state = State.LAUNCHED;
-        launchDirection = direction;
     }
 
     // called once grid position is determined.
