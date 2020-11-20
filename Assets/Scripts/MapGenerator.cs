@@ -50,10 +50,12 @@ public class MapGenerator : MonoBehaviour
     int obstacleMax = 30;
     int obstacleCap = 50;
     int floraCap = 150;
+
+    private bool generationDone = false;
     
     private void Awake() 
     {
-     
+        generationDone = false;
     }
     private void Start()
     {      
@@ -116,12 +118,7 @@ public class MapGenerator : MonoBehaviour
         cavePoints = new int[width, height];
         seed = Random.Range(0,200f);
         demoGeneration(); 
-
-        layer0.ClearAllTiles();
-        layer0a.ClearAllTiles();
-        layer1.ClearAllTiles();
-        layer2.ClearAllTiles();
-        layer2a.ClearAllTiles();
+        ClearAllTiles();
         for (int y = 0; y < height; ++y)
         {
             for (int x = 0; x < width; ++x)
@@ -167,7 +164,8 @@ public class MapGenerator : MonoBehaviour
                 }
             }  
         ProcessMap();
-        generateTile();   
+        generateTile(); 
+        generationDone = true;  
     }
 
     public List<List<Coord>> GetRegions(int tileType) {
@@ -371,6 +369,18 @@ public class MapGenerator : MonoBehaviour
         }
 
         return wallNeighbors;
+    }
+    public bool canSpawn()
+    {
+        return generationDone;
+    }
+    public void ClearAllTiles()
+    {
+        layer0.ClearAllTiles();
+        layer0a.ClearAllTiles();
+        layer1.ClearAllTiles();
+        layer2.ClearAllTiles();
+        layer2a.ClearAllTiles();
     }
 
     public struct Coord 

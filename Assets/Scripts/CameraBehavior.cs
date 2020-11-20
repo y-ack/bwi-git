@@ -12,12 +12,12 @@ public class CameraBehavior : MonoBehaviour
 
     private void Start() 
     {
-    minValues.x = 14f;
-    minValues.y = 8.5f;
+    minValues.x = 15f;
+    minValues.y = 9.25f;
     minValues.z = -10;
 
-    maxValue.x = 45.95f;
-    maxValue.y = 30.5f;
+    maxValue.x = 45f;
+    maxValue.y = 30f;
     maxValue.z = -10;  
     }
 	void Update()

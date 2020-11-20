@@ -30,8 +30,12 @@ public class Spawner : MonoBehaviour
         GameObject[] bubbleColors = { redBubble, yellowbubble, blueBubble };
         bubbleCap = Random.Range(minBubble,maxBubble);
         GameManager.theManager.currentBubbleSpirit = new GameObject[bubbleCap];
-        StartCoroutine(SpawnPlayer());
-        StartCoroutine(SpawnObj(0, bubbleColors, bubbleCap));
+
+        if (currentLevel.canSpawn() == true)
+        {
+            StartCoroutine(SpawnPlayer());
+            StartCoroutine(SpawnObj(0, bubbleColors, bubbleCap));
+        }
     }
 
     public IEnumerator SpawnObj(int TileType, GameObject[] bubbleArray, int cap)
@@ -91,6 +95,6 @@ public class Spawner : MonoBehaviour
             }
         }
         playerSpawned = false;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
     }
 }
