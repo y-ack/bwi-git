@@ -10,21 +10,10 @@ public class GameManager : MonoBehaviour
     public PlayerBehavior mPlayer = null;
     public Spawner gameSpawner;
     public MapGenerator mapGenerator;
-    public Image mainMenuUI;
-    public Image lostScreenUI; 
-    public Image resultScreenUI;
+    public GameUIControl uiControl;
     private PlayerData playerData;
     private gameState currentState;
 
-    /* 
-     * Currently, Lost screen and result screen share the same format. 
-     * Depends on the finalized design, will merge them if necessary.
-     * 
-     * */
-
-    private CanvasGroup mainMenuGroup;
-    private CanvasGroup lostScreenGroup;
-    private CanvasGroup resultScreenGroup;
     public GameObject[] currentBubbleSpirit;
     public GameObject[] currentBubbleProjectile;
     public int bubbleCounter = 0;
@@ -32,6 +21,7 @@ public class GameManager : MonoBehaviour
     public bool isInvincible = true;
     public bool isFocusing = false;
     private float focusDuration = 2f;
+    private Vector3 originalPos;
 
 
 
@@ -60,15 +50,11 @@ public class GameManager : MonoBehaviour
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
 
-        // Ideally, I want to clean this up so void start isn't as crowded
-        mainMenuGroup = mainMenuUI.GetComponent<CanvasGroup>();
-        lostScreenGroup = lostScreenUI.GetComponent<CanvasGroup>();
-        resultScreenGroup = resultScreenUI.GetComponent<CanvasGroup>();
         // we can probably just start the game with these already disabled in the editor
         // I'm keeping this here for testing purposes
-        hideMenu();
-        hideLost();
-        hideResult();
+        uiControl.hideMenu();
+        uiControl.hideLost();
+        uiControl.hideResult();
         currentState = gameState.LOAD;
     }
 
@@ -91,6 +77,9 @@ public class GameManager : MonoBehaviour
             saveGame();
         }
 
+        if (Input.GetKeyDown(KeyCode.K))
+            playerHit();
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             currentState = gameState.LOSE;
@@ -98,7 +87,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            currentState = gameState.CLEARED;
+            setCleared();
         }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -127,7 +116,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
             currentState = gameState.PAUSE;
-            showMenu();
+            uiControl.showMenu();
         }
     }
 
@@ -140,21 +129,18 @@ public class GameManager : MonoBehaviour
             case gameState.LOAD:
                 loadSequence();
                 break;
-                
             case gameState.RUN:
                 runSequence();
                 break;
             case gameState.PAUSE:
                 pauseSequence();
                 break;
-                /*
             case gameState.LOSE:
                 loseSequence();
                 break;
             case gameState.CLEARED:
                 clearedSequence();
                 break;
-            */
             case gameState.NEXT:
                 nextSequence();
                 break;
@@ -220,14 +206,16 @@ public class GameManager : MonoBehaviour
     {
         RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
+        RunStatistics.Instance.currentStage = 1;
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
-        float difficulty = setStageDifficulty(RunStatistics.Instance.stagesCleared);
+        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
         //Debug.Log("Diff: " + difficulty);
         mapGenerator.normalGeneration(difficulty);
         mapGenerator.generateNewGrid();
         gameSpawner.spawnWorld();
-
+        RunStatistics.Instance.currentLife = 3;
+        originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
         unpauseGame();
     }
@@ -238,7 +226,7 @@ public class GameManager : MonoBehaviour
      * */
     private void pauseSequence()
     {
-        showMenu();
+        uiControl.showMenu();
     }
 
     /*
@@ -252,8 +240,7 @@ public class GameManager : MonoBehaviour
 
         if(bubbleCounter == 0)
         {
-            RunStatistics.Instance.stagesCleared++;
-            currentState = gameState.CLEARED;
+            setCleared();
         }
     }
 
@@ -262,8 +249,8 @@ public class GameManager : MonoBehaviour
      * */
     private void loseSequence()
     {
-        updateLost();
-        showLost();
+        uiControl.updateLost();
+        uiControl.showLost();
     }
 
     /*
@@ -272,20 +259,21 @@ public class GameManager : MonoBehaviour
      * */
     private void clearedSequence()
     {
-        updateResult();
-        showResult();
+        uiControl.updateResult();
+        uiControl.showResult();
     }
 
     // nextSequence method, used to create a new stage for player
     private void nextSequence()
     {
-        hideResult();
+        uiControl.hideResult();
         clearEnemy(); // Not necessary if everything runs well.
-        float difficulty = setStageDifficulty(RunStatistics.Instance.stagesCleared);
+        RunStatistics.Instance.currentStage++;
+        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
         //Debug.Log("Diff: " + difficulty);
 
          //TODO: spawn boss bubble every 3 level for alpha playtest
-        if (RunStatistics.Instance.stagesCleared % 3 == 0)
+        if (RunStatistics.Instance.currentStage % 3 == 0)
         {
             mapGenerator.bossGeneration(difficulty);
             mapGenerator.generateNewGrid();           
@@ -299,8 +287,12 @@ public class GameManager : MonoBehaviour
             gameSpawner.spawnWorld();
         }
 
+        uiControl.updateStage();
+        originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
     }
+
+
     private float setStageDifficulty(int stage)
     {
         float difficulty;
@@ -368,61 +360,12 @@ public class GameManager : MonoBehaviour
 
     #endregion;
 
-    #region UI Control
     // Method used to restart the run from the beginning
     public void restartLevel()
     {
-        hideLost();
+        uiControl.hideLost();
         clearEnemy();
         currentState = gameState.LOAD;
-    }
-
-    // Method Used to show the menu screen
-    private void showMenu()
-    {
-        mainMenuGroup.alpha = 1f;
-        mainMenuGroup.blocksRaycasts = true;
-        mainMenuGroup.interactable = true;
-    }
-
-    // Method used to hide the menu screen
-    private void hideMenu()
-    {
-        mainMenuGroup.alpha = 0f;
-        mainMenuGroup.blocksRaycasts = false;
-        mainMenuGroup.interactable = false;
-    }
-
-    // Method used to show the lose screen
-    private void showLost()
-    {
-        lostScreenGroup.alpha = 1f;
-        lostScreenGroup.blocksRaycasts = true;
-        lostScreenGroup.interactable = true;
-    }
-
-    // Method used to hide the Lose screen
-    private void hideLost()
-    {
-        lostScreenGroup.alpha = 0f;
-        lostScreenGroup.blocksRaycasts = false;
-        lostScreenGroup.interactable = false;
-    }
-
-    // Method used to show the result screen
-    private void showResult()
-    {
-        resultScreenGroup.alpha = 1f;
-        resultScreenGroup.blocksRaycasts = true;
-        resultScreenGroup.interactable = true;
-    }
-
-    // Method used to hide the result screen
-    private void hideResult()
-    {
-        resultScreenGroup.alpha = 0f;
-        resultScreenGroup.blocksRaycasts = false;
-        resultScreenGroup.interactable = false;
     }
 
     // Method for button to change game state from Run to Pause
@@ -435,7 +378,7 @@ public class GameManager : MonoBehaviour
     // Method for button to change game state from Pause to Run
     public void setRun()
     {
-        hideMenu();
+        uiControl.hideMenu();
         unpauseGame();
         currentState = gameState.RUN;
     }
@@ -449,7 +392,15 @@ public class GameManager : MonoBehaviour
     // Method for Playerbehavior to change game state to Lose
     public void setLose()
     {
+        pauseGame();
         currentState = gameState.LOSE;
+    }
+
+    public void setCleared()
+    {
+        pauseGame();
+        RunStatistics.Instance.stagesCleared++;
+        currentState = gameState.CLEARED;
     }
 
     // Method for button to change game state to NEXT
@@ -458,40 +409,9 @@ public class GameManager : MonoBehaviour
         currentState = gameState.NEXT;
     }
 
-    // Method used to update the result screen. 
-    private void updateResult()
+    public void playerHit()
     {
-        GameObject statisticBG = resultScreenUI.transform.Find("Statistic Background").gameObject;
-        GameObject scoreText = statisticBG.transform.Find("ScoreText").gameObject;
-        GameObject stageText = statisticBG.transform.Find("StageText").gameObject;
-        GameObject timeText = statisticBG.transform.Find("TimeText").gameObject;
-        GameObject clearText = statisticBG.transform.Find("ClearText").gameObject;
-        GameObject chainText = statisticBG.transform.Find("ChainText").gameObject;
-
-        scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
-        stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
-        timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
-        clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
-        chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
+        RunStatistics.Instance.currentLife--;
+        mPlayer.transform.position = originalPos;
     }
-
-    // Method used to update the lost screen.
-    private void updateLost()
-    {
-        GameObject statisticBG = lostScreenUI.transform.Find("Statistic Background").gameObject;
-        GameObject scoreText = statisticBG.transform.Find("ScoreText").gameObject;
-        GameObject stageText = statisticBG.transform.Find("StageText").gameObject;
-        GameObject timeText = statisticBG.transform.Find("TimeText").gameObject;
-        GameObject clearText = statisticBG.transform.Find("ClearText").gameObject;
-        GameObject chainText = statisticBG.transform.Find("ChainText").gameObject;
-
-        scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
-        stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
-        timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
-        clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
-        chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
-    }
-    #endregion
-
-
 }

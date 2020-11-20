@@ -16,12 +16,11 @@ public class PlayerBehavior : MonoBehaviour
 
     private bool isDashButtonDown;
     private float DashAmount = 5f;
-    private float dashCoolDown = 1f;
+    public float dashCoolDown = 1f;
     private float dashAfterSec = 0;
-    private float captureCoolDown = 1f;
+    public float captureCoolDown = 1f;
     private float captureAfterSec = 0;
-    private bool isCapturing = false;
-
+    public bool isCapturing = false;
     private GameObject capturedBubble;
 
     public enum CaptureState
@@ -220,7 +219,15 @@ public class PlayerBehavior : MonoBehaviour
                 case "RedBubble":
                 case "BlueBubble":
                 case "YellowBubble":
-                    GameManager.theManager.setLose();
+                    if(RunStatistics.Instance.currentLife == 0)
+                    {
+                        GameManager.theManager.setLose();
+                    }
+                    else
+                    {
+                        GameManager.theManager.playerHit();
+                    }
+                    
                     //reset game, lose game
                     //player hits bullet and dies
                     //stats
