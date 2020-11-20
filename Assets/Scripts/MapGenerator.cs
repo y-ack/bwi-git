@@ -31,13 +31,12 @@ public class MapGenerator : MonoBehaviour
 
     public int height;
 
-    [Range(0,5)]
-    public int smoothCycles;
+    private int smoothCycles;
 
     private TilemapRenderer wallTopTile;
 
-    //only works when set to 4 for some reasons.
-    private int thickness = 4;
+    //works when set to 4 because there are usually 3 neighbors max.
+    private int minNeighbors = 4;
 
     //determine where to spawn the player/enemy
     public float tileSize = 0.32f;
@@ -57,25 +56,7 @@ public class MapGenerator : MonoBehaviour
     {
         generationDone = false;
     }
-    private void Start()
-    {      
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {    
-
-            //generateNewGrid();           
-        }
-    }
-    public void demoGeneration()
-    {
-        xscale = 7;
-        yscale = 7;
-        threshold = 0.35f;
-        smoothCycles = 4;
-    }
 
     //All possible generation result
     public void allGeneration()
@@ -106,6 +87,7 @@ public class MapGenerator : MonoBehaviour
         threshold = 0.3f;
         smoothCycles = Random.Range(1,4);
     }
+
     public void optimizedGeneration()
     {
         xscale = Random.Range(3f,4f);
@@ -113,12 +95,84 @@ public class MapGenerator : MonoBehaviour
         threshold = Random.Range(0.37f,0.42f);
         smoothCycles = Random.Range(1,3);
     }
+
+    public void demoGeneration()
+    {
+        xscale = 5;
+        yscale = 5;
+        threshold = 0.4f;
+    }
+
+    
+    public void bossGeneration(float difficulty)
+    {
+        float minXScale = 15f;
+        float minYScale = 13f; //bias toward xscale
+        float maxThreshold = 0.3f;
+        float maxXScale = 20f;
+        float maxYScale = 18f; 
+        float minThreshold = 0.2f;
+        float scaleStep = 0.05f;
+        float thresholdStep = 0.001f;
+        float maxDifficulty = 100f;
+        if (difficulty < 0)
+        {
+            Debug.Log("Difficulty is negative.");           
+        }
+        else if (difficulty > maxDifficulty)
+        {
+            xscale = maxXScale;
+            yscale = maxYScale;
+            threshold = minThreshold;
+        }
+        else
+        {
+            xscale = minXScale + difficulty * scaleStep;
+            yscale = minYScale + difficulty * scaleStep; 
+            threshold = maxThreshold - difficulty * thresholdStep;
+        }
+        Debug.Log("Boss level: " + difficulty);
+    }
+    public void normalGeneration(float difficulty)
+    {
+        float minXScale = 5f;
+        float minYScale = 3f; //bias toward xscale
+        float maxThreshold = 0.4f;
+        float maxXScale = 15f;
+        float maxYScale = 13f; 
+        float minThreshold = 0.3f;
+        float scaleStep = 0.05f;
+        float thresholdStep = 0.001f;
+        float maxDifficulty = 100f;
+        if (difficulty < 0)
+        {
+            Debug.Log("Difficulty is negative");           
+        }
+        else if (difficulty > maxDifficulty)
+        {
+            xscale = maxXScale;
+            yscale = maxYScale;
+            threshold = minThreshold;
+        }
+        else
+        {
+            xscale = minXScale + difficulty * scaleStep;
+            yscale = minYScale + difficulty * scaleStep;  
+            threshold = maxThreshold - difficulty * thresholdStep; 
+        }
+        Debug.Log("Normal level: " + difficulty);
+    }
+
     public void generateNewGrid()
     {
-        cavePoints = new int[width, height];
-        seed = Random.Range(0,200f);
-        demoGeneration(); 
         ClearAllTiles();
+        cavePoints = new int[width, height];
+        smoothCycles = 2;
+        seed = Random.Range(0,200f);
+        normalGeneration(1); 
+
+        Debug.Log("xscale: "+ xscale+", yscale: "+ yscale+ ", threshold: " + threshold);
+
         for (int y = 0; y < height; ++y)
         {
             for (int x = 0; x < width; ++x)
@@ -153,10 +207,10 @@ public class MapGenerator : MonoBehaviour
                     {
                         int neighboringWalls = GetNeighbors(x, y);
 
-                        if (neighboringWalls > thickness)
+                        if (neighboringWalls > minNeighbors)
                         {
                             cavePoints[x, y] = 1;
-                        }else if (neighboringWalls < thickness)
+                        }else if (neighboringWalls < minNeighbors)
                         {
                             cavePoints[x, y] = 0;
                         }
