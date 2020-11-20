@@ -131,6 +131,7 @@ public class BubbleSpirit : MonoBehaviour
     {
         /* for combining/launching captured bubbles to set new parent */
         transform.parent = newParentUnit.transform;
+        transform.position = transform.parent.position;
 
         // should this be in start or moved to a separate UpdateParent()?
         parentGrid = transform.parent.GetComponent<GridLayout>();

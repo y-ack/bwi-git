@@ -136,21 +136,25 @@ public class GameManager : MonoBehaviour
     {
         switch (currentState)
         {
+            
             case gameState.LOAD:
                 loadSequence();
                 break;
+                
             case gameState.RUN:
                 runSequence();
                 break;
             case gameState.PAUSE:
                 pauseSequence();
                 break;
+                /*
             case gameState.LOSE:
                 loseSequence();
                 break;
             case gameState.CLEARED:
                 clearedSequence();
                 break;
+            */
             case gameState.NEXT:
                 nextSequence();
                 break;
