@@ -222,8 +222,12 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.stagesCleared = 0;
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
+        float difficulty = setStageDifficulty(RunStatistics.Instance.stagesCleared);
+        //Debug.Log("Diff: " + difficulty);
+        mapGenerator.normalGeneration(difficulty);
         mapGenerator.generateNewGrid();
         gameSpawner.spawnWorld();
+
         currentState = gameState.RUN;
         unpauseGame();
     }
@@ -277,9 +281,34 @@ public class GameManager : MonoBehaviour
     {
         hideResult();
         clearEnemy(); // Not necessary if everything runs well.
-        mapGenerator.generateNewGrid();
-        gameSpawner.spawnWorld();
+        float difficulty = setStageDifficulty(RunStatistics.Instance.stagesCleared);
+        //Debug.Log("Diff: " + difficulty);
+
+         //TODO: spawn boss bubble every 3 level for alpha playtest
+        if (RunStatistics.Instance.stagesCleared % 3 == 0)
+        {
+            mapGenerator.bossGeneration(difficulty);
+            mapGenerator.generateNewGrid();           
+            gameSpawner.spawnWorld();
+        }
+        //TODO: spawn normal bubbles
+        else
+        {
+            mapGenerator.normalGeneration(difficulty);
+            mapGenerator.generateNewGrid();           
+            gameSpawner.spawnWorld();
+        }
+
         currentState = gameState.RUN;
+    }
+    private float setStageDifficulty(int stage)
+    {
+        float difficulty;
+        //curve is the stage scale, set to 2 for quick demo of the curve,
+        //change to something like 12 for full game.
+        int curve = 2;
+        difficulty = 100/(1 + Mathf.Exp(-((stage/curve) - (1.7f * Mathf.Exp(1)))));
+        return difficulty;
     }
 
     private void clearEnemy()

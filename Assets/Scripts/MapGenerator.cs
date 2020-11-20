@@ -169,7 +169,7 @@ public class MapGenerator : MonoBehaviour
         cavePoints = new int[width, height];
         smoothCycles = 2;
         seed = Random.Range(0,200f);
-        normalGeneration(1); 
+        //normalGeneration(1); 
 
         Debug.Log("xscale: "+ xscale+", yscale: "+ yscale+ ", threshold: " + threshold);
 
