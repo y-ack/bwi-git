@@ -131,13 +131,11 @@ public class BubbleSpirit : MonoBehaviour
     {
         /* for combining/launching captured bubbles to set new parent */
         transform.parent = newParentUnit.transform;
-        transform.position = transform.parent.position;
-
         // should this be in start or moved to a separate UpdateParent()?
         parentGrid = transform.parent.GetComponent<GridLayout>();
         parentUnit = newParentUnit;
         SnapToGrid();
-        newParentUnit.addBubble(this);
+        parentUnit.addBubble(this);
     }
     
     //        (-1, 1) ( 0, 1)
@@ -145,8 +143,9 @@ public class BubbleSpirit : MonoBehaviour
     //        (-1,-1) ( 0,-1)
     public void setParent(BubbleUnit newParentUnit, Vector2Int cell)
     {
-        gridPosition = cell;
         AdoptedBy(newParentUnit);
+        gridPosition = cell;
+        UpdateGridPosition();
     }
 
     void OnTriggerEnter2D(Collider2D other)
