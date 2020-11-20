@@ -7,11 +7,6 @@ using UnityEngine;
 [Serializable]
 public struct BubbleColor
 {
-    //    public static const Texture2D redTexture;
-    //public static const Texture2D blueTexture;
-    //public static const Texture2D yellowTexture;
-    //public static const Texture2D garbageTexture;
-
     public const int red = 0,
         blue = 1,
         yellow = 2,
@@ -26,34 +21,22 @@ public struct BubbleColor
             && (a == b
                 || (a == rainbow || b == rainbow));
     }
-
-    /*    public static Texture2D getTexture(int color)
-    {
-        switch (color)
-        {
-            case BubbleColor.red:
-                return redTexture;
-            case BubbleColor.blue:
-                return blueTexture;
-            case BubbleColor.yellow:
-                return yellowTexture;
-            default:
-                return garbageTexture; //well, no, but to help it compile
-        }
-        }*/
 }
-
 
 public class BubbleSpirit : MonoBehaviour
 {
-    public enum State {    
+    public Texture2D redTexture = null;
+    public Texture2D blueTexture = null;
+    public Texture2D yellowTexture = null;
+    //public Texture2D[] colorTextures = new Texture2D[]{redTexture, blueTexture, yellowTexture};
+
+    public enum State {
         NORMAL = 0,
         CAPTURED,
         LAUNCHED,
         CLEARED
     }
     
-    public GameObject testingInitialParent; //don't use this for production spawning
     public BubbleUnit parentUnit;
     private GridLayout parentGrid; // this one is ok to keep, since it's just cached
     public Vector2Int gridPosition;
@@ -67,7 +50,7 @@ public class BubbleSpirit : MonoBehaviour
     bool cleared;
 
     void Start()
-    {    }
+    { state = State.NORMAL; }
 
     void Update()
     {
@@ -100,7 +83,13 @@ public class BubbleSpirit : MonoBehaviour
         }
         color = bubbleColor;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
-        //sr.material.mainTexture = BubbleColor.getTexture(bubbleColor);
+        // this sucks and unity is not making it easy on me
+        if (color == BubbleColor.red)
+            sr.material.mainTexture = redTexture;
+        if (color == BubbleColor.blue)
+            sr.material.mainTexture = blueTexture;
+        if (color == BubbleColor.yellow)
+            sr.material.mainTexture = yellowTexture;
     }
 
     public bool tryLaunch(Vector3 direction)
