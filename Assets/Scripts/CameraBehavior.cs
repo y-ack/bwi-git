@@ -6,19 +6,20 @@ using UnityEngine;
 public class CameraBehavior : MonoBehaviour
 {
     public Transform follow;
-	private float smoothSpeed = 3f;
+    private float smoothSpeed = 3f;
 	public Vector3 p;
+    public float scale = 0.0f;
     public Vector3 minValues, maxValue;
 
     private void Start() 
     {
-    minValues.x = 15f;
-    minValues.y = 9.25f;
-    minValues.z = -10;
-
-    maxValue.x = 45f;
-    maxValue.y = 30f;
-    maxValue.z = -10;  
+        minValues.x = 15f - scale;
+        minValues.y = 10f - scale;
+        minValues.z = -10;
+        
+        maxValue.x = 45f + scale;
+        maxValue.y = 29f + scale;
+        maxValue.z = -10;  
     }
 	void Update()
     {        
