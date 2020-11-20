@@ -18,12 +18,10 @@ public class PlayerBulletBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GameManager.theManager.canMove == true)
-        {
-            transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
-        }
+        transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
+        
         lifeSpan -= Time.deltaTime;
-        if(lifeSpan <= 0)
+        if(lifeSpan <= 0 && Vector3.Distance(ParentPlayer.transform.position,transform.position) > 4f)
         {
             destroySelf();
         }

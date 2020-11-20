@@ -49,65 +49,34 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.theManager.canMove == true)
-        {
-            movementVector = new Vector2(Input.GetAxis("Horizontal"),
+        movementVector = new Vector2(Input.GetAxis("Horizontal"),
                                      Input.GetAxis("Vertical"));
 
-            rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.deltaTime);
-            rbody.angularVelocity = 0f;
-            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.deltaTime);
+        rbody.angularVelocity = 0f;
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-            moveDir = new Vector3(Input.GetAxis("Horizontal"),
-                Input.GetAxis("Vertical")).normalized;
+        moveDir = new Vector3(Input.GetAxis("Horizontal"),
+            Input.GetAxis("Vertical")).normalized;
 
-
-            if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
-            {
-                isDashButtonDown = true;
-            }
-            countdownCooldown();
-            if (Input.GetMouseButtonDown(0))
-            {
-                GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
-                                       GameObject);
-                e.transform.localPosition = transform.localPosition;
-                e.transform.localRotation = transform.localRotation;
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                if(captureAfterSec <= 0)
-                {
-                    GameObject e = Instantiate(Resources.Load("Prefabs/net") as
-                                       GameObject);
-                    e.transform.localPosition = transform.localPosition;
-                    e.transform.localRotation = transform.localRotation;
-                    captureAfterSec = captureCoolDown;
-                }
-                if(isCapturing == true)
-                {
-                    spawnCapturedBubble();
-                    isCapturing = false;
-                }
-            }
-        }   
+        if(GameManager.theManager.canMove == true)
+        {
+            buttonControl();
+        }
     }
 
     void FixedUpdate()
     {
-        if(GameManager.theManager.canMove == true)
+        //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+        rbody.velocity = moveDir * moveSpeed;
+        Vector2 lookDir = mousePos - rbody.position;
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        rbody.rotation = angle;
+
+        if (isDashButtonDown == true)
         {
-            //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
-            rbody.velocity = moveDir * moveSpeed;
-            Vector2 lookDir = mousePos - rbody.position;
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-            rbody.rotation = angle;
+            Dashing();
 
-            if (isDashButtonDown == true)
-            {
-                Dashing();
-
-            }
         }
     }
 
@@ -126,6 +95,38 @@ public class PlayerBehavior : MonoBehaviour
             case 2:
                 currentState = CaptureState.YELLOW;
                 break;
+        }
+    }
+
+    private void buttonControl()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
+        {
+            isDashButtonDown = true;
+        }
+        countdownCooldown();
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = transform.localRotation;
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (captureAfterSec <= 0)
+            {
+                GameObject e = Instantiate(Resources.Load("Prefabs/net") as
+                                   GameObject);
+                e.transform.localPosition = transform.localPosition;
+                e.transform.localRotation = transform.localRotation;
+                captureAfterSec = captureCoolDown;
+            }
+            if (isCapturing == true)
+            {
+                spawnCapturedBubble();
+                isCapturing = false;
+            }
         }
     }
 

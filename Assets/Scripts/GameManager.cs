@@ -83,8 +83,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            currentState = gameState.PAUSE;
-            showMenu();
+            setPause();
         }
 
         if (Input.GetKeyDown(KeyCode.L))
@@ -222,7 +221,7 @@ public class GameManager : MonoBehaviour
         mapGenerator.generateNewGrid();
         gameSpawner.spawnWorld();
         currentState = gameState.RUN;
-        canMove = true;
+        unpauseGame();
     }
 
     /*
@@ -232,7 +231,6 @@ public class GameManager : MonoBehaviour
     private void pauseSequence()
     {
         showMenu();
-        canMove = false;
     }
 
     /*
@@ -243,7 +241,6 @@ public class GameManager : MonoBehaviour
     {
         buttonControl();
         RunStatistics.Instance.time += Time.smoothDeltaTime;
-        canMove = true;
 
         if(bubbleCounter == 0)
         {
@@ -259,7 +256,6 @@ public class GameManager : MonoBehaviour
     {
         updateLost();
         showLost();
-        canMove = false;
     }
 
     /*
@@ -270,7 +266,6 @@ public class GameManager : MonoBehaviour
     {
         updateResult();
         showResult();
-        canMove = false;
     }
 
     // nextSequence method, used to create a new stage for player
@@ -304,6 +299,18 @@ public class GameManager : MonoBehaviour
         }
 
         bubbleCounter = 0;
+    }
+
+    private void pauseGame()
+    {
+        Time.timeScale = 0;
+        canMove = false;
+    }
+
+    private void unpauseGame()
+    {
+        Time.timeScale = 1;
+        canMove = true;
     }
 
     #region Data Control
@@ -385,10 +392,18 @@ public class GameManager : MonoBehaviour
         resultScreenGroup.interactable = false;
     }
 
+    // Method for button to change game state from Run to Pause
+    public void setPause()
+    {
+        currentState = gameState.PAUSE;
+        pauseGame();
+    }
+
     // Method for button to change game state from Pause to Run
     public void setRun()
     {
         hideMenu();
+        unpauseGame();
         currentState = gameState.RUN;
     }
 
@@ -407,7 +422,6 @@ public class GameManager : MonoBehaviour
     // Method for button to change game state to NEXT
     public void setNextSequence()
     {
-        hideResult();
         currentState = gameState.NEXT;
     }
 

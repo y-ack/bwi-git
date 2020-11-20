@@ -85,9 +85,7 @@ public class TempEnemyBehavior : MonoBehaviour
     void Update()
     {
         // If The Gamemanager canMove = false, no in game object should be able to move.
-        if (GameManager.theManager.canMove == true){
-            stateControl();
-        }
+        stateControl();
     }
 
     private void stateControl()

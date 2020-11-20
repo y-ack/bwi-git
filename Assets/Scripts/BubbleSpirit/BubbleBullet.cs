@@ -12,8 +12,6 @@ public class BubbleBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GameManager.theManager.canMove == true)
-        {
             if (accelerationTimeout > 0f)
             {
                 velocity += new Vector3(acceleration, acceleration, 0f) *
@@ -25,7 +23,6 @@ public class BubbleBullet : MonoBehaviour
                                                           angularVelocity *
                                                           Time.smoothDeltaTime);
             transform.position += velocity * Time.smoothDeltaTime;
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
