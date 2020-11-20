@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,10 +7,10 @@ using UnityEngine;
 [Serializable]
 public struct BubbleColor
 {
-    public static const Texture2D redTexture;
-    public static const Texture2D blueTexture;
-    public static const Texture2D yellowTexture;
-    public static const Texture2D garbageTexture;
+    //    public static const Texture2D redTexture;
+    //public static const Texture2D blueTexture;
+    //public static const Texture2D yellowTexture;
+    //public static const Texture2D garbageTexture;
 
     public const int red = 0,
         blue = 1,
@@ -26,7 +27,7 @@ public struct BubbleColor
                 || (a == rainbow || b == rainbow));
     }
 
-    public static Texture2D getTexture(int color)
+    /*    public static Texture2D getTexture(int color)
     {
         switch (color)
         {
@@ -39,7 +40,7 @@ public struct BubbleColor
             default:
                 return garbageTexture; //well, no, but to help it compile
         }
-    }
+        }*/
 }
 
 
@@ -99,7 +100,7 @@ public class BubbleSpirit : MonoBehaviour
         }
         color = bubbleColor;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
-        sr.material.mainTexture = BubbleColor.getTexture(bubbleColor);
+        //sr.material.mainTexture = BubbleColor.getTexture(bubbleColor);
     }
 
     public bool tryLaunch(Vector3 direction)
