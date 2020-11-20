@@ -28,6 +28,7 @@ public class BubbleSpirit : MonoBehaviour
     public Texture2D redTexture = null;
     public Texture2D blueTexture = null;
     public Texture2D yellowTexture = null;
+    private Sprite mySprite;
     //public Texture2D[] colorTextures = new Texture2D[]{redTexture, blueTexture, yellowTexture};
 
     public enum State {
@@ -43,6 +44,7 @@ public class BubbleSpirit : MonoBehaviour
 
     public State state; // could probably be private
     public int color;
+    private float bubbleSpeed = 15f;
     private Vector3 launchDirection;
     public bool searched; // for parent path searching ... not impl yet.
 
@@ -54,8 +56,14 @@ public class BubbleSpirit : MonoBehaviour
 
     void Update()
     {
+        switch(state)
+        {
+            case State.LAUNCHED:
+            transform.localPosition += transform.up * (bubbleSpeed * Time.smoothDeltaTime);
+            break;
+        }
         // searched = false; // ... this is bad.
-
+        /*
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
         switch (state)
@@ -71,7 +79,12 @@ public class BubbleSpirit : MonoBehaviour
                 transform.position += launchDirection * Time.deltaTime;
                 break;
         }
+        */
         // TODO[RETRO] add gleam animation for bubble spirits
+    }
+    public void SetLaunched()
+    {
+        state = State.LAUNCHED;
     }
 
     // get colors from BubbleColor.red/blue/etc
@@ -84,12 +97,21 @@ public class BubbleSpirit : MonoBehaviour
         color = bubbleColor;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         // this sucks and unity is not making it easy on me
+        // swapping out materials didnt work as easily as hoped
+        // maybe need to be looked into more
+        // alternate method: create sprite and swap out sprites completely
         if (color == BubbleColor.red)
-            sr.material.mainTexture = redTexture;
+            mySprite = Sprite.Create(redTexture, new Rect(0.0f, 0.0f, redTexture.width, redTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            sr.sprite = mySprite;
+            //sr.material.mainTexture = redTexture;
         if (color == BubbleColor.blue)
-            sr.material.mainTexture = blueTexture;
+            mySprite = Sprite.Create(blueTexture, new Rect(0.0f, 0.0f, blueTexture.width, blueTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            sr.sprite = mySprite;
+            //sr.material.mainTexture = blueTexture;
         if (color == BubbleColor.yellow)
-            sr.material.mainTexture = yellowTexture;
+            mySprite = Sprite.Create(yellowTexture, new Rect(0.0f, 0.0f, yellowTexture.width, yellowTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            sr.sprite = mySprite;
+            //sr.material.mainTexture = yellowTexture;
     }
 
     public bool tryLaunch(Vector3 direction)
@@ -147,7 +169,20 @@ public class BubbleSpirit : MonoBehaviour
         gridPosition = cell;
         UpdateGridPosition();
     }
-
+    
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.tag == "Bullet")
+        {
+            Destroy(this.gameObject);
+        }
+        if(other.gameObject.tag == "Capture")
+        {
+            state = State.CAPTURED;
+        }
+    }
+    
+    /*
     void OnTriggerEnter2D(Collider2D other)
     {
         switch (state)
@@ -173,7 +208,8 @@ public class BubbleSpirit : MonoBehaviour
                 break;
         }
     }
-
+    */
+    
     private void tryMatch()
     {
         BubbleNeighbors bn = parentUnit.getNeighbors(this);

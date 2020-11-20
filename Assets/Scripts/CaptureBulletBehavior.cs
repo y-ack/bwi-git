@@ -7,7 +7,7 @@ public class CaptureBulletBehavior : MonoBehaviour
     static private PlayerBehavior ParentPlayer = null;
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
 
-    private const float bulletSpeed = 10f;
+    private const float bulletSpeed = 15f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,22 +19,16 @@ public class CaptureBulletBehavior : MonoBehaviour
         transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision){        
+    private void OnTriggerEnter2D(Collider2D collision){        
         if (collision.gameObject.name != "Player") 
         {        
             GameObject m = collision.gameObject;
             destroySelf();
-            if(collision.gameObject.tag == "RedBubble")
+            
+            if(collision.gameObject.tag == "BubbleSpirit")
             {
-                ParentPlayer.SetCapture(0, m);
-            }
-            if(collision.gameObject.tag == "BlueBubble")
-            {
-                ParentPlayer.SetCapture(1, m);
-            }
-            if(collision.gameObject.tag == "YellowBubble")
-            {
-                ParentPlayer.SetCapture(2, m);
+                BubbleSpirit capturedBubble = collision.GetComponent<BubbleSpirit>();
+                ParentPlayer.SetCapture(capturedBubble);
             }
         }
     }

@@ -60,33 +60,19 @@ public class Spawner : MonoBehaviour
                 Vector2 p = player.transform.position;    
                     if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
                     {
-                        /*
-                        GameObject temp = bubbleArray[Random.Range(0, bubbleArray.Length)];
-                        GameObject e = Instantiate(temp, Vector3.zero, temp.transform.rotation) as GameObject;
-                        TempEnemyBehavior bubble = e.GetComponent<TempEnemyBehavior>();                
-                        bubble.transform.localPosition = new Vector3(ranX, ranY, 0);
-                        bubble.SetState(0);
-                        */
                         GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
                         BubbleUnit bubbleParent = e.GetComponent<BubbleUnit>();
                         bubbleParent.transform.localPosition = new Vector3(ranX, ranY, 0);
-                        //BubbleUnit bubbleParent = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as BubbleUnit;
-                        //bubbleParent.transform.position = new Vector3(ranX, ranY, 0);
-                        
+
                         GameObject f = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
                         BubbleSpirit bubbleChild = f.GetComponent<BubbleSpirit>();
                         bubbleChild.setParent(bubbleParent, new Vector2Int(0, 0));
-                        /*
+                        bubbleChild.SetColor(Random.Range(0, 3));
+                        
                         GameObject d = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
                         BubbleSpirit bubbleChild2 = d.GetComponent<BubbleSpirit>();
                         bubbleChild2.setParent(bubbleParent, new Vector2Int(1, 0));
-                        */
-                        //BubbleSpirit bubbleChild = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as BubbleSpirit;
-                        //bubbleChild.setParent(bubbleParent, new Vector2Int(ranX, ranY));
-
-                        //bubbleParent.addBubble(temp);
-
-                        
+                        bubbleChild2.SetColor(Random.Range(0, 3));
 
                         GameManager.theManager.addBubble();
                         //GameManager.theManager.currentBubbleSpirit[cap-1] = e;

@@ -21,13 +21,13 @@ public class PlayerBehavior : MonoBehaviour
     public float captureCoolDown = 1f;
     private float captureAfterSec = 0;
     public bool isCapturing = false;
-    private GameObject capturedBubble;
+    private BubbleSpirit capturedBubble;
 
     public enum CaptureState
     {
-        RED,
-        BLUE,
-        YELLOW
+        CAPTURING,
+        IDLE
+        
     };
     private CaptureState currentState;
 
@@ -62,6 +62,16 @@ public class PlayerBehavior : MonoBehaviour
         {
             buttonControl();
         }
+        switch(currentState)
+        {
+            case CaptureState.CAPTURING:
+                //capturedBubble.transform.position = new Vector3(transform.position.x + 3, transform.position.y + 3, 0);
+                //capturedBubble.transform.position.y = transform.position.y;
+                capturedBubble.transform.rotation = transform.rotation;
+                break;
+            case CaptureState.IDLE:
+                break;
+        }
     }
 
     void FixedUpdate()
@@ -79,22 +89,11 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
 
-    public void SetCapture(int inputState, GameObject inputBubble)
+    public void SetCapture(BubbleSpirit bubbleSpirit)
     {
         isCapturing = true;
-        capturedBubble = inputBubble;
-        switch(inputState)
-        {
-            case 0:
-                currentState = CaptureState.RED;
-                break;
-            case 1:
-                currentState = CaptureState.BLUE;
-                break;
-            case 2:
-                currentState = CaptureState.YELLOW;
-                break;
-        }
+        capturedBubble = bubbleSpirit;
+        currentState = CaptureState.CAPTURING;
     }
 
     private void buttonControl()
@@ -113,7 +112,7 @@ public class PlayerBehavior : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1))
         {
-            if (captureAfterSec <= 0)
+            if (captureAfterSec <= 0 && isCapturing == false)
             {
                 GameObject e = Instantiate(Resources.Load("Prefabs/net") as
                                    GameObject);
@@ -123,70 +122,10 @@ public class PlayerBehavior : MonoBehaviour
             }
             if (isCapturing == true)
             {
-                spawnCapturedBubble();
+                capturedBubble.SetLaunched();
+                currentState = CaptureState.IDLE;
                 isCapturing = false;
             }
-        }
-    }
-
-
-    public void spawnCapturedBubble()
-    {
-        GameObject f;
-        TempEnemyBehavior temp;
-        switch(currentState)
-        {
-            case CaptureState.RED:
-                temp = capturedBubble.GetComponent<TempEnemyBehavior>();
-                temp.transform.localPosition = transform.localPosition;
-                temp.transform.localRotation = transform.localRotation;
-                temp.SetState(1);
-                break;
-            /*
-                f = Instantiate(Resources.Load("Prefabs/EnemyBubbles/RedBubble") as
-                    GameObject);
-                //f = Instantiate(Resources.Load("Prefabs/CapturedBubbles/CapturedRedBubble") as
-                //    GameObject);
-                temp = f.GetComponent<TempEnemyBehavior>();
-                temp.transform.localPosition = transform.localPosition;
-                temp.transform.localRotation = transform.localRotation;        
-                temp.SetState(1);
-                break;
-            */
-            case CaptureState.BLUE:
-                temp = capturedBubble.GetComponent<TempEnemyBehavior>();
-                temp.transform.localPosition = transform.localPosition;
-                temp.transform.localRotation = transform.localRotation;
-                temp.SetState(1);
-                break;
-            /*
-                f = Instantiate(Resources.Load("Prefabs/EnemyBubbles/BlueBubble") as
-                    GameObject);
-                //f = Instantiate(Resources.Load("Prefabs/CapturedBubbles/CapturedBlueBubble") as
-                //    GameObject);
-                temp = f.GetComponent<TempEnemyBehavior>();
-                temp.transform.localPosition = transform.localPosition;
-                temp.transform.localRotation = transform.localRotation;
-                temp.SetState(1);
-                break;
-                */
-            case CaptureState.YELLOW:
-                temp = capturedBubble.GetComponent<TempEnemyBehavior>();
-                temp.transform.localPosition = transform.localPosition;
-                temp.transform.localRotation = transform.localRotation;
-                temp.SetState(1);
-                break;
-            /*
-                f = Instantiate(Resources.Load("Prefabs/EnemyBubbles/YellowBubble") as
-                    GameObject);
-                //f = Instantiate(Resources.Load("Prefabs/CapturedBubbles/CapturedYellowBubble") as
-                //    GameObject);
-                temp = f.GetComponent<TempEnemyBehavior>();
-                temp.transform.localPosition = transform.localPosition;
-                temp.transform.localRotation = transform.localRotation;
-                temp.SetState(1);
-                break;
-                */
         }
     }
 

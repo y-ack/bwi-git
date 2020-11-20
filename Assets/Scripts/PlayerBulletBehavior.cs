@@ -7,7 +7,8 @@ public class PlayerBulletBehavior : MonoBehaviour
     static private PlayerBehavior ParentPlayer = null;
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
 
-    private const float bulletSpeed = 10f;
+    private const float bulletSpeed = 15f;
+    Vector2 bulletDirection;
     private float lifeSpan;
     // Start is called before the first frame update
     void Start()
@@ -28,10 +29,9 @@ public class PlayerBulletBehavior : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision){        
-        if (collision.gameObject.tag == "RedBubble" || collision.gameObject.tag == "BlueBubble" || collision.gameObject.tag == "YellowBubble") 
+        if (collision.gameObject.tag == "BubbleSpirit") 
         {        
-            Debug.Log("Logging");
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
             GameManager.theManager.bubbleCleared();
             destroySelf();
         }
