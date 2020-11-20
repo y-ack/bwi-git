@@ -74,9 +74,9 @@ public class Spawner : MonoBehaviour
                         bubbleChild2.setParent(bubbleParent, new Vector2Int(1, 0));
                         bubbleChild2.SetColor(Random.Range(0, 3));
 
-                        GameManager.theManager.addBubble();
+                        GameManager.theManager.addBubble();GameManager.theManager.addBubble();
                         //GameManager.theManager.currentBubbleSpirit[cap-1] = e;
-                        cap--;      
+                        cap-=2; //you're spawning two right now
                         
                     }
             }

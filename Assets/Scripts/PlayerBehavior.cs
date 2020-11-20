@@ -25,11 +25,10 @@ public class PlayerBehavior : MonoBehaviour
 
     public enum CaptureState
     {
-        CAPTURING,
-        IDLE
-        
+        IDLE,
+        CAPTURING
     };
-    private CaptureState currentState;
+    private CaptureState captureState;
 
     // Start is called before the first frame update
     private void Awake() {
@@ -62,25 +61,26 @@ public class PlayerBehavior : MonoBehaviour
         {
             buttonControl();
         }
-        switch(currentState)
+        switch(captureState)
         {
             case CaptureState.CAPTURING:
                 //capturedBubble.transform.position = new Vector3(transform.position.x + 3, transform.position.y + 3, 0);
                 //capturedBubble.transform.position.y = transform.position.y;
-                capturedBubble.transform.rotation = transform.rotation;
+                //capturedBubble.transform.rotation = transform.rotation;
                 break;
             case CaptureState.IDLE:
                 break;
         }
     }
 
+    float angle;
     void FixedUpdate()
     {
         //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
         rbody.velocity = moveDir * moveSpeed;
         Vector2 lookDir = mousePos - rbody.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        rbody.rotation = angle;
+        angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        //rbody.rotation = angle;
 
         if (isDashButtonDown == true)
         {
@@ -93,7 +93,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         isCapturing = true;
         capturedBubble = bubbleSpirit;
-        currentState = CaptureState.CAPTURING;
+        captureState = CaptureState.CAPTURING;
     }
 
     private void buttonControl()
@@ -108,7 +108,7 @@ public class PlayerBehavior : MonoBehaviour
             GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
-            e.transform.localRotation = transform.localRotation;
+            e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -117,14 +117,15 @@ public class PlayerBehavior : MonoBehaviour
                 GameObject e = Instantiate(Resources.Load("Prefabs/net") as
                                    GameObject);
                 e.transform.localPosition = transform.localPosition;
-                e.transform.localRotation = transform.localRotation;
+                e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
                 captureAfterSec = captureCoolDown;
             }
             if (isCapturing == true)
             {
-                capturedBubble.SetLaunched();
-                currentState = CaptureState.IDLE;
-                isCapturing = false;
+                isCapturing = capturedBubble.tryLaunch(
+                    ((Vector3)mousePos - transform.position).normalized);
+                if (isCapturing)
+                    captureState = CaptureState.IDLE;
             }
         }
     }

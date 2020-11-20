@@ -56,35 +56,50 @@ public class BubbleSpirit : MonoBehaviour
 
     void Update()
     {
-        switch(state)
-        {
-            case State.LAUNCHED:
-            transform.localPosition += transform.up * (bubbleSpeed * Time.smoothDeltaTime);
-            break;
-        }
         // searched = false; // ... this is bad.
-        /*
+        
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
+        float speed = 5.0f * Time.smoothDeltaTime;
         switch (state)
         {
             case State.CAPTURED:
-                float speed = 5.0f;
                 transform.position = Vector3.MoveTowards(transform.position,
                                                          transform.parent.position,
                                                          speed);
                 break;
             case State.LAUNCHED:
                 // travel in launchDirection until a collision happens
-                transform.position += launchDirection * Time.deltaTime;
+                transform.position += launchDirection * speed * 2f; //speed bugged
                 break;
-        }
-        */
+        }        
         // TODO[RETRO] add gleam animation for bubble spirits
     }
-    public void SetLaunched()
+        void OnTriggerEnter2D(Collider2D other)
     {
-        state = State.LAUNCHED;
+        switch (state)
+        {
+            case State.NORMAL:
+                if(other.gameObject.tag == "Bullet")
+                {
+                    Clear();
+                }
+                if(other.gameObject.tag == "Capture")
+                {
+                    Captured();
+                }
+                break;
+
+            case State.LAUNCHED:
+                // hits a bubble: stick, get parent, add, and call trymatch
+                if (other.gameObject.tag == "BubbleSpirit")
+                {
+                    AdoptedBy(other.GetComponent<BubbleSpirit>().parentUnit);
+                    state = State.NORMAL;
+                    tryMatch();
+                }
+                break;
+        }
     }
 
     // get colors from BubbleColor.red/blue/etc
@@ -102,16 +117,20 @@ public class BubbleSpirit : MonoBehaviour
         // alternate method: create sprite and swap out sprites completely
         if (color == BubbleColor.red)
             mySprite = Sprite.Create(redTexture, new Rect(0.0f, 0.0f, redTexture.width, redTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-            sr.sprite = mySprite;
             //sr.material.mainTexture = redTexture;
         if (color == BubbleColor.blue)
             mySprite = Sprite.Create(blueTexture, new Rect(0.0f, 0.0f, blueTexture.width, blueTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-            sr.sprite = mySprite;
             //sr.material.mainTexture = blueTexture;
         if (color == BubbleColor.yellow)
             mySprite = Sprite.Create(yellowTexture, new Rect(0.0f, 0.0f, yellowTexture.width, yellowTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-            sr.sprite = mySprite;
-            //sr.material.mainTexture = yellowTexture;
+           //sr.material.mainTexture = yellowTexture;
+
+        sr.sprite = mySprite;
+    }
+
+    public void setLaunch()
+    {
+        state = State.LAUNCHED;
     }
 
     public bool tryLaunch(Vector3 direction)
@@ -120,16 +139,17 @@ public class BubbleSpirit : MonoBehaviour
         {
             Debug.LogWarning("tried to launch a spirit that isn't captured");
             return false;
-        } else if
+        } /*else if
                 (Vector3.Distance(transform.position,
                                   transform.parent.position)
-                 < 2.0f) {
+                 < 8.0f) {
             Debug.Log("not close enough to player for launch! wait on anim");
             return false;
-        } else
+            }*/ else
         {
             state = State.LAUNCHED;
             launchDirection = direction;
+            Unparent();
             return true;
         }
     }
@@ -159,7 +179,14 @@ public class BubbleSpirit : MonoBehaviour
         SnapToGrid();
         parentUnit.addBubble(this);
     }
-    
+
+    private void Unparent() 
+    {
+        if (parentUnit) parentUnit.removeBubble(this);
+        transform.parent = null;
+        parentUnit = null;
+    }
+
     //        (-1, 1) ( 0, 1)
     //    (-1, 0) ( 0, 0) ( 1, 0)
     //        (-1,-1) ( 0,-1)
@@ -169,50 +196,18 @@ public class BubbleSpirit : MonoBehaviour
         gridPosition = cell;
         UpdateGridPosition();
     }
-    
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.tag == "Bullet")
-        {
-            Destroy(this.gameObject);
-        }
-        if(other.gameObject.tag == "Capture")
-        {
-            state = State.CAPTURED;
-        }
-    }
-    
-    /*
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        switch (state)
-        {
-            case State.NORMAL:
-                if (other.gameObject.tag == "Bullet")
-                {
-                    Clear();
-                }
-                // handled by parent unit?: also maybe TODO[ALPHA]?
-                //b) wall: cannot pass through, bounces off
-                //c) flora: bounces off rocks, passes through bushes
-                //d) others: ignored
-                break;
 
-            case State.LAUNCHED:
-                // hits a bubble: stick, get parent, add, and call trymatch
-                if (other.gameObject.tag == "BubbleSpirit")
-                {
-                    AdoptedBy(other.GetComponent<BubbleSpirit>().parentUnit);
-                    tryMatch();
-                }
-                break;
-        }
+    private void Captured()
+    {
+        state = State.CAPTURED;
+        Unparent();
+        transform.parent = GameObject.FindWithTag("Player").transform;
     }
-    */
-    
+        
     private void tryMatch()
     {
         BubbleNeighbors bn = parentUnit.getNeighbors(this);
+        Debug.Log(string.Join(",",bn.List()));
         bool hasMatch = false;
         //it's possible that the one we collided with is not the match,
         //but there is a match after snapping, so check all
@@ -224,23 +219,24 @@ public class BubbleSpirit : MonoBehaviour
                 hasMatch = true;
                 break;
             }
-            if (hasMatch)
-            {
-                ChainClear();
-            }
         }
+        if (hasMatch)
+        {
+            ChainClear();
+        }
+        
     }
 
     public void Clear()
     {
         cleared = true;
+        state = State.CLEARED;
         RunStatistics.Instance.bubblesCleared++;
-        parentUnit.removeBubble(this);
-        transform.parent = null;
-        parentUnit = null;
+        GameManager.theManager.bubbleCleared();
+        Unparent();
         //trigger animation, yield and delete
-        
-        Destroy(this, 1.0f);
+
+        Destroy(gameObject, 0.2f);
     }
 
     public void ChainClear()
@@ -250,17 +246,19 @@ public class BubbleSpirit : MonoBehaviour
             return;
         }
         
-        Clear();
         RunStatistics.Instance.bubblesChainCleared[color]++;
+        cleared = true;
 
         List<BubbleSpirit> bn_list = parentUnit.getNeighbors(this).List();
         foreach (BubbleSpirit bn in bn_list)
         {
             if (bn != null &&
-                BubbleColor.match(this.color, bn.color))
+                BubbleColor.match(color, bn.color))
             {
+                Debug.Log(bn.color);
                 bn.ChainClear();
             }
         }
+        Clear();
     }
 }

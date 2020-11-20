@@ -34,20 +34,25 @@ public class BubbleUnit : MonoBehaviour
     private float moveTimer;
     private Dictionary<Vector2Int, BubbleSpirit> grid = new
         Dictionary<Vector2Int, BubbleSpirit>();
-    
 
+
+    public BubbleSpirit cellOrNull(Vector2Int cellPos)
+    {
+        return grid.ContainsKey(cellPos) ? grid[cellPos] : null;
+    }
 
     public BubbleNeighbors getNeighbors(BubbleSpirit b)
     {
         var pos = b.gridPosition;
         var parity = pos.y & 1;
-        return new BubbleNeighbors() {
-            NW = grid[pos + oddr_directions[parity][2]],
-                NE = grid[pos + oddr_directions[parity][1]],
-                E = grid[pos + oddr_directions[parity][0]],
-                SE = grid[pos + oddr_directions[parity][5]],
-                SW = grid[pos + oddr_directions[parity][4]],
-                W = grid[pos + oddr_directions[parity][3]]
+        return new BubbleNeighbors()
+        {
+            NW = cellOrNull(pos + oddr_directions[parity][2]),
+                NE = cellOrNull(pos + oddr_directions[parity][1]),
+                E = cellOrNull(pos + oddr_directions[parity][0]),
+                SE = cellOrNull(pos + oddr_directions[parity][5]),
+                SW = cellOrNull(pos + oddr_directions[parity][4]),
+                W = cellOrNull(pos + oddr_directions[parity][3])
                 };
     }
 

@@ -354,8 +354,6 @@ public class GameManager : MonoBehaviour
     public void bubbleCleared()
     {
         bubbleCounter--;
-        RunStatistics.Instance.bubblesCleared++;
-        RunStatistics.Instance.totalScore += 5;
     }
 
     #endregion;
