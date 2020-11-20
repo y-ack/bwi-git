@@ -32,7 +32,9 @@ public class BubbleUnit : MonoBehaviour
         }
     };
     private float moveTimer;
-    private Dictionary<Vector2Int, BubbleSpirit> grid;
+    private Dictionary<Vector2Int, BubbleSpirit> grid = new
+        Dictionary<Vector2Int, BubbleSpirit>();
+    
 
 
     public BubbleNeighbors getNeighbors(BubbleSpirit b)
