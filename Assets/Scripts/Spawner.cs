@@ -18,7 +18,7 @@ public class Spawner : MonoBehaviour
     private int bubbleCap;
     //minBubble and maxBubble can be set based on the level difficulty.
     private int minBubble = 20;
-    private int maxBubble = 100;
+    private int maxBubble = 50;
     private int maxUnitSize;
     public List<int> unitsSize = new List<int>();
 
@@ -152,7 +152,11 @@ public class Spawner : MonoBehaviour
 
     public int getBubbleCap(float difficulty)
     {
-        return minBubble + Mathf.RoundToInt(difficulty * 0.25f);
+        int bubbleCap = minBubble + Mathf.RoundToInt(difficulty * 0.25f);
+        if (bubbleCap >= maxBubble)
+            return maxBubble;
+        else
+            return bubbleCap;
     }
 
     //Placeholder for difficulty, can be set to curve later.

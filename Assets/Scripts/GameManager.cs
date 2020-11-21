@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager theManager = null;
     public PlayerBehavior mPlayer = null;
-    public PlayerHitBox mPlayerHitBox = null;
     public Spawner gameSpawner;
     public MapGenerator mapGenerator;
     public GameUIControl uiControl;
@@ -45,11 +44,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+ 
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
-        PlayerHitBox.setParent(mPlayer);
-        //PlayerBehavior.setChild(mPlayerHitBox);
 
         // we can probably just start the game with these already disabled in the editor
         // I'm keeping this here for testing purposes
@@ -158,9 +155,9 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.bubblesCleared = 0;
         float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
         //Debug.Log("Diff: " + difficulty);
-        mapGenerator.normalGeneration(difficulty);
+        mapGenerator.normalGeneration(999);
         mapGenerator.generateNewGrid();
-        gameSpawner.spawnBubbles(difficulty);
+        gameSpawner.spawnBubbles(999);
         RunStatistics.Instance.currentLife = 3;
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
