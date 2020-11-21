@@ -29,49 +29,7 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
     }
-    public int getBubbleCap(float difficulty)
-    {
-        return minBubble + Mathf.RoundToInt(difficulty * 0.25f);
-    }
-
-    //Placeholder for difficulty, can be set to curve later.
-    public void setMaxUnitSize(float difficulty)
-    {
-        if (difficulty <= 25f)
-        {
-            maxUnitSize = 3;
-        }
-        else if (difficulty <= 50f)
-        {
-            maxUnitSize = 4;
-        }
-        else if (difficulty <= 75f)
-        {
-            maxUnitSize = 5;
-        }
-        else
-        {
-            maxUnitSize = 6;
-        }
-    }
-    public void getTotalUnit( int totalBubble)
-    {
-        int bubbleLeft = totalBubble;      
-        while (bubbleLeft > 0)
-        {
-            if (bubbleLeft <= 0)
-            {
-                break;
-            }
-            int ranUnitSize = Random.Range(1,maxUnitSize + 1);
-            if (ranUnitSize > bubbleLeft)
-            {
-                ranUnitSize = Random.Range(1,bubbleLeft + 1);
-            } 
-            unitsSize.Add(ranUnitSize);
-            bubbleLeft -= ranUnitSize;
-        }
-    }
+    
 
     public void spawnBubbles(float difficulty)
     {
@@ -157,7 +115,7 @@ public class Spawner : MonoBehaviour
                 }
                 else
                 {
-                    //For Bigger unit (like Bosses)
+                    //For spawning bigger units (like Bosses)
                 }
                 GameManager.theManager.addBubble();
             }  
@@ -192,52 +150,49 @@ public class Spawner : MonoBehaviour
         yield return new WaitForSeconds(1f);
     }
 
-    /*
-    public IEnumerator SpawnObj(int TileType, GameObject[] bubbleArray, int cap)
-    {  
-        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(TileType);  
-      
-        if (spawnPool == null)
+    public int getBubbleCap(float difficulty)
+    {
+        return minBubble + Mathf.RoundToInt(difficulty * 0.25f);
+    }
+
+    //Placeholder for difficulty, can be set to curve later.
+    public void setMaxUnitSize(float difficulty)
+    {
+        if (difficulty <= 25f)
         {
-            Debug.Log("Unable to find spawnable tile for enemy!");
-        } 
-
-        while(cap > 0)
-        { 
-            ranX = Random.Range(2,currentLevel.width);
-            ranY = Random.Range(2,currentLevel.height);
-            if (currentLevel.cavePoints[ranX,ranY] == TileType &&
-                currentLevel.cavePoints[ranX + 1,ranY] == TileType &&
-                currentLevel.cavePoints[ranX - 1,ranY] == TileType &&
-                currentLevel.cavePoints[ranX,ranY + 1] == TileType &&
-                currentLevel.cavePoints[ranX,ranY - 1] == TileType)
-            {
-                Vector2 p = player.transform.position;    
-                    if( (Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
-                    {
-                        GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
-                        BubbleUnit bubbleParent = e.GetComponent<BubbleUnit>();
-                        bubbleParent.transform.localPosition = new Vector3(ranX, ranY, 0);
-
-                        GameObject f = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
-                        BubbleSpirit bubbleChild = f.GetComponent<BubbleSpirit>();
-                        bubbleChild.setParent(bubbleParent, new Vector2Int(0, 0));
-                        bubbleChild.SetColor(Random.Range(0, 3));
-                        
-                        GameObject d = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
-                        BubbleSpirit bubbleChild2 = d.GetComponent<BubbleSpirit>();
-                        bubbleChild2.setParent(bubbleParent, new Vector2Int(1, 0));
-                        bubbleChild2.SetColor(Random.Range(0, 3));
-
-                        GameManager.theManager.addBubble();GameManager.theManager.addBubble();
-                        //GameManager.theManager.currentBubbleSpirit[cap-1] = e;
-                        cap-=2; //you're spawning two right now
-                        
-                    }
-            }
+            maxUnitSize = 3;
         }
-    yield return new WaitForSeconds(3f);
-    }*/
+        else if (difficulty <= 50f)
+        {
+            maxUnitSize = 4;
+        }
+        else if (difficulty <= 75f)
+        {
+            maxUnitSize = 5;
+        }
+        else
+        {
+            maxUnitSize = 6;
+        }
+    }
+    public void getTotalUnit( int totalBubble)
+    {
+        int bubbleLeft = totalBubble;      
+        while (bubbleLeft > 0)
+        {
+            if (bubbleLeft <= 0)
+            {
+                break;
+            }
+            int ranUnitSize = Random.Range(1,maxUnitSize + 1);
+            if (ranUnitSize > bubbleLeft)
+            {
+                ranUnitSize = Random.Range(1,bubbleLeft + 1);
+            } 
+            unitsSize.Add(ranUnitSize);
+            bubbleLeft -= ranUnitSize;
+        }
+    }
 
 
 }
