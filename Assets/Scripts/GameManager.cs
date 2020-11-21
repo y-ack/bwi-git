@@ -155,9 +155,9 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.bubblesCleared = 0;
         float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
         //Debug.Log("Diff: " + difficulty);
-        mapGenerator.normalGeneration(999);
+        mapGenerator.normalGeneration(difficulty);
         mapGenerator.generateNewGrid();
-        gameSpawner.spawnBubbles(999);
+        gameSpawner.spawnBubbles(difficulty);
         RunStatistics.Instance.currentLife = 3;
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
