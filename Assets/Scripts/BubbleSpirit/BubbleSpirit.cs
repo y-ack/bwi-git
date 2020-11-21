@@ -186,14 +186,17 @@ public class BubbleSpirit : MonoBehaviour
         transform.parent = null;
         parentUnit = null;
     }
-
     //        (-1, 1) ( 0, 1)
     //    (-1, 0) ( 0, 0) ( 1, 0)
     //        (-1,-1) ( 0,-1)
     public void setParent(BubbleUnit newParentUnit, Vector2Int cell)
     {
-        AdoptedBy(newParentUnit);
         gridPosition = cell;
+        // move to separate updateparent?
+        transform.parent = newParentUnit.transform;
+        parentGrid = transform.parent.GetComponent<GridLayout>();
+        parentUnit = newParentUnit;
+        parentUnit.addBubble(this);
         UpdateGridPosition();
     }
 
