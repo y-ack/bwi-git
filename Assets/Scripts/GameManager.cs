@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour
     public int bubbleCounter = 0;
     public bool canMove;
     public bool isInvincible = true;
-    public bool isFocusing = false;
-    private float focusDuration = 2f;
     private Vector3 originalPos;
 
 
@@ -89,11 +87,6 @@ public class GameManager : MonoBehaviour
         {
             setCleared();
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            currentState = gameState.FOCUS;
-            //canFocus = true;
-        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             if(isInvincible == false)
@@ -144,58 +137,9 @@ public class GameManager : MonoBehaviour
             case gameState.NEXT:
                 nextSequence();
                 break;
-            case gameState.FOCUS:
-                focusSequence();
-                break;
             default:
                 break;
         }
-    }
-
-    private void focusSequence()
-    {
-        if(focusDuration > 0)
-        {
-            focusing();
-        }
-        focusDuration -= Time.deltaTime;
-        if(focusDuration <= 0)
-        {
-            Time.timeScale = 1f;
-            isFocusing = false;
-            setRun();
-            focusDuration = 2f;
-        }
-        /*
-        if(focusAfterSecDuration > 0)
-        {
-            focusing();
-            focusAfterSecDuration -= Time.deltaTime;
-        }
-        if(focusAfterSecDuration <= 0)
-        {
-            focusAfterSecDuration = focusDuration;
-        }
-        */
-        /*
-        if (focusAfterSecDuration > 0)
-        {
-            focusAfterSecDuration -= Time.deltaTime;
-        }
-        */
-        /*
-        if(focusAfterSecDuration <= 0)
-        {
-            focusAfterSecDuration = focusDuration;
-        }
-        */
-    }
-
-    private void focusing()
-    {
-        Time.timeScale = 0.5f;
-        isFocusing = true;
-        //focusAfterSec = focusCoolDown;
     }
 
     /*

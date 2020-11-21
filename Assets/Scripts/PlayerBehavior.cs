@@ -6,20 +6,23 @@ public class PlayerBehavior : MonoBehaviour
 {
     Rigidbody2D rbody;
     private float moveSpeed;
-    Vector2 mousePos;
+    private float normalSpeed = 20f;
+    private float focusSpeed;
 
+    Vector2 mousePos;
     Vector2 movementVector;
+    private Vector3 moveDir;
 
     public Camera cam;
-
-    private Vector3 moveDir;
 
     private bool isDashButtonDown;
     private float DashAmount = 5f;
     public float dashCoolDown = 1f;
     private float dashAfterSec = 0;
+
     public float captureCoolDown = 1f;
     private float captureAfterSec = 0;
+
     public bool isCapturing = false;
     private BubbleSpirit capturedBubble;
 
@@ -29,6 +32,15 @@ public class PlayerBehavior : MonoBehaviour
         CAPTURING
     };
     private CaptureState captureState;
+
+    public enum PlayerState
+    {
+        NORMAL,
+        ROLLING,
+        FOCUS,
+        DEAD
+    };
+    private PlayerState movementState;
 
     // Start is called before the first frame update
     private void Awake() {
@@ -41,7 +53,8 @@ public class PlayerBehavior : MonoBehaviour
 
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
-        moveSpeed = 20f;
+        moveSpeed = normalSpeed;
+        focusSpeed = normalSpeed / 2;
     }
 
     // Update is called once per frame
@@ -71,6 +84,20 @@ public class PlayerBehavior : MonoBehaviour
             case CaptureState.IDLE:
                 break;
         }
+
+        switch(movementState)
+        {
+            case PlayerState.NORMAL:
+                moveSpeed = normalSpeed;
+                break;
+            case PlayerState.ROLLING:
+                break;
+            case PlayerState.FOCUS:
+                moveSpeed = focusSpeed;
+                break;
+            case PlayerState.DEAD:
+                break;
+        }
     }
 
     float angle;
@@ -80,7 +107,7 @@ public class PlayerBehavior : MonoBehaviour
         rbody.velocity = moveDir * moveSpeed;
         Vector2 lookDir = mousePos - rbody.position;
         angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        //rbody.rotation = angle;
+        rbody.rotation = angle;
 
         if (isDashButtonDown == true)
         {
@@ -127,6 +154,14 @@ public class PlayerBehavior : MonoBehaviour
                 if (isCapturing)
                     captureState = CaptureState.IDLE;
             }
+        }
+        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            movementState = PlayerState.FOCUS;
+        }
+        else
+        {
+            movementState = PlayerState.NORMAL;
         }
     }
 
