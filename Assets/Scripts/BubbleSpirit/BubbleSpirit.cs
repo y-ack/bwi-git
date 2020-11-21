@@ -56,23 +56,35 @@ public class BubbleSpirit : MonoBehaviour
     void Start()
     { state = State.NORMAL; }
 
+    [SerializeField] private float orbit_x = 0.9f;
+    [SerializeField] private float orbit_y = 0.4f;
     void Update()
     {
         // searched = false; // ... this is bad.
         
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
-        float speed = 10.0f * Time.smoothDeltaTime;
+        float delta = bubbleSpeed * Time.smoothDeltaTime;
         switch (state)
         {
             case State.CAPTURED:
-                transform.position = Vector3.MoveTowards(transform.position,
-                                                         transform.parent.position,
-                                                         speed);
+                float a = transform.parent.GetComponent<PlayerBehavior>().angle;
+                var lookDir = Vector3.RotateTowards(transform.parent.up, -transform.parent.right,
+                                                    a * Mathf.Deg2Rad, 1.0f);
+                lookDir.y *= orbit_y; lookDir.x *= orbit_x;
+                Debug.Log(transform.localPosition);
+                if (Vector3.Distance(transform.localPosition, Vector3.zero) <= 1.5f)
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
+                                                                  lookDir,
+                                                                  delta);
+                else
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition,
+                                                                  Vector3.zero,
+                                                                  delta);
                 break;
             case State.LAUNCHED:
                 // travel in launchDirection until a collision happens
-                transform.position += launchDirection * speed; //speed bugged
+                transform.position += launchDirection * delta; //delta bugged
                 break;
         }        
         // TODO[RETRO] add gleam animation for bubble spirits

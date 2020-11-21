@@ -92,7 +92,7 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
 
-    float angle;
+    public float angle;
     void FixedUpdate()
     {
         //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
@@ -100,14 +100,6 @@ public class PlayerBehavior : MonoBehaviour
         Vector2 lookDir = mousePos - rbody.position;
         angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         //rbody.rotation = angle;
-
-        /*
-        if (isDashButtonDown == true)
-        {
-            Dashing();
-
-        }
-        */
     }
     private void buttonControl()
     {
