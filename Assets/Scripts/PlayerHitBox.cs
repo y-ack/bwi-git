@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class PlayerHitBox : MonoBehaviour
 {
-    static private PlayerBehavior ParentPlayer = null;
-    static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
+    [SerializeField]private PlayerBehavior ParentPlayer = null;
+    public void setParent(PlayerBehavior g) { ParentPlayer = g; }
 
-    public int sortingOrder = 0;
+    [SerializeField] private Vector2 offset;
     private SpriteRenderer sprite;
+    public int sortingOrder = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
+        transform.parent = ParentPlayer.transform;
+        transform.localPosition = (Vector3)offset;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = ParentPlayer.transform.position;
-        sprite.sortingOrder = sortingOrder;
-        Debug.Log(sprite.sortingOrder);
+        //Debug.Log(sprite.sortingOrder);
     }
+
     public void show()
     {
-        Debug.Log("Showing");
         sortingOrder = 1;
+        sprite.sortingOrder = sortingOrder;
     }
     public void hide()
     {
-        Debug.Log("Hiding");
-        sortingOrder = 0;
+        sortingOrder = -1;
+        sprite.sortingOrder = sortingOrder;        
     }
 }

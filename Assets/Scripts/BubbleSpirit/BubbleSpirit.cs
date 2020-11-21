@@ -62,7 +62,7 @@ public class BubbleSpirit : MonoBehaviour
         
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
-        float speed = 5.0f * Time.smoothDeltaTime;
+        float speed = 10.0f * Time.smoothDeltaTime;
         switch (state)
         {
             case State.CAPTURED:
@@ -72,7 +72,7 @@ public class BubbleSpirit : MonoBehaviour
                 break;
             case State.LAUNCHED:
                 // travel in launchDirection until a collision happens
-                transform.position += launchDirection * speed * 2f; //speed bugged
+                transform.position += launchDirection * speed; //speed bugged
                 break;
         }        
         // TODO[RETRO] add gleam animation for bubble spirits
@@ -82,12 +82,16 @@ public class BubbleSpirit : MonoBehaviour
         switch (state)
         {
             case State.NORMAL:
-                if(other.gameObject.tag == "Bullet")
+                if(other.gameObject.tag == "Bullet"
+                   && !other.GetComponent<PlayerBulletBehavior>().disabled)
                 {
+                    other.GetComponent<PlayerBulletBehavior>().disabled = true;
                     Clear();
                 }
-                if(other.gameObject.tag == "Capture")
+                if(other.gameObject.tag == "Capture"
+                   && !other.GetComponent<CaptureBulletBehavior>().disabled)
                 {
+                    other.GetComponent<CaptureBulletBehavior>().disabled = true;
                     Captured();
                 }
                 break;
@@ -99,7 +103,11 @@ public class BubbleSpirit : MonoBehaviour
                     AdoptedBy(other.GetComponent<BubbleSpirit>().parentUnit);
                     state = State.NORMAL;
                     tryMatch();
+                } else if (other.gameObject.tag == "Wall Top")
+                {
+                    Clear();
                 }
+                //TODO if hits a wall, reparent into new unit instead? discuss
                 break;
         }
     }
@@ -145,13 +153,13 @@ public class BubbleSpirit : MonoBehaviour
         {
             Debug.LogWarning("tried to launch a spirit that isn't captured");
             return false;
-        } /*else if
+        } else if
                 (Vector3.Distance(transform.position,
                                   transform.parent.position)
-                 < 8.0f) {
+                 > 2.0f) {
             Debug.Log("not close enough to player for launch! wait on anim");
             return false;
-            }*/ else
+            } else
         {
             state = State.LAUNCHED;
             launchDirection = direction;
@@ -235,7 +243,7 @@ public class BubbleSpirit : MonoBehaviour
         }
         
     }
-
+    
     public void Clear()
     {
         cleared = true;

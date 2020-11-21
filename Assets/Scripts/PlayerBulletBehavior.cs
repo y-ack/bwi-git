@@ -10,6 +10,8 @@ public class PlayerBulletBehavior : MonoBehaviour
     private const float bulletSpeed = 15f;
     Vector2 bulletDirection;
     private float lifeSpan;
+
+    public bool disabled = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,17 +30,24 @@ public class PlayerBulletBehavior : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision){        
-        if (collision.gameObject.tag == "BubbleSpirit") 
-        {        
-            //Destroy(collision.gameObject);
-            GameManager.theManager.bubbleCleared();
-            destroySelf();
-        }
-        if(collision.gameObject.tag != "Player")
+    private void OnTriggerEnter2D(Collider2D c)
+    {
+        if (disabled) return;
+        
+        switch (c.gameObject.tag)
         {
-            destroySelf();
-        }
+            case "Wall Top":
+                disabled = true;
+                destroySelf();
+                break;
+            case "BubbleSpirit":
+                //disabled by bs collision
+                if (c.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
+                    destroySelf();
+                break;
+            default:
+                return;
+        };
     }
     private void destroySelf()
     {
