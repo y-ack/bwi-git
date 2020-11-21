@@ -119,6 +119,7 @@ public class PlayerBehavior : MonoBehaviour
         countdownCooldown();
         if (Input.GetMouseButton(0) && shootAfterSec <= 0)
         {
+            Debug.Log("huhhh");
             GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
