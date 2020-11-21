@@ -36,9 +36,10 @@ public class TitleBehavior : MonoBehaviour
         CREDITS
     };
 
-    
+
     void Start()
     {
+        FindObjectOfType<AudioManager>().Play("Title_Theme");
         currentState = TitleState.INTRO;
         savedGamesCanvas = savedGamesUI.GetComponent<CanvasGroup>();
         mainMenuCanvas = mainMenuUI.GetComponent<CanvasGroup>();

@@ -24,7 +24,10 @@ public class TitleButton : MonoBehaviour
     {
         checkTime();
         if (isShake == true)
-            shake();
+            {
+                shake();
+            }
+
     }
 
 
@@ -34,11 +37,13 @@ public class TitleButton : MonoBehaviour
 
         if (pName != "" && pName.Length >= 3 && pName.Length <= 6)
         {
-         RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
-         SceneManager.LoadScene("Main");
+            FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
+            RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
+            SceneManager.LoadScene("Main");
         }
         else
         {
+            FindObjectOfType<AudioManager>().Play("Menu_Play_NoName");
             isShake = true;
             shakeTime = Time.timeSinceLevelLoad + 1f;
             shakeMagnitude = 1f;
