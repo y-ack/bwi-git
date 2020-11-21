@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Diff: " + difficulty);
         mapGenerator.normalGeneration(difficulty);
         mapGenerator.generateNewGrid();
-        gameSpawner.spawnWorld();
+        gameSpawner.spawnBubbles(difficulty);
         RunStatistics.Instance.currentLife = 3;
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
@@ -224,14 +224,14 @@ public class GameManager : MonoBehaviour
         {
             mapGenerator.bossGeneration(difficulty);
             mapGenerator.generateNewGrid();           
-            gameSpawner.spawnWorld();
+            //gameSpawner.spawnBubbles();
         }
         //TODO: spawn normal bubbles
         else
         {
             mapGenerator.normalGeneration(difficulty);
             mapGenerator.generateNewGrid();           
-            gameSpawner.spawnWorld();
+            gameSpawner.spawnBubbles(difficulty);
         }
 
         uiControl.updateStage();

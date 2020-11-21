@@ -331,7 +331,6 @@ public class MapGenerator : MonoBehaviour
             {
  
 
-                Debug.Log("floraMin: "+ floraMin + ", obstacleMin: " + obstacleMin);
                 while (floraCount <= floraCap)
                 {           
                     int randX = Random.Range(2,width - 2);
@@ -366,9 +365,11 @@ public class MapGenerator : MonoBehaviour
                     }
                 }
                 */
-                Debug.Log("floraCount: "+ floraCount + ", obstacleCount: " +obstacleCount);
+                
             }
         }
+        //Debug.Log("floraMin: "+ floraMin + ", obstacleMin: " + obstacleMin);
+        Debug.Log("floraCount: " + floraCount + ", obstacleCount: " + obstacleCount);
     }
     public void setFloor(int x, int y)
     {
