@@ -12,6 +12,8 @@ public class PlayerBehavior : MonoBehaviour
     Vector2 mousePos;
     Vector2 movementVector;
     private Vector3 moveDir;
+    private Vector3 slideDir;
+    private float slideSpeed;
 
     public Camera cam;
 
@@ -22,6 +24,9 @@ public class PlayerBehavior : MonoBehaviour
 
     public float captureCoolDown = 1f;
     private float captureAfterSec = 0;
+
+    public float shootCoolDown = 0.4f;
+    public float shootAfterSec = 0;
 
     public bool isCapturing = false;
     private BubbleSpirit capturedBubble;
@@ -50,6 +55,7 @@ public class PlayerBehavior : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        movementState = PlayerState.NORMAL;
 
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
@@ -60,40 +66,22 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movementVector = new Vector2(Input.GetAxis("Horizontal"),
-                                     Input.GetAxis("Vertical"));
-
-        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.deltaTime);
-        rbody.angularVelocity = 0f;
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-
-        moveDir = new Vector3(Input.GetAxis("Horizontal"),
-            Input.GetAxis("Vertical")).normalized;
-
         if(GameManager.theManager.canMove == true)
         {
             buttonControl();
         }
-        switch(captureState)
-        {
-            case CaptureState.CAPTURING:
-                //capturedBubble.transform.position = new Vector3(transform.position.x + 3, transform.position.y + 3, 0);
-                //capturedBubble.transform.position.y = transform.position.y;
-                //capturedBubble.transform.rotation = transform.rotation;
-                break;
-            case CaptureState.IDLE:
-                break;
-        }
-
         switch(movementState)
         {
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
+                playerMovementControls();
                 break;
             case PlayerState.ROLLING:
+                HandleRolling();
                 break;
             case PlayerState.FOCUS:
                 moveSpeed = focusSpeed;
+                playerMovementControls();
                 break;
             case PlayerState.DEAD:
                 break;
@@ -107,35 +95,31 @@ public class PlayerBehavior : MonoBehaviour
         rbody.velocity = moveDir * moveSpeed;
         Vector2 lookDir = mousePos - rbody.position;
         angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        rbody.rotation = angle;
+        //rbody.rotation = angle;
 
+        /*
         if (isDashButtonDown == true)
         {
             Dashing();
 
         }
+        */
     }
-
-    public void SetCapture(BubbleSpirit bubbleSpirit)
-    {
-        isCapturing = true;
-        capturedBubble = bubbleSpirit;
-        captureState = CaptureState.CAPTURING;
-    }
-
     private void buttonControl()
     {
         if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
         {
-            isDashButtonDown = true;
+            movementState = PlayerState.ROLLING;
+            slideSpeed = 150f;
         }
         countdownCooldown();
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0) && shootAfterSec <= 0)
         {
             GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
             e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
+            shootAfterSec = shootCoolDown;
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -159,28 +143,64 @@ public class PlayerBehavior : MonoBehaviour
         {
             movementState = PlayerState.FOCUS;
         }
-        else
+        else if(movementState != PlayerState.ROLLING)
         {
             movementState = PlayerState.NORMAL;
         }
     }
 
+    private void playerMovementControls()
+    {
+        movementVector = new Vector2(Input.GetAxis("Horizontal"),
+                                     Input.GetAxis("Vertical"));
+        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.deltaTime);
+        rbody.angularVelocity = 0f;
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        moveDir = new Vector3(Input.GetAxis("Horizontal"),
+            Input.GetAxis("Vertical")).normalized;
+    }
+
+    private void HandleRolling()
+    {
+        rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.deltaTime);
+        slideSpeed -= slideSpeed * 4f * Time.deltaTime;
+        if(slideSpeed <= 20f)
+        {
+            movementState = PlayerState.NORMAL;
+        }
+    }
+
+    /*
     public void Dashing()
     {
         rbody.MovePosition(transform.position + moveDir * DashAmount);
         isDashButtonDown = false;
         dashAfterSec = dashCoolDown;
     }
+    */
+    public void SetCapture(BubbleSpirit bubbleSpirit)
+    {
+        isCapturing = true;
+        capturedBubble = bubbleSpirit;
+        captureState = CaptureState.CAPTURING;
+    }
 
     public void countdownCooldown()
     {
+        /*
         if (dashAfterSec > 0)
         {
             dashAfterSec -= Time.deltaTime;
         }
+        */
         if (captureAfterSec > 0)
         {
             captureAfterSec -= Time.deltaTime;
+        }
+        if (shootAfterSec > 0)
+        {
+            shootAfterSec -= Time.deltaTime;
         }
     }
 
@@ -191,9 +211,6 @@ public class PlayerBehavior : MonoBehaviour
             switch (collision.gameObject.tag)
             {
                 case "EnemyBullet":
-                case "RedBubble":
-                case "BlueBubble":
-                case "YellowBubble":
                     if(RunStatistics.Instance.currentLife == 0)
                     {
                         GameManager.theManager.setLose();
