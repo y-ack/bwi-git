@@ -10,8 +10,9 @@ public struct BubbleColor
     public const int red = 0,
         blue = 1,
         yellow = 2,
-        rainbow = 3,
-        garbage = 4;
+        purple = 3,
+        rainbow = 4,
+        garbage = 5;
     public const int count = garbage + 1;
     // match function that ignores 'garbage' block color
     // and matches any color against 'rainbow'
@@ -28,6 +29,7 @@ public class BubbleSpirit : MonoBehaviour
     public Texture2D redTexture = null;
     public Texture2D blueTexture = null;
     public Texture2D yellowTexture = null;
+    public Texture2D purpleTexture = null;
     private Sprite mySprite;
     //public Texture2D[] colorTextures = new Texture2D[]{redTexture, blueTexture, yellowTexture};
 
@@ -124,7 +126,11 @@ public class BubbleSpirit : MonoBehaviour
         if (color == BubbleColor.yellow)
             mySprite = Sprite.Create(yellowTexture, new Rect(0.0f, 0.0f, yellowTexture.width, yellowTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
            //sr.material.mainTexture = yellowTexture;
+        if (color == BubbleColor.purple)
+            mySprite = Sprite.Create(purpleTexture, new Rect(0.0f, 0.0f, purpleTexture.width, purpleTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+           //sr.material.mainTexture = purpleTexture;
 
+        
         sr.sprite = mySprite;
     }
 
