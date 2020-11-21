@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    public PlayerHitBox mPlayerHitbox = null;
+
     Rigidbody2D rbody;
     private float moveSpeed;
     private float normalSpeed = 20f;
@@ -74,6 +76,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
+                mPlayerHitbox.hide();
                 playerMovementControls();
                 break;
             case PlayerState.ROLLING:
@@ -81,6 +84,7 @@ public class PlayerBehavior : MonoBehaviour
                 break;
             case PlayerState.FOCUS:
                 moveSpeed = focusSpeed;
+                mPlayerHitbox.show();
                 playerMovementControls();
                 break;
             case PlayerState.DEAD:
