@@ -44,11 +44,11 @@ public class BubbleUnit : MonoBehaviour
 
     public BubbleNeighbors getNeighbors(BubbleSpirit b)
     {
-        Debug.Log("BubbleUnit's grid:");
-        foreach (KeyValuePair<Vector2Int, BubbleSpirit> kvp in grid)
-        {
-            Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value.color));
-        }
+        // Debug.Log("BubbleUnit's grid:");
+        // foreach (KeyValuePair<Vector2Int, BubbleSpirit> kvp in grid)
+        // {
+        //     Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value.color));
+        // }
         var pos = b.gridPosition;
         var parity = pos.y & 1;
         return new BubbleNeighbors()
@@ -70,7 +70,7 @@ public class BubbleUnit : MonoBehaviour
         // add a safeguard just in case. possible that player could
         // release a bubble ON TOP OF existing ones, for example, and then
         // the grid would resolve to the same position...
-        grid[b.gridPosition] =  b;
+        grid.Add(b.gridPosition, b);
     }
 
     /*
