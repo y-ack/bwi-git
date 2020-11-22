@@ -103,7 +103,7 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void buttonControl()
     {
-        if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
+        if (Input.GetKeyDown(KeyCode.Space) && (dashAfterSec <= 0))
         {
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
