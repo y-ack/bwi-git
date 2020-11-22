@@ -49,12 +49,16 @@ public class BubbleSpirit : MonoBehaviour
     private float bubbleSpeed = 15f;
     private Vector3 launchDirection;
     public bool searched; // for parent path searching ... not impl yet.
+    private PlayerBehavior playerTarget = null;
 
     public BubbleBulletPattern pattern; //maybe an array
     bool cleared;
 
     void Start()
-    { state = State.NORMAL; }
+    {
+        state = State.NORMAL;
+        playerTarget = (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
+    }
 
     [SerializeField] private float orbit_x = 0.9f;
     [SerializeField] private float orbit_y = 0.4f;
@@ -88,7 +92,8 @@ public class BubbleSpirit : MonoBehaviour
         }        
         // TODO[RETRO] add gleam animation for bubble spirits
     }
-        void OnTriggerEnter2D(Collider2D other)
+    
+    void OnTriggerEnter2D(Collider2D other)
     {
         switch (state)
         {
@@ -109,7 +114,8 @@ public class BubbleSpirit : MonoBehaviour
 
             case State.LAUNCHED:
                 // hits a bubble: stick, get parent, add, and call trymatch
-                if (other.gameObject.tag == "BubbleSpirit")
+                if (other.gameObject.tag == "BubbleSpirit"
+                    && other.GetComponent<BubbleSpirit>().state == State.NORMAL)
                 {
                     AdoptedBy(other.GetComponent<BubbleSpirit>().parentUnit);
                     state = State.NORMAL;
@@ -148,7 +154,6 @@ public class BubbleSpirit : MonoBehaviour
         if (color == BubbleColor.purple)
             mySprite = Sprite.Create(purpleTexture, new Rect(0.0f, 0.0f, purpleTexture.width, purpleTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
            //sr.material.mainTexture = purpleTexture;
-
         
         sr.sprite = mySprite;
     }
@@ -170,7 +175,7 @@ public class BubbleSpirit : MonoBehaviour
                  > 2.0f) {
             Debug.Log("not close enough to player for launch! wait on anim");
             return false;
-            } else
+        } else
         {
             state = State.LAUNCHED;
             launchDirection = direction;
@@ -229,13 +234,13 @@ public class BubbleSpirit : MonoBehaviour
     {
         state = State.CAPTURED;
         Unparent();
-        transform.parent = GameObject.FindWithTag("Player").transform;
+        transform.parent = playerTarget.transform;
     }
         
     private void tryMatch()
     {
         BubbleNeighbors bn = parentUnit.getNeighbors(this);
-        Debug.Log(string.Join(",",bn.List()));
+        //Debug.Log(string.Join(",",bn.List()));
         bool hasMatch = false;
         //it's possible that the one we collided with is not the match,
         //but there is a match after snapping, so check all
@@ -283,7 +288,7 @@ public class BubbleSpirit : MonoBehaviour
             if (bn != null &&
                 BubbleColor.match(color, bn.color))
             {
-                Debug.Log(bn.color);
+                //Debug.Log(bn.color);
                 bn.ChainClear();
             }
         }

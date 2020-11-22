@@ -35,6 +35,7 @@ public class BubbleUnit : MonoBehaviour
     private float moveTimer;
     private Dictionary<Vector2Int, BubbleSpirit> grid = new
         Dictionary<Vector2Int, BubbleSpirit>();
+    private int bubbleCount;
 
 
     public BubbleSpirit cellOrNull(Vector2Int cellPos)
@@ -67,10 +68,12 @@ public class BubbleUnit : MonoBehaviour
         //there's a curious behavior here: if a bubble believes it
         //belongs somewhere where another already exists, won't it overwrite?
         // i don't know if this is possible in practice, yet, but i want to
+        // (IT IS)
         // add a safeguard just in case. possible that player could
         // release a bubble ON TOP OF existing ones, for example, and then
         // the grid would resolve to the same position...
         grid.Add(b.gridPosition, b);
+        ++bubbleCount;
     }
 
     /*
@@ -90,9 +93,15 @@ public class BubbleUnit : MonoBehaviour
         //just leave disjoint for now ...
         //TODO[ALPHA] do pathExists to check need to cut the unit
         grid.Remove(b.gridPosition);
+        --bubbleCount;
+        //if (--bubbleCount == 0) destroySelf();
     }
 
-    
+    private void destroySelf()
+    {
+        Destroy(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {

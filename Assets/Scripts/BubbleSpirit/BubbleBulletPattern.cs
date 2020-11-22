@@ -19,7 +19,8 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     public float patternCooldown = 2f;
     public float patternAngleDeltaAfter = 0f;
 
-    public float lifetime = 0;
+    private float lifetime = 0.001f;
+    private float patternLifetime = 0;
 
     private PlayerBehavior playerTarget;
     public void Start()
@@ -29,13 +30,18 @@ public abstract class BubbleBulletPattern : MonoBehaviour
         if (!playerTarget) { Debug.Log("Bullet system cannot find player"); }
     }
 
+    const float activationRadius = 10f;
     public void Update()
     {
         if(GameManager.theManager.canMove == true)
         {
-            lifetime -= Time.deltaTime;
-            if (lifetime <= 0)
+            patternLifetime -= Time.deltaTime;
+            var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
+            if ((lifetime <= 0 || playerDist < activationRadius)
+                && patternLifetime <= 0)
             {
+                lifetime -= Time.deltaTime;
+                // while there are more bullets in the cycle and it's time
                 while (step < bulletCount && lifetime <= 0f)
                 {
                     float angle = Vector3.Angle(transform.position, playerTarget.transform.position)
@@ -45,10 +51,11 @@ public abstract class BubbleBulletPattern : MonoBehaviour
                     ++step;
                     lifetime += delayTime;
                 }
+                // no more bullets or delay is 0; prime next pattern use
                 if (lifetime <= 0f)
                 {
                     step = 0;
-                    lifetime = patternCooldown;
+                    patternLifetime = patternCooldown;
                     baseAngle += patternAngleDeltaAfter;
                 } //else {
             }
