@@ -38,7 +38,8 @@ public abstract class BubbleBulletPattern : MonoBehaviour
             {
                 while (step < bulletCount && lifetime <= 0f)
                 {
-                    float angle = baseAngle + angleDelta * step;
+                    float angle = Vector3.Angle(transform.position, playerTarget.transform.position)
+                        + baseAngle + angleDelta * step;
                     FireAt(angle);
 
                     ++step;
@@ -57,18 +58,19 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     {
         velocityParameters = v;
     }
+
     abstract public void FireAt(float angle);
     
-    public void FireTowards(Transform target)
-    {
-        FireAt(Vector3.Angle(transform.position, target.position));
-    }
+    // public void FireTowards(Transform target)
+    // {
+    //     FireAt(Vector3.Angle(transform.position, target.position));
+    // }
     public void Fire()
     {
         FireAt(0.0f);
     }
-    public void FireTowardsPlayer()
-    {
-        FireTowards(playerTarget.transform);
-    }
+    // public void FireTowardsPlayer()
+    // {
+    //     FireTowards(playerTarget.transform);
+    // }
 }

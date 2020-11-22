@@ -14,6 +14,7 @@ public class BubbleBulletPatternLinear : BubbleBulletPattern
                                       Mathf.Sin(angle),
                                       0) * velocityParameters[0];
         bullet.angularVelocity = angularVelocity;
+        //could use vector for acceleration too ...
         bullet.acceleration = acceleration;
         bullet.accelerationTimeout = accelerationTime;
     }

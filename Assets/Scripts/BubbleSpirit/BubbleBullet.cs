@@ -14,7 +14,7 @@ public class BubbleBullet : MonoBehaviour
     {
             if (accelerationTimeout > 0f)
             {
-                velocity += new Vector3(acceleration, acceleration, 0f) *
+                velocity += velocity.normalized * acceleration *
                     Mathf.Min(Time.deltaTime, accelerationTimeout);
                 accelerationTimeout -= Time.deltaTime;
             }
@@ -29,14 +29,18 @@ public class BubbleBullet : MonoBehaviour
     {
         switch (collision.gameObject.tag)
         {
-            case "Player":
-                Debug.Log("Hit PLayer");
+            case "PlayerHitbox":
+                Debug.Log("Hit Player");
                 destroyYoSelf();
                 break;
-            case "Wall":
+                //case "Wall":
             case "Wall Top":
                 Debug.Log("Colliding Wall");
                 destroyYoSelf();
+                break;
+            case "PlayerGraze":
+                RunStatistics.Instance.grazeTime += Time.deltaTime;
+                // TODO[BETA] graze sound
                 break;
             default:
                 break;

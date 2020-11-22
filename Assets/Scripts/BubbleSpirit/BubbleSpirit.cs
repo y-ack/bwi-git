@@ -72,7 +72,6 @@ public class BubbleSpirit : MonoBehaviour
                 var lookDir = Vector3.RotateTowards(transform.parent.up, -transform.parent.right,
                                                     a * Mathf.Deg2Rad, 1.0f);
                 lookDir.y *= orbit_y; lookDir.x *= orbit_x;
-                Debug.Log(transform.localPosition);
                 if (Vector3.Distance(transform.localPosition, Vector3.zero) <= 1.5f)
                     transform.localPosition = Vector3.MoveTowards(transform.localPosition,
                                                                   lookDir,
