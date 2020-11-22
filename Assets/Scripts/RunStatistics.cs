@@ -16,9 +16,6 @@ public class RunStatistics : Singleton<RunStatistics>
 
     public string playerName;
     //don't set this, save manager will calculate at run finish
-    public string savePath = "";
-    public int totalSaveNum; // How many save files are in total. Change when Delete save is implemented.
-    public int saveNum; // This player's statistic saveNumfile. Use to create savePath.
     public int currentLife; // Player start with 3
     public float time;
     public int controlMode; // 0 = Mouse & Keyboard. 1 = Controller

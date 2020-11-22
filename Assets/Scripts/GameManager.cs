@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] currentBubbleProjectile;
     public int bubbleCounter = 0;
     public bool canMove;
+    private bool isHelp;
     public bool isInvincible = true;
     private Vector3 originalPos;
 
@@ -53,6 +54,13 @@ public class GameManager : MonoBehaviour
         uiControl.hideMenu();
         uiControl.hideLost();
         uiControl.hideResult();
+
+        if(RunStatistics.Instance.isNew == true)
+        {
+            isHelp = true;
+            uiControl.showHelp();
+        }
+
         currentState = gameState.LOAD;
     }
 
@@ -96,6 +104,21 @@ public class GameManager : MonoBehaviour
             else
             {
                 isInvincible = false;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if(isHelp == true)
+            {
+                isHelp = false;
+                uiControl.hideHelp();
+                unpauseGame();
+            }
+            else
+            {
+                isHelp = true;
+                uiControl.showHelp();
+                pauseGame();
             }
         }
     }
@@ -153,13 +176,14 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.currentStage = 1;
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
+        RunStatistics.Instance.currentLife = 3;
         float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
         //Debug.Log("Diff: " + difficulty);
         mapGenerator.normalGeneration(difficulty);
         mapGenerator.generateNewGrid();
         gameSpawner.spawnBubbles(difficulty);
-        RunStatistics.Instance.currentLife = 3;
         originalPos = mPlayer.transform.position;
+        uiControl.updateStage();
         currentState = gameState.RUN;
         unpauseGame();
     }
@@ -234,6 +258,7 @@ public class GameManager : MonoBehaviour
         uiControl.updateStage();
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
+        unpauseGame();
     }
 
 
@@ -247,9 +272,11 @@ public class GameManager : MonoBehaviour
         return difficulty;
     }
 
+    // Method used to clear all the bubblet spirits and their projectile for a new game
     private void clearEnemy()
     {
-        currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
+
+        currentBubbleSpirit = GameObject.FindGameObjectsWithTag("BubbleSpirit");
 
         for(int i = 0; i < currentBubbleSpirit.Length; i++)
         {
@@ -259,23 +286,17 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        for(int i = 0; i < currentBubbleProjectile.Length; i++)
-        {
-            if (currentBubbleProjectile[i] != null)
-            {
-                Destroy(currentBubbleProjectile[i]);
-            }
-        }
-
-        bubbleCounter = 0;
+        bubbleCounter = 0; 
     }
 
+    // Method used to pause the game
     private void pauseGame()
     {
         Time.timeScale = 0;
         canMove = false;
     }
-
+    
+    // Method used to unpause the game
     private void unpauseGame()
     {
         Time.timeScale = 1;
@@ -335,6 +356,7 @@ public class GameManager : MonoBehaviour
     public void setLose()
     {
         pauseGame();
+        clearEnemy();
         currentState = gameState.LOSE;
     }
 
@@ -351,6 +373,7 @@ public class GameManager : MonoBehaviour
         currentState = gameState.NEXT;
     }
 
+    // Method for when the player is hit by an enemy bullet. Reduce 1 life and return to stage's original position
     public void playerHit()
     {
         RunStatistics.Instance.currentLife--;

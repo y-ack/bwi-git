@@ -6,30 +6,35 @@ using System.Runtime.Serialization.Formatters.Binary;
 public static class SaveSystem
 {
     
-
+    /*
+     * savePlayer Method
+     * */
     public static void savePlayer()
+    {
+        
+
+        if(loadPlayer() != null)
+        {
+            PlayerData playerData = loadPlayer();
+            toSave(playerData);
+        }
+        else
+        {
+            PlayerData playerData = new PlayerData();
+            toSave(playerData);
+        }
+
+        
+    }
+
+    private static void toSave(PlayerData data)
     {
         BinaryFormatter formatter = new BinaryFormatter();
 
         string playerName = RunStatistics.Instance.playerName;
-        int saveNum;
 
-        if(RunStatistics.Instance.saveNum < 1) // does not exist
-        {
-            RunStatistics.Instance.totalSaveNum++;
-            saveNum = RunStatistics.Instance.totalSaveNum;
-            RunStatistics.Instance.saveNum = saveNum;
-
-        }
-        else // does exist
-        {
-            saveNum = RunStatistics.Instance.saveNum;
-        }
-
-        string savePath = Application.persistentDataPath + "/" + playerName + saveNum + ".score";
+        string savePath = Application.persistentDataPath + "/SaveData.score";
         FileStream stream = new FileStream(savePath, FileMode.Create);
-
-        PlayerData data = new PlayerData();
 
         data.playerName = playerName;
         data.setSessionTime(RunStatistics.Instance.time);
@@ -38,15 +43,14 @@ public static class SaveSystem
         data.setbubbleMatched(RunStatistics.Instance.bubblesChainCleared.Length);
         data.setBossCleared(RunStatistics.Instance.bossCleared);
         data.calculateStageAverage();
-        data.saveNum = saveNum;
 
         formatter.Serialize(stream, data);
         stream.Close();
     }
 
-    public static PlayerData loadPlayer(string savePath)
+    public static PlayerData loadPlayer()
     {
-        string path = savePath;
+        string path = Application.persistentDataPath + "/SaveData.score";
 
         if(File.Exists(path))
         {
@@ -60,7 +64,7 @@ public static class SaveSystem
         }
         else
         {
-            Debug.LogError("Save file not found in " + path);
+            Debug.Log("Save file not found in " + path);
             return null;
         }
     }

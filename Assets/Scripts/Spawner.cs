@@ -36,7 +36,6 @@ public class Spawner : MonoBehaviour
         currentLevel = mGrid.GetComponent<MapGenerator>();
         GameObject[] bubbleColors = { redBubble, yellowbubble, blueBubble };
         bubbleCap = getBubbleCap(difficulty);
-        GameManager.theManager.currentBubbleSpirit = new GameObject[bubbleCap];
 
         if (currentLevel.canSpawn() == true)
         {
@@ -54,8 +53,10 @@ public class Spawner : MonoBehaviour
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
         } 
+
         getTotalUnit(totalBubble);
         Vector2 p = player.transform.position;    
+
         foreach(int unit in unitsSize) 
         { 
             //Trying to get a spawnable location
@@ -75,10 +76,11 @@ public class Spawner : MonoBehaviour
                     }
                 }               
             }   
+
             GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
             BubbleUnit bubbleParent = e.GetComponent<BubbleUnit>();
             bubbleParent.transform.localPosition = new Vector3(ranX, ranY, 0);
-                        
+            
             bubbles = new GameObject[unit];
             bubbleChild = new BubbleSpirit[unit];
             int bx = 0;
@@ -179,6 +181,7 @@ public class Spawner : MonoBehaviour
             maxUnitSize = 6;
         }
     }
+
     public void getTotalUnit( int totalBubble)
     {
         int bubbleLeft = totalBubble;      

@@ -9,6 +9,7 @@ public class GameUIControl : MonoBehaviour
     public Image mainMenuUI;
     public Image lostScreenUI;
     public Image resultScreenUI;
+    public Image helpScreenUI;
     public Image captureUI;
     public Image trapUI;
     public Image rollUI;
@@ -19,6 +20,7 @@ public class GameUIControl : MonoBehaviour
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
+    private CanvasGroup helpScreenGroup;
 
     private float rollCooldown;
     private float trapCooldown;
@@ -30,6 +32,7 @@ public class GameUIControl : MonoBehaviour
         mainMenuGroup = mainMenuUI.GetComponent<CanvasGroup>();
         lostScreenGroup = lostScreenUI.GetComponent<CanvasGroup>();
         resultScreenGroup = resultScreenUI.GetComponent<CanvasGroup>();
+        helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
 
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = 0.2f;
@@ -119,6 +122,16 @@ public class GameUIControl : MonoBehaviour
         resultScreenGroup.alpha = 0f;
         resultScreenGroup.blocksRaycasts = false;
         resultScreenGroup.interactable = false;
+    }
+
+    public void showHelp()
+    {
+        helpScreenGroup.alpha = 1f;
+    }
+
+    public void hideHelp()
+    {
+        helpScreenGroup.alpha = 0f;
     }
 
     // Method used to update the result screen. 

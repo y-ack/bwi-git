@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerData
 {
     public string playerName { get; set; } = "Iris";
-    public float totalPlayTime { get; private set; } = 0;
+    public float totalPlayTime { get; private set; }
     public float averageStageTime { get; private set; } = 0;
     public int stageCleared { get; private set; } = 0;
     public int maxLevel { get; private set; } = 0;
@@ -35,7 +35,7 @@ public class PlayerData
     public void setSessionTime(float input)
     {
         lastSessionTime = input;
-        totalPlayTime += lastSessionTime;
+        totalPlayTime = totalPlayTime + lastSessionTime;
     }
 
     public int getStageCleared()
@@ -127,6 +127,14 @@ public class PlayerData
 
     public void calculateStageAverage()
     {
-        averageStageTime = (totalPlayTime / stageCleared);
+        if(stageCleared != 0)
+        {
+            averageStageTime = (totalPlayTime / stageCleared);
+        }
+        else
+        {
+            averageStageTime = 0;
+        }
+        
     }
 }

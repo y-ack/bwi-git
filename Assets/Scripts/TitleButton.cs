@@ -39,6 +39,7 @@ public class TitleButton : MonoBehaviour
         {
             FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
             RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
+            RunStatistics.Instance.isNew = true;
             SceneManager.LoadScene("Main");
         }
         else
@@ -53,11 +54,25 @@ public class TitleButton : MonoBehaviour
     // Method used to load the player's progress
     public void loadGame()
     {
-        PlayerData playerData = SaveSystem.loadPlayer(savePath);
-        RunStatistics.Instance.playerName = playerData.playerName;
-        RunStatistics.Instance.saveNum = playerData.saveNum;
-        RunStatistics.Instance.savePath = savePath;
-        SceneManager.LoadScene("Main");
+        if(SaveSystem.loadPlayer() != null)
+        {
+            PlayerData playerData = SaveSystem.loadPlayer();
+            RunStatistics.Instance.playerName = playerData.playerName;
+            RunStatistics.Instance.isNew = false;
+            SceneManager.LoadScene("Main");
+        }
+        else
+        {
+            isShake = true;
+            shakeTime = Time.timeSinceLevelLoad + 1f;
+            shakeMagnitude = 1f;
+        }
+        
+    }
+
+    public void viewStatistic()
+    {
+        SceneManager.LoadScene("Statistic");
     }
 
     public void setPath(string iPath)

@@ -32,4 +32,10 @@ public class ButtonControl : MonoBehaviour
         GameManager.theManager.saveGame();
         SceneManager.LoadScene("TitleScreen");
     }
+
+    // Function used to move the player to the title screen from statistic scene
+    public void statisticToMenu()
+    {
+        SceneManager.LoadScene("TitleScreen");
+    }
 }

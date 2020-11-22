@@ -136,11 +136,12 @@ public class TitleBehavior : MonoBehaviour
         try
         {
             saveFile = Directory.GetFiles(@Application.persistentDataPath, "*.score*");
-            RunStatistics.Instance.totalSaveNum = saveFile.Length;
+            //RunStatistics.Instance.totalSaveNum = saveFile.Length; keeping the multiple save code incase we switch back for some reason
         }
         catch (FileNotFoundException e)
         {
             Debug.LogError("No Save Files Found");
+            throw e;  
         }
     }
 
@@ -160,7 +161,7 @@ public class TitleBehavior : MonoBehaviour
             for (int i = 0; i < saveFile.Length; i++)
             {
                 // Create a PlayerData based on the path in safeFile array at i
-                PlayerData sData = SaveSystem.loadPlayer(saveFile[i].ToString());
+                PlayerData sData = SaveSystem.loadPlayer();
 
                 // instantiate new SaveData object
                 GameObject e = Instantiate(Resources.Load("Prefabs/dataButton") as
