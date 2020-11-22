@@ -171,18 +171,33 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.currentStage = 1;
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
-        RunStatistics.Instance.currentLife = 3;
-        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
+        RunStatistics.Instance.currentLife = 3;      
         //Debug.Log("Diff: " + difficulty);
-        mapGenerator.normalGeneration(difficulty);
-        mapGenerator.generateNewGrid();
-        gameSpawner.spawnBubbles(difficulty);
+        generateStage();
         originalPos = mPlayer.transform.position;
         uiControl.updateStage();
         currentState = gameState.RUN;
         unpauseGame();
     }
-
+    //set
+    private void generateStage()
+    {
+        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
+        //spawn boss bubble every 3 level for alpha playtest
+        if (RunStatistics.Instance.currentStage % 3 == 0)
+        {
+            mapGenerator.bossGeneration(difficulty);
+            mapGenerator.generateNewGrid();           
+            gameSpawner.spawnBoss(difficulty);
+        }
+        // spawn normal bubbles
+        else
+        {
+            mapGenerator.normalGeneration(difficulty);
+            mapGenerator.generateNewGrid();           
+            gameSpawner.spawnNormal(difficulty);
+        }
+    }
     /*
      * pauseSequence method, run when ESC is pressed. All objects cannot move.
      * Used to show the main menu of the game
@@ -232,24 +247,7 @@ public class GameManager : MonoBehaviour
         uiControl.hideResult();
         clearEnemy(); // Not necessary if everything runs well.
         RunStatistics.Instance.currentStage++;
-        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
-        //Debug.Log("Diff: " + difficulty);
-
-         //TODO: spawn boss bubble every 3 level for alpha playtest
-        if (RunStatistics.Instance.currentStage % 3 == 0)
-        {
-            mapGenerator.bossGeneration(difficulty);
-            mapGenerator.generateNewGrid();           
-            //gameSpawner.spawnBubbles();
-        }
-        //TODO: spawn normal bubbles
-        else
-        {
-            mapGenerator.normalGeneration(difficulty);
-            mapGenerator.generateNewGrid();           
-            gameSpawner.spawnBubbles(difficulty);
-        }
-
+        generateStage();
         uiControl.updateStage();
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;

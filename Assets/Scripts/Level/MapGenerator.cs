@@ -56,9 +56,7 @@ public class MapGenerator : MonoBehaviour
     {
         generationDone = false;
     }
-
-
-    //All possible generation result
+    /*//All possible generation result
     public void allGeneration()
     {   
         xscale = Random.Range(0,10f);
@@ -101,7 +99,7 @@ public class MapGenerator : MonoBehaviour
         xscale = 5;
         yscale = 5;
         threshold = 0.4f;
-    }
+    }*/
 
     
     public void bossGeneration(float difficulty)
@@ -133,6 +131,7 @@ public class MapGenerator : MonoBehaviour
         }
         Debug.Log("Boss level: " + difficulty);
     }
+    
     public void normalGeneration(float difficulty)
     {
         float minXScale = 5f;

@@ -10,6 +10,8 @@ public class CameraBehavior : MonoBehaviour
 	public Vector3 p;
     public float scale = 0.0f;
     public Vector3 minValues, maxValue;
+    public Vector3 targetPosition;
+
 
     private void Start() 
     {
@@ -20,9 +22,15 @@ public class CameraBehavior : MonoBehaviour
         maxValue.x = 45f + scale;
         maxValue.y = 29f + scale;
         maxValue.z = -10;  
+
     }
 	void Update()
     {        
+        FollowPlayer();
+    }
+    
+    public void FollowPlayer()
+    {
         Vector3 targetPosition = follow.position;
         //Verify if the targetPosition is out of bound or not
         //Limit it to the min and max values
