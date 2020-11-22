@@ -31,17 +31,19 @@ public class Spawner : MonoBehaviour
     List<List<MapGenerator.Coord>> spawnPool;
     private void Start()
     {
+
+
+    }
+    
+
+    public void spawnNormal(float difficulty)
+    {
         currentLevel = mGrid.GetComponent<MapGenerator>();
         spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);  
         if (spawnPool == null)
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
         } 
-    }
-    
-
-    public void spawnNormal(float difficulty)
-    {
         normalCap = getNormalCap(difficulty);
         if (currentLevel.canSpawn() == true)
         {
@@ -125,8 +127,12 @@ public class Spawner : MonoBehaviour
 
     public void spawnBoss(float difficulty)
     {
-        //TODO: Instantiate this array length based on the difficulty.
-
+        currentLevel = mGrid.GetComponent<MapGenerator>();
+        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);  
+        if (spawnPool == null)
+        {
+            Debug.Log("Unable to find spawnable tile for enemy!");
+        } 
         bossCap = getBossCap(difficulty);
         if (currentLevel.canSpawn() == true)
         {

@@ -12,8 +12,7 @@ public class PlayerHitBox : MonoBehaviour
     public int sortingOrder = 0;
 
     void Start()
-    {
-        sprite = GetComponent<SpriteRenderer>();
+    {      
         transform.parent = ParentPlayer.transform;
         transform.localPosition = (Vector3)offset;
     }
@@ -25,11 +24,13 @@ public class PlayerHitBox : MonoBehaviour
 
     public void show()
     {
+        sprite = GetComponent<SpriteRenderer>();
         sortingOrder = 1;
         sprite.sortingOrder = sortingOrder;
     }
     public void hide()
     {
+        sprite = GetComponent<SpriteRenderer>();
         sortingOrder = -1;
         sprite.sortingOrder = sortingOrder;        
     }
