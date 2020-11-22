@@ -35,7 +35,7 @@ public class GameUIControl : MonoBehaviour
         helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
 
         rollCooldown = thePlayer.dashCoolDown;
-        trapCooldown = 0.2f;
+        trapCooldown = thePlayer.shootCoolDown;
         captureCooldown = thePlayer.captureCoolDown;
     }
 
@@ -68,11 +68,11 @@ public class GameUIControl : MonoBehaviour
 
     private void buttonControl()
     {
-        if (Input.GetMouseButtonDown(0) && trapUI.fillAmount == 1)
+        if (Input.GetMouseButton(0) && trapUI.fillAmount == 1)
             trapUI.fillAmount = 0;
         if (Input.GetMouseButtonDown(1) && captureUI.fillAmount == 1)
             captureUI.fillAmount = 0;
-        if (Input.GetKeyDown(KeyCode.F) && rollUI.fillAmount == 1)
+        if (Input.GetKeyDown(KeyCode.Space) && rollUI.fillAmount == 1)
             rollUI.fillAmount = 0;
     }
 

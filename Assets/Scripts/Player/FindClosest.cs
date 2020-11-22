@@ -28,7 +28,11 @@ public class FindClosest : MonoBehaviour
                 closestEnemy = currentEnemy;
             }
         }
-        closestEnemyPosition = new Vector3(closestEnemy.transform.position.x, closestEnemy.transform.position.y, 0);
+
+        if(closestEnemy != null)
+        {
+            closestEnemyPosition = new Vector3(closestEnemy.transform.position.x, closestEnemy.transform.position.y, 0);
+        }
         //Debug.DrawLine(this.transform.position, closestEnemy.transform.position);
     }
 }

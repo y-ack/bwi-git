@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] currentBubbleProjectile;
     public int unitCounter = 0;
     public int bubbleCounter = 0;
+    private float waitTime;
     public bool canMove;
     private bool isHelp;
     public bool isInvincible = true;
@@ -30,11 +31,11 @@ public class GameManager : MonoBehaviour
     {
         LOAD,
         PAUSE,
+        HELP,
         RUN,
         LOSE,
         CLEARED,
-        NEXT,
-        FOCUS
+        NEXT
     }
 
     void Start()
@@ -51,16 +52,9 @@ public class GameManager : MonoBehaviour
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
 
-        // we can probably just start the game with these already disabled in the editor
-        // I'm keeping this here for testing purposes
         uiControl.hideMenu();
         uiControl.hideLost();
         uiControl.hideResult();
-
-        if(RunStatistics.Instance.isNew == true)
-        {
-            toShowHelp();
-        }
 
         currentState = gameState.LOAD;
     }
@@ -72,51 +66,73 @@ public class GameManager : MonoBehaviour
     }
 
     // Method used to contain all the game's control.
-    private void buttonControl()
+    private void runButtonControl()
+    {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                setPause();
+            }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                saveGame();
+            }
+
+            if (Input.GetKeyDown(KeyCode.K))
+                playerHit();
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                currentState = gameState.LOSE;
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                setCleared();
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                if (isInvincible == false)
+                {
+                    isInvincible = true;
+                }
+                else
+                {
+                    isInvincible = false;
+                }
+            }
+        
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            setHelp();
+        }
+    }
+
+    private void pauseButtonControl()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            setPause();
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            saveGame();
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-            playerHit();
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            currentState = gameState.LOSE;
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            setCleared();
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            if(isInvincible == false)
-            {
-                isInvincible = true;
-            }
-            else
-            {
-                isInvincible = false;
-            }
+            setRun();
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            if(isHelp == true)
-            {
-                toHideHelp();
-            }
-            else
-            {
-                toShowHelp();
-            }
+            uiControl.hideMenu();
+            setHelp();
+        }
+    }
+
+    private void helpButtonControl()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            toHideHelp();
+            setPause();
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            toHideHelp();
+            setRun();
         }
     }
 
@@ -148,6 +164,9 @@ public class GameManager : MonoBehaviour
             case gameState.PAUSE:
                 pauseSequence();
                 break;
+            case gameState.HELP:
+                helpSequence();
+                break;
             case gameState.LOSE:
                 loseSequence();
                 break;
@@ -178,9 +197,19 @@ public class GameManager : MonoBehaviour
         generateStage();
         originalPos = mPlayer.transform.position;
         uiControl.updateStage();
-        currentState = gameState.RUN;
-        unpauseGame();
+        waitTime = 1f;
+        if (RunStatistics.Instance.isNew == true)
+        {
+            setHelp();
+            RunStatistics.Instance.isNew = false;
+        }
+        else
+        {
+            currentState = gameState.RUN;
+            unpauseGame();
+        }
     }
+
     //set
     private void generateStage()
     {
@@ -200,13 +229,20 @@ public class GameManager : MonoBehaviour
             gameSpawner.spawnNormal(difficulty);
         }
     }
+
     /*
      * pauseSequence method, run when ESC is pressed. All objects cannot move.
      * Used to show the main menu of the game
      * */
     private void pauseSequence()
     {
-        uiControl.showMenu();
+        pauseButtonControl();
+    }
+
+    // helpSequence method, run when a new game is loaded or H is pressed. All objects cannot move.
+    private void helpSequence()
+    {
+        helpButtonControl();
     }
 
     /*
@@ -215,14 +251,20 @@ public class GameManager : MonoBehaviour
      * */
     private void runSequence()
     {
-        buttonControl();
+        runButtonControl();
         RunStatistics.Instance.time += Time.smoothDeltaTime;
 
-        if(bubbleCounter == 0)
+        if (bubbleCounter == 0)
         {
-            setCleared();
+            waitTime -= Time.deltaTime * 3;
+            if(waitTime <= 0)
+            {
+                setCleared();
+            }
         }
     }
+
+
 
     /*
      * loseSequence method, used to show the player's final result of current run.
@@ -252,6 +294,7 @@ public class GameManager : MonoBehaviour
         generateStage();
         uiControl.updateStage();
         originalPos = mPlayer.transform.position;
+        waitTime = 1f;
         currentState = gameState.RUN;
         unpauseGame();
     }
@@ -278,6 +321,7 @@ public class GameManager : MonoBehaviour
                 Destroy(currentBubbleSpirit[i]);
             }
         }
+
         currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
         for(int j = 0; j < currentBubbleUnit.Length; j++)
         {
@@ -285,8 +329,9 @@ public class GameManager : MonoBehaviour
             {
                 Destroy(currentBubbleUnit[j]);
             }
-        } 
-        bubbleCounter = 0; 
+        }
+        
+        bubbleCounter = 0;
     }
 
     // Method used to pause the game
@@ -334,8 +379,16 @@ public class GameManager : MonoBehaviour
     // Method for button to change game state from Run to Pause
     public void setPause()
     {
+        uiControl.showMenu();
         currentState = gameState.PAUSE;
         pauseGame();
+    }
+
+    // Method for button to change the game state to HELP
+    public void setHelp()
+    {
+        currentState = gameState.HELP;
+        toShowHelp();
     }
 
     // Method for button to change game state from Pause to Run
@@ -380,6 +433,7 @@ public class GameManager : MonoBehaviour
         mPlayer.transform.position = originalPos;
     }
 
+    // Method to show the help screen
     private void toShowHelp()
     {
         isHelp = true;
@@ -387,6 +441,7 @@ public class GameManager : MonoBehaviour
         pauseGame();
     }
 
+    // Method to hide the help screen
     private void toHideHelp()
     {
         isHelp = false;
