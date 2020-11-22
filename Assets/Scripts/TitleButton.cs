@@ -56,6 +56,7 @@ public class TitleButton : MonoBehaviour
     {
         if(SaveSystem.loadPlayer() != null)
         {
+            FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
             PlayerData playerData = SaveSystem.loadPlayer();
             RunStatistics.Instance.playerName = playerData.playerName;
             RunStatistics.Instance.isNew = false;
@@ -63,6 +64,7 @@ public class TitleButton : MonoBehaviour
         }
         else
         {
+            FindObjectOfType<AudioManager>().Play("Menu_Play_NoName");
             isShake = true;
             shakeTime = Time.timeSinceLevelLoad + 1f;
             shakeMagnitude = 1f;

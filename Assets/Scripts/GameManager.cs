@@ -57,8 +57,7 @@ public class GameManager : MonoBehaviour
 
         if(RunStatistics.Instance.isNew == true)
         {
-            isHelp = true;
-            uiControl.showHelp();
+            toShowHelp();
         }
 
         currentState = gameState.LOAD;
@@ -110,15 +109,11 @@ public class GameManager : MonoBehaviour
         {
             if(isHelp == true)
             {
-                isHelp = false;
-                uiControl.hideHelp();
-                unpauseGame();
+                toHideHelp();
             }
             else
             {
-                isHelp = true;
-                uiControl.showHelp();
-                pauseGame();
+                toShowHelp();
             }
         }
     }
@@ -378,5 +373,19 @@ public class GameManager : MonoBehaviour
     {
         RunStatistics.Instance.currentLife--;
         mPlayer.transform.position = originalPos;
+    }
+
+    private void toShowHelp()
+    {
+        isHelp = true;
+        uiControl.showHelp();
+        pauseGame();
+    }
+
+    private void toHideHelp()
+    {
+        isHelp = false;
+        uiControl.hideHelp();
+        unpauseGame();
     }
 }
