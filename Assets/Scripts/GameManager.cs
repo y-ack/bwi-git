@@ -14,8 +14,10 @@ public class GameManager : MonoBehaviour
     private PlayerData playerData;
     private gameState currentState;
 
+    public GameObject[] currentBubbleUnit;
     public GameObject[] currentBubbleSpirit;
     public GameObject[] currentBubbleProjectile;
+    public int unitCounter = 0;
     public int bubbleCounter = 0;
     public bool canMove;
     private bool isHelp;
@@ -268,9 +270,7 @@ public class GameManager : MonoBehaviour
     // Method used to clear all the bubblet spirits and their projectile for a new game
     private void clearEnemy()
     {
-
         currentBubbleSpirit = GameObject.FindGameObjectsWithTag("BubbleSpirit");
-
         for(int i = 0; i < currentBubbleSpirit.Length; i++)
         {
             if(currentBubbleSpirit[i] != null)
@@ -278,7 +278,14 @@ public class GameManager : MonoBehaviour
                 Destroy(currentBubbleSpirit[i]);
             }
         }
-
+        currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
+        for(int j = 0; j < currentBubbleUnit.Length; j++)
+        {
+            if(currentBubbleUnit[j] != null)
+            {
+                Destroy(currentBubbleUnit[j]);
+            }
+        } 
         bubbleCounter = 0; 
     }
 
