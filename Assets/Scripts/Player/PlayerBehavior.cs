@@ -24,10 +24,10 @@ public class PlayerBehavior : MonoBehaviour
 
     private bool isDashButtonDown;
     private float DashAmount = 5f;
-    public float dashCoolDown = 1f;
+    public float dashCoolDown = 5f;
     private float dashAfterSec = 0;
 
-    public float captureCoolDown = 1f;
+    public float captureCoolDown = 3f;
     private float captureAfterSec = 0;
 
     public float shootCoolDown = 0.4f;
@@ -109,9 +109,10 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void buttonControl()
     {
-        if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
+        if (Input.GetKeyDown(KeyCode.Space) && dashAfterSec <= 0)
         {
             FindObjectOfType<AudioManager>().Play("Iris_Rolling");
+            dashAfterSec = dashCoolDown;
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
         }
@@ -148,7 +149,7 @@ public class PlayerBehavior : MonoBehaviour
                     captureState = CaptureState.IDLE;
             }
         }
-        if(Input.GetKey(KeyCode.Space))
+        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             movementState = PlayerState.FOCUS;
         }
@@ -242,15 +243,6 @@ public class PlayerBehavior : MonoBehaviour
             movementState = PlayerState.NORMAL;
         }
     }
-
-    /*
-    public void Dashing()
-    {
-        rbody.MovePosition(transform.position + moveDir * DashAmount);
-        isDashButtonDown = false;
-        dashAfterSec = dashCoolDown;
-    }
-    */
     public void SetCapture(BubbleSpirit bubbleSpirit)
     {
         FindObjectOfType<AudioManager>().Play("Iris_Capturing");
@@ -261,6 +253,10 @@ public class PlayerBehavior : MonoBehaviour
 
     public void countdownCooldown()
     {
+        if (dashAfterSec > 0)
+        {
+            dashAfterSec -= Time.deltaTime;
+        }
         if (captureAfterSec > 0)
         {
             captureAfterSec -= Time.deltaTime;
