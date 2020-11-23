@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
         RUN,
         LOSE,
         CLEARED,
+        UPGRADE,
         NEXT
     }
 
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
         uiControl.hideMenu();
         uiControl.hideLost();
         uiControl.hideResult();
+        uiControl.hideUpgrade();
 
         currentState = gameState.LOAD;
     }
@@ -173,6 +175,9 @@ public class GameManager : MonoBehaviour
             case gameState.CLEARED:
                 clearedSequence();
                 break;
+            case gameState.UPGRADE:
+                upgradeSequence();
+                break;
             case gameState.NEXT:
                 nextSequence();
                 break;
@@ -282,10 +287,17 @@ public class GameManager : MonoBehaviour
         uiControl.showResult();
     }
 
+    // method used to control the upgrade sequence gamestate
+    private void upgradeSequence()
+    {
+        uiControl.updateUpgrade();
+    }
+
     // nextSequence method, used to create a new stage for player
     private void nextSequence()
     {
         uiControl.hideResult();
+        uiControl.hideUpgrade();
         clearEnemy(); // Not necessary if everything runs well.
         RunStatistics.Instance.currentStage++;
         generateStage();
@@ -427,6 +439,15 @@ public class GameManager : MonoBehaviour
         pauseGame();
         RunStatistics.Instance.stagesCleared++;
         currentState = gameState.CLEARED;
+    }
+
+
+    // Method used to set the game to upgrade sequence
+    public void setUpgrade()
+    {
+        uiControl.hideResult();
+        uiControl.showUpgrade();
+        currentState = gameState.UPGRADE;
     }
 
     // Method for button to change game state to NEXT

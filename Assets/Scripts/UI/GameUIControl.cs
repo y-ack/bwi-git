@@ -9,6 +9,7 @@ public class GameUIControl : MonoBehaviour
     public Image mainMenuUI;
     public Image lostScreenUI;
     public Image resultScreenUI;
+    public Image upgradeScreenUI;
     public Image helpScreenUI;
     public Image captureUI;
     public Image trapUI;
@@ -20,6 +21,7 @@ public class GameUIControl : MonoBehaviour
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
+    private CanvasGroup upgradeScreenGroup;
     private CanvasGroup helpScreenGroup;
 
     private float rollCooldown;
@@ -32,6 +34,7 @@ public class GameUIControl : MonoBehaviour
         mainMenuGroup = mainMenuUI.GetComponent<CanvasGroup>();
         lostScreenGroup = lostScreenUI.GetComponent<CanvasGroup>();
         resultScreenGroup = resultScreenUI.GetComponent<CanvasGroup>();
+        upgradeScreenGroup = upgradeScreenUI.GetComponent<CanvasGroup>();
         helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
 
         rollCooldown = thePlayer.dashCoolDown;
@@ -124,6 +127,22 @@ public class GameUIControl : MonoBehaviour
         resultScreenGroup.interactable = false;
     }
 
+    // Method used to show the upgrade screen
+    public void showUpgrade()
+    {
+        upgradeScreenGroup.alpha = 1f;
+        upgradeScreenGroup.blocksRaycasts = true;
+        upgradeScreenGroup.interactable = true;
+    }
+
+    // Method used to hide the upgrade screen
+    public void hideUpgrade()
+    {
+        upgradeScreenGroup.alpha = 0f;
+        upgradeScreenGroup.blocksRaycasts = false;
+        upgradeScreenGroup.interactable = false;
+    }
+
     public void showHelp()
     {
         helpScreenGroup.alpha = 1f;
@@ -167,6 +186,24 @@ public class GameUIControl : MonoBehaviour
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
         chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
     }
+
+    // Method used to update the upgrade screen.
+    public void updateUpgrade()
+    {
+        GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
+        GameObject speedText = upgradeBG.transform.Find("speedText").gameObject;
+        GameObject trapText = upgradeBG.transform.Find("trapText").gameObject;
+        GameObject captureText = upgradeBG.transform.Find("captureText").gameObject;
+        GameObject rollText = upgradeBG.transform.Find("rollText").gameObject;
+        GameObject lifeText = upgradeBG.transform.Find("lifeText").gameObject;
+
+        speedText.GetComponent<Text>().text = "Iris Movement Speed: " + thePlayer.normalSpeed + " (Max 18)";
+        trapText.GetComponent<Text>().text = "Bubble Trap Cooldown: " + thePlayer.shootCoolDown + " (Max 0.3)";
+        captureText.GetComponent<Text>().text = "Bubble Capture Cooldown: " + thePlayer.captureCoolDown + " (Max 2)";
+        rollText.GetComponent<Text>().text = "Roll Cooldown: " + thePlayer.dashCoolDown + " (Max 4)";
+        lifeText.GetComponent<Text>().text = "Player Life: " + RunStatistics.Instance.currentLife + " (Max 3)";
+    }
+
 
     public void updateRoll()
     {

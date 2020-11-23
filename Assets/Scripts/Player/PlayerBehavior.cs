@@ -11,7 +11,7 @@ public class PlayerBehavior : MonoBehaviour
 
     Rigidbody2D rbody;
     private float moveSpeed;
-    private float normalSpeed = 15f;
+    public float normalSpeed = 15f;
     private float focusSpeed;
 
     Vector2 mousePos;
@@ -271,6 +271,9 @@ public class PlayerBehavior : MonoBehaviour
     {
         switch (collision.gameObject.tag)
         {
+            case "EnemyBullet":
+                Hit();
+                break;
             default:
                 break;
         }
