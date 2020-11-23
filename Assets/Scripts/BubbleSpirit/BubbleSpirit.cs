@@ -270,7 +270,8 @@ public class BubbleSpirit : MonoBehaviour
         state = State.CLEARED;
         
         Unparent();
-        Destroy(pattern.gameObject);
+        if (pattern != null)
+            Destroy(pattern.gameObject);
         //trigger animation, yield and delete
     }
 

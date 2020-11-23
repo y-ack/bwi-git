@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Mathematics;
+//using Unity.Mathematics;
 
 public abstract class BubbleBulletPattern : MonoBehaviour
 {
     public BubbleBullet bulletPrefab;
-    public float[] velocityParameters;
+    public double[] velocityParameters;
 
     public int step = 0;
     public int bulletCount = 0;
     public float baseAngle = 0f;
+    public float angleVariation = 0f;
     public float angleDelta;
     public float angularVelocity = 0f;
     public float acceleration = 0f;
@@ -19,9 +20,10 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     public float patternCooldown = 2f;
     public float patternAngleDeltaAfter = 0f;
 
-    public void Init(float[] velocityParameters,
+    public void Init(double[] velocityParameters,
                      int bulletCount = 0,
                      float baseAngle = 0f,
+                     float angleVariation = 0f,
                      float angleDelta = float.NaN,
                      float angularVelocity = 0f,
                      float acceleration = 0f,
@@ -44,6 +46,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
             this.bulletCount = bulletCount;
             this.angleDelta = angleDelta;
         }
+        this.angleVariation = angleVariation;
         this.baseAngle = baseAngle;
         this.angularVelocity = angularVelocity;
         this.acceleration = acceleration;
@@ -53,10 +56,11 @@ public abstract class BubbleBulletPattern : MonoBehaviour
         this.patternAngleDeltaAfter = patternAngleDeltaAfter;
     }
 
-    [SerializeField]private float lifetime;
-    [SerializeField]private float patternLifetime = 0.0001f;
+    private float lifetime;
+    private float patternLifetime = 0.0001f;
 
     private PlayerBehavior playerTarget;
+    public BubbleSpirit parentBubble;
     public void Start()
     {
         playerTarget =
@@ -67,7 +71,9 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     const float activationRadius = 15f;
     public void Update()
     {
-        if(GameManager.theManager.canMove == true)
+        if(GameManager.theManager.canMove// &&
+           //parentBubble.state == BubbleSpirit.State.NORMAL
+        )
         {
             patternLifetime -= Time.deltaTime;
             var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
@@ -81,7 +87,8 @@ public abstract class BubbleBulletPattern : MonoBehaviour
                     float angle = Mathf.Atan2(
                         playerTarget.transform.position.y - transform.position.y,
                         playerTarget.transform.position.x - transform.position.x
-                    ) + baseAngle + angleDelta * step;
+                    ) + baseAngle + angleDelta * step +
+                        Random.Range(-angleVariation,angleVariation);
                     FireAt(angle);
 
                     ++step;
@@ -97,7 +104,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
             }
         }
     }
-    public void setPatternParameters(float[] v)
+    public void setPatternParameters(double[] v)
     {
         velocityParameters = v;
     }
