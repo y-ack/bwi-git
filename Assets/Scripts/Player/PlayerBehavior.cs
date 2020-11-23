@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    static private GameManager mGameManager;
+    static public void SetGameManager(GameManager g){ mGameManager = g; }
     public PlayerHitBox mPlayerHitbox = null;
     public Animator irisAnimator = null;
 
@@ -78,14 +80,17 @@ public class PlayerBehavior : MonoBehaviour
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
                 mPlayerHitbox.hide();
+                mGameManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.ROLLING:
                 HandleRolling();
+                mGameManager.isInvincible = true;
                 break;
             case PlayerState.FOCUS:
                 moveSpeed = focusSpeed;
                 mPlayerHitbox.show();
+                mGameManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.DEAD:
@@ -104,7 +109,7 @@ public class PlayerBehavior : MonoBehaviour
     }
     private void buttonControl()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (dashAfterSec <= 0))
+        if (Input.GetKeyDown(KeyCode.F) && (dashAfterSec <= 0))
         {
             FindObjectOfType<AudioManager>().Play("Iris_Rolling");
             movementState = PlayerState.ROLLING;
@@ -143,7 +148,7 @@ public class PlayerBehavior : MonoBehaviour
                     captureState = CaptureState.IDLE;
             }
         }
-        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        if(Input.GetKey(KeyCode.Space))
         {
             movementState = PlayerState.FOCUS;
         }

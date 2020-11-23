@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
  
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
+        PlayerBehavior.SetGameManager(this);
 
         uiControl.hideMenu();
         uiControl.hideLost();
