@@ -8,7 +8,7 @@ public class PlayerBehavior : MonoBehaviour
 
     Rigidbody2D rbody;
     private float moveSpeed;
-    private float normalSpeed = 20f;
+    private float normalSpeed = 15f;
     private float focusSpeed;
 
     Vector2 mousePos;
@@ -184,12 +184,6 @@ public class PlayerBehavior : MonoBehaviour
 
     public void countdownCooldown()
     {
-        /*
-        if (dashAfterSec > 0)
-        {
-            dashAfterSec -= Time.deltaTime;
-        }
-        */
         if (captureAfterSec > 0)
         {
             captureAfterSec -= Time.deltaTime;
@@ -202,29 +196,23 @@ public class PlayerBehavior : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(GameManager.theManager.isInvincible == false)
+        switch (collision.gameObject.tag)
         {
-            switch (collision.gameObject.tag)
+            default:
+                break;
+        }
+    }
+    public void Hit()
+    {
+        if (GameManager.theManager.isInvincible == false)
+        {
+            if (RunStatistics.Instance.currentLife == 0)
             {
-                case "EnemyBullet":
-                    if(RunStatistics.Instance.currentLife == 0)
-                    {
-                        GameManager.theManager.setLose();
-                    }
-                    else
-                    {
-                        GameManager.theManager.playerHit();
-                    }
-                    
-                    //reset game, lose game
-                    //player hits bullet and dies
-                    //stats
-                    //reset game, lose game
-                    //player hits bullet and dies
-                    //stats
-                    break;
-                default:
-                    break;
+                GameManager.theManager.setLose();
+            }
+            else
+            {
+                GameManager.theManager.playerHit();
             }
         }
     }

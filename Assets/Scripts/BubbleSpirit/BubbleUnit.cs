@@ -1,35 +1,44 @@
 ﻿using System.Runtime.InteropServices;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct BubbleNeighbors
 {
-    public BubbleSpirit NW;
-    public BubbleSpirit NE;
-    public BubbleSpirit E;
-    public BubbleSpirit SE;
-    public BubbleSpirit SW;
-    public BubbleSpirit W;
+    public Vector2Int origin;
+    public List<BubbleSpirit> neighbors;
+    public List<Vector2Int> offsets;
 
-    public List<BubbleSpirit> List()
+    public const int NW = 0;
+    public const int NE = 1;
+    public const int E  = 2;
+    public const int SE = 3;
+    public const int SW = 4;
+    public const int W  = 5;
+    
+    public Dictionary<Vector2Int,BubbleSpirit> Dictionary()
     {
-        return new List<BubbleSpirit> { NW, NE, E, SE, SW, W };
+        var d = new Dictionary<Vector2Int, BubbleSpirit>();
+        for (int i = 0; i < 6; ++i)
+        {
+            d.Add(offsets[i] + origin, neighbors[i]);
+        }
+        return d;
     }
 }
 
 public class BubbleUnit : MonoBehaviour
 {
+    //TODO change to List<> :(
     public Vector2Int[][] oddr_directions = new Vector2Int[][]
     {
         new Vector2Int[] {
-            new Vector2Int(+1,  0), new Vector2Int(0, -1), new Vector2Int(-1, -1),
-            new Vector2Int(-1,  0), new Vector2Int(-1, +1), new Vector2Int( 0, +1)
+            new Vector2Int(-1, -1), new Vector2Int( 0, -1), new Vector2Int(+1, 0),
+            new Vector2Int( 0, +1), new Vector2Int(-1, +1), new Vector2Int(-1, 0)
         },
         new Vector2Int[] {
-            new Vector2Int(+1,  0), new Vector2Int(+1, -1), new Vector2Int( 0, -1),
-            new Vector2Int(-1,  0), new Vector2Int( 0, +1), new Vector2Int(+1, +1),
+            new Vector2Int( 0, -1), new Vector2Int(+1, -1), new Vector2Int(+1, 0),
+            new Vector2Int(+1, +1), new Vector2Int( 0, +1), new Vector2Int(-1, 0),
         }
     };
     private float moveTimer;
@@ -52,15 +61,29 @@ public class BubbleUnit : MonoBehaviour
         // }
         var pos = b.gridPosition;
         var parity = pos.y & 1;
-        return new BubbleNeighbors()
+        var neighbors = new BubbleNeighbors()
         {
-            NW = cellOrNull(pos + oddr_directions[parity][2]),
-                NE = cellOrNull(pos + oddr_directions[parity][1]),
-                E = cellOrNull(pos + oddr_directions[parity][0]),
-                SE = cellOrNull(pos + oddr_directions[parity][5]),
-                SW = cellOrNull(pos + oddr_directions[parity][4]),
-                W = cellOrNull(pos + oddr_directions[parity][3])
-                };
+            origin = pos,
+            offsets = new List<Vector2Int>(oddr_directions[parity])
+        };
+        neighbors.neighbors = new List<BubbleSpirit>();
+        for (int i = 0; i < 6; ++i)
+        {
+            neighbors.neighbors.Add(cellOrNull(neighbors.offsets[i] + pos));
+        }
+        return neighbors;
+    }
+
+    public Vector2Int nearestEmpty(BubbleSpirit b)
+    {
+        if (!grid.ContainsKey(b.gridPosition))
+        {
+            return b.gridPosition;
+        }
+        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        BubbleNeighbors n = getNeighbors(b);
+        b.gridPosition = n.offsets[n.neighbors.FindIndex(x => x == null)];
+        return b.gridPosition;
     }
 
     public void addBubble(BubbleSpirit b)
@@ -72,6 +95,7 @@ public class BubbleUnit : MonoBehaviour
         // add a safeguard just in case. possible that player could
         // release a bubble ON TOP OF existing ones, for example, and then
         // the grid would resolve to the same position...
+        nearestEmpty(b);
         grid.Add(b.gridPosition, b);
         ++bubbleCount;
     }

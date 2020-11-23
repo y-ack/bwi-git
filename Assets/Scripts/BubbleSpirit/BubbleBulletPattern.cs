@@ -19,33 +19,69 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     public float patternCooldown = 2f;
     public float patternAngleDeltaAfter = 0f;
 
-    private float lifetime = 0.001f;
-    private float patternLifetime = 0;
+    public void Init(float[] velocityParameters,
+                     int bulletCount = 0,
+                     float baseAngle = 0f,
+                     float angleDelta = float.NaN,
+                     float angularVelocity = 0f,
+                     float acceleration = 0f,
+                     float accelerationTime = 0f,
+                     float delayTime = 0f,
+                     float patternCooldown = 2f,
+                     float patternAngleDeltaAfter = 0f)
+    {
+        this.velocityParameters = velocityParameters;
+        if (bulletCount > 0 && float.IsNaN(angleDelta))
+        {
+            this.bulletCount = bulletCount;
+            this.angleDelta = (2.0f * Mathf.PI) / bulletCount;
+        } else if (bulletCount == 0 && !float.IsNaN(angleDelta))
+        {
+            this.bulletCount = Mathf.RoundToInt((2.0f * Mathf.PI) / angleDelta);
+            this.angleDelta = angleDelta;
+        } else
+        {
+            this.bulletCount = bulletCount;
+            this.angleDelta = angleDelta;
+        }
+        this.baseAngle = baseAngle;
+        this.angularVelocity = angularVelocity;
+        this.acceleration = acceleration;
+        this.accelerationTime = accelerationTime;
+        this.delayTime = delayTime;
+        this.patternCooldown = patternCooldown;
+        this.patternAngleDeltaAfter = patternAngleDeltaAfter;
+    }
+
+    [SerializeField]private float lifetime;
+    [SerializeField]private float patternLifetime = 0.0001f;
 
     private PlayerBehavior playerTarget;
     public void Start()
     {
         playerTarget =
-    (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
+            (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
         if (!playerTarget) { Debug.Log("Bullet system cannot find player"); }
     }
 
-    const float activationRadius = 10f;
+    const float activationRadius = 15f;
     public void Update()
     {
         if(GameManager.theManager.canMove == true)
         {
             patternLifetime -= Time.deltaTime;
             var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
-            if ((lifetime <= 0 || playerDist < activationRadius)
+            if (((lifetime <= 0 && delayTime != 0) || playerDist < activationRadius)
                 && patternLifetime <= 0)
             {
                 lifetime -= Time.deltaTime;
                 // while there are more bullets in the cycle and it's time
                 while (step < bulletCount && lifetime <= 0f)
                 {
-                    float angle = Vector3.Angle(transform.position, playerTarget.transform.position)
-                        + baseAngle + angleDelta * step;
+                    float angle = Mathf.Atan2(
+                        playerTarget.transform.position.y - transform.position.y,
+                        playerTarget.transform.position.x - transform.position.x
+                    ) + baseAngle + angleDelta * step;
                     FireAt(angle);
 
                     ++step;
@@ -71,13 +107,5 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     // public void FireTowards(Transform target)
     // {
     //     FireAt(Vector3.Angle(transform.position, target.position));
-    // }
-    public void Fire()
-    {
-        FireAt(0.0f);
-    }
-    // public void FireTowardsPlayer()
-    // {
-    //     FireTowards(playerTarget.transform);
     // }
 }

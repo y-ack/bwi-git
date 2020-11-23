@@ -22,6 +22,16 @@ public class PlayerHitBox : MonoBehaviour
         //Debug.Log(sprite.sortingOrder);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "EnemyBullet":
+                ParentPlayer.Hit();
+                break;
+        }
+    }
+
     public void show()
     {
         sprite = GetComponent<SpriteRenderer>();

@@ -49,12 +49,12 @@ public class Spawner : MonoBehaviour
         {
             StartCoroutine(setPlayerNormal());
             setMaxUnitSize(difficulty);
-            StartCoroutine(setNormal(normalCap));
+            StartCoroutine(setNormal(normalCap, difficulty));
         }
     }
     
 
-    public IEnumerator setNormal(int totalBubble)
+    public IEnumerator setNormal(int totalBubble, float difficulty)
     {   
         setTotalUnit(totalBubble);
         Vector2 p = player.transform.position;    
@@ -96,6 +96,7 @@ public class Spawner : MonoBehaviour
                     
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, 3));
+                    BulletPatternGenerator.Instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else if (i > 0 && i <= 6)
                 {
@@ -113,6 +114,7 @@ public class Spawner : MonoBehaviour
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    BulletPatternGenerator.Instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else
                 {
@@ -137,12 +139,12 @@ public class Spawner : MonoBehaviour
         if (currentLevel.canSpawn() == true)
         {
             StartCoroutine(setPlayerBoss());
-            StartCoroutine(setBoss(bossCap));
+            StartCoroutine(setBoss(bossCap, difficulty));
         }
     }
 
 
-    public IEnumerator setBoss(int bossCap)
+    public IEnumerator setBoss(int bossCap, float difficulty)
     {     
         while (spawnPosFound == false)
         {
@@ -177,6 +179,7 @@ public class Spawner : MonoBehaviour
                 
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, 4));
+                BulletPatternGenerator.Instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i > 0 && i <= 6)
             {
@@ -194,6 +197,7 @@ public class Spawner : MonoBehaviour
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, 4));  
+                BulletPatternGenerator.Instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i > 6 && i <= 21)
             {
@@ -210,7 +214,8 @@ public class Spawner : MonoBehaviour
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 3));  
+                bossChild[i].SetColor(Random.Range(0, 3));
+                BulletPatternGenerator.Instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else
             {

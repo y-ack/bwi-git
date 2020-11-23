@@ -25,7 +25,7 @@ public class BubbleBullet : MonoBehaviour
             transform.position += velocity * Time.smoothDeltaTime;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         switch (collision.gameObject.tag)
         {

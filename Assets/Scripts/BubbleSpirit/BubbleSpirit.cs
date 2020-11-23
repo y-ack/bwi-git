@@ -211,6 +211,7 @@ public class BubbleSpirit : MonoBehaviour
         parentUnit = newParentUnit;
         SnapToGrid();
         parentUnit.addBubble(this);
+        UpdateGridPosition();
     }
 
     private void Unparent() 
@@ -247,7 +248,7 @@ public class BubbleSpirit : MonoBehaviour
         bool hasMatch = false;
         //it's possible that the one we collided with is not the match,
         //but there is a match after snapping, so check all
-        foreach (BubbleSpirit neighbor in bn.List())
+        foreach (BubbleSpirit neighbor in bn.neighbors)
         {
             if (neighbor != null &&
                 BubbleColor.match(neighbor.color, this.color))
@@ -269,6 +270,7 @@ public class BubbleSpirit : MonoBehaviour
         state = State.CLEARED;
         
         Unparent();
+        Destroy(pattern.gameObject);
         //trigger animation, yield and delete
     }
 
@@ -310,15 +312,14 @@ public class BubbleSpirit : MonoBehaviour
 
             if (distanceFrom > 0.5f)
             {
-                
                 // Two different lerp function to facilitate a specific look for the bubble spirit travel speed
-                if(distanceFrom > 1f)
+                if(distanceFrom > 10f)
                 {
-                    transform.position = Vector3.Lerp(transform.position, IrisPos, 4f * Time.deltaTime); 
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 8f * Time.deltaTime); 
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, IrisPos, 2f * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 5f * Time.deltaTime);
                 }
             }
             else
@@ -348,7 +349,7 @@ public class BubbleSpirit : MonoBehaviour
         RunStatistics.Instance.bubblesChainCleared[color]++;
         cleared = true;
 
-        List<BubbleSpirit> bn_list = parentUnit.getNeighbors(this).List();
+        List<BubbleSpirit> bn_list = parentUnit.getNeighbors(this).neighbors;
         foreach (BubbleSpirit bn in bn_list)
         {
             if (bn != null &&

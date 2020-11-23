@@ -10,9 +10,10 @@ public class BubbleBulletPatternLinear : BubbleBulletPattern
 
 
         bullet.transform.position = transform.position;
+
         bullet.velocity = new Vector3(Mathf.Cos(angle),
                                       Mathf.Sin(angle),
-                                      0) * velocityParameters[0];
+                                       0) * velocityParameters[0];
         bullet.angularVelocity = angularVelocity;
         //could use vector for acceleration too ...
         bullet.acceleration = acceleration;
