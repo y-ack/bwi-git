@@ -124,7 +124,7 @@ public class BubbleSpirit : MonoBehaviour
                     BubbleUnit parentScript = this.transform.parent.GetComponent<BubbleUnit>();
 
                     parentScript.hitWall();
-                    Debug.Log("hitting wall");
+                    //Debug.Log("hitting wall");
                 }
                 break;
 

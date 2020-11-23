@@ -20,24 +20,26 @@ public class BulletPatternGenerator : MonoBehaviour
     //     new List<BubbleBulletPattern>()
     // };
 
+    private BubbleBulletPattern Linear()
+    {
+        return (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
+                                                         typeof(BubbleBulletPatternLinear));
+    }
+    private BubbleBulletPattern Petal()
+    {
+        return (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
+                                                             typeof(BubbleBulletPatternLemniscate));
+    }
     public void Awake()
     {
         for (int i = 0; i < 5; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
-                var g =
-                    (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
-                                                              typeof(BubbleBulletPatternLinear));
-                g.Init(new double[] { 2.0 }, 1, 0f, 0, 0, 0, 0, 0, 0, 3f, 0);
-                patterns[i][j] = (BubbleBulletPattern)g;
+                patterns[i][j] = Linear().Init(new double[] { 2.0 }, 1, 0f, 0, 0, 0, 0, 0, 0, 5f, 0);
             }
         }
-        var g2 =
-            (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
-                                                          typeof(BubbleBulletPatternLemniscate));
-        g2.Init(new double[] { 2.08, 0, 4, 1.5, 2, 0.5 }, 48, 0f, 0, float.NaN, 0, 0, 0, 0, 2f, 0);
-        patterns[4][0] = (BubbleBulletPattern)g2;
+        patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
         
         instance = this;
     }

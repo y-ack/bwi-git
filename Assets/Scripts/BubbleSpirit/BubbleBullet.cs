@@ -33,12 +33,10 @@ public class BubbleBullet : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "PlayerHitbox":
-                Debug.Log("Hit Player");
                 destroyYoSelf();
                 break;
                 //case "Wall":
             case "Wall Top":
-                Debug.Log("Colliding Wall");
                 destroyYoSelf();
                 break;
             case "PlayerGraze":

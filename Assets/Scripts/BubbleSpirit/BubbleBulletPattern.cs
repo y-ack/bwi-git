@@ -20,7 +20,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     public float patternCooldown = 2f;
     public float patternAngleDeltaAfter = 0f;
 
-    public void Init(double[] velocityParameters,
+    public BubbleBulletPattern Init(double[] velocityParameters,
                      int bulletCount = 0,
                      float baseAngle = 0f,
                      float angleVariation = 0f,
@@ -54,6 +54,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
         this.delayTime = delayTime;
         this.patternCooldown = patternCooldown;
         this.patternAngleDeltaAfter = patternAngleDeltaAfter;
+        return this;
     }
 
     private float lifetime;
