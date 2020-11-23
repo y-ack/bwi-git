@@ -133,6 +133,7 @@ public class BubbleSpirit : MonoBehaviour
                 if (other.gameObject.tag == "BubbleSpirit"
                     && other.GetComponent<BubbleSpirit>().state == State.NORMAL)
                 {
+                    FindObjectOfType<AudioManager>().Play("Bubble_HitBubble");
                     AdoptedBy(other.GetComponent<BubbleSpirit>().parentUnit);
                     state = State.NORMAL;
                     tryMatch();
@@ -193,6 +194,7 @@ public class BubbleSpirit : MonoBehaviour
             return false;
         } else
         {
+            FindObjectOfType<AudioManager>().Play("Iris_Launch");
             state = State.LAUNCHED;
             launchDirection = direction;
             Unparent();
@@ -266,6 +268,7 @@ public class BubbleSpirit : MonoBehaviour
             if (neighbor != null &&
                 BubbleColor.match(neighbor.color, this.color))
             {
+                FindObjectOfType<AudioManager>().Play("Bubble_Matched");
                 hasMatch = true;
                 break;
             }
@@ -279,13 +282,20 @@ public class BubbleSpirit : MonoBehaviour
     
     public void Clear()
     {
+        FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+        StartCoroutine(BubbleClearSound());
+        FindObjectOfType<AudioManager>().Play("Bubble_Clear");
+
         cleared = true;
-        state = State.CLEARED;
-        
+        state = State.CLEARED;       
         Unparent();
         if (pattern != null)
             Destroy(pattern.gameObject);
         //trigger animation, yield and delete
+    }
+    IEnumerator BubbleClearSound()
+    {      
+        yield return new WaitForSeconds(0.5f);
     }
 
     // Method used to animate the bubble spirit after getting hit by a 
@@ -335,6 +345,8 @@ public class BubbleSpirit : MonoBehaviour
                 {
                     transform.position = Vector3.Lerp(transform.position, IrisPos, 5f * Time.deltaTime);
                 }
+                //Play this sound when bubble almost reaches the player
+                //FindObjectOfType<AudioManager>().Play("Bubble_Collect");
             }
             else
             {
@@ -347,6 +359,7 @@ public class BubbleSpirit : MonoBehaviour
 
     private void clearDestroy()
     {
+        
         RunStatistics.Instance.bubblesCleared++;
         RunStatistics.Instance.totalScore += 15;
         GameManager.theManager.bubbleCleared();

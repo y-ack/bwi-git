@@ -9,10 +9,6 @@ public class CaptureBulletBehavior : MonoBehaviour
 
     public bool disabled = false;
     private const float bulletSpeed = 15f;
-    void Start()
-    {
-    }
-
     void Update()
     {
         transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
@@ -23,7 +19,7 @@ public class CaptureBulletBehavior : MonoBehaviour
         if (disabled) return;
         switch (collision.gameObject.tag)
         {
-            case "BubbleSpirit":
+            case "BubbleSpirit":               
                 BubbleSpirit capturedBubble = collision.GetComponent<BubbleSpirit>();
                 ParentPlayer.SetCapture(capturedBubble);
                 destroySelf();

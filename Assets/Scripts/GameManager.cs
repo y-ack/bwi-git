@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
             case gameState.LOAD:
                 loadSequence();
                 break;
-            case gameState.RUN:
+            case gameState.RUN:               
                 runSequence();
                 break;
             case gameState.PAUSE:
@@ -195,6 +195,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Diff: " + difficulty);
         generateStage();
         originalPos = mPlayer.transform.position;
+        FindObjectOfType<AudioManager>().Play("Stage_BG"); 
         uiControl.updateStage();
         if (RunStatistics.Instance.isNew == true)
         {

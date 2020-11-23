@@ -8,7 +8,10 @@ public class BubbleBullet : MonoBehaviour
     public float angularVelocity;
     public float acceleration;
     public float accelerationTimeout;
-
+    private void Awake() 
+    {
+        FindObjectOfType<AudioManager>().Play("Bubble_Shoot"); 
+    }
     // Update is called once per frame
     void Update()
     {

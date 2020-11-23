@@ -90,7 +90,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
                     ) + baseAngle + angleDelta * step +
                         Random.Range(-angleVariation,angleVariation);
                     FireAt(angle);
-
+                    
                     ++step;
                     lifetime += delayTime;
                 }

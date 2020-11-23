@@ -6,9 +6,8 @@ public class BubbleBulletPatternLemniscate : BubbleBulletPattern
 {
     public override void FireAt(float angle)
     {
+
         var bullet = (BubbleBullet)Instantiate(bulletPrefab);
-
-
         bullet.transform.position = transform.position;
 
         var v = velocityParameters;

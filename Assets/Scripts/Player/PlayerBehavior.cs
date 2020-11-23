@@ -113,6 +113,8 @@ public class PlayerBehavior : MonoBehaviour
         countdownCooldown();
         if (Input.GetMouseButton(0) && shootAfterSec <= 0)
         {
+            FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
+            FindObjectOfType<AudioManager>().Play("Iris_Trap2");
             GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
@@ -123,6 +125,8 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (captureAfterSec <= 0 && isCapturing == false)
             {
+                FindObjectOfType<AudioManager>().Play("Iris_CaptureA");
+                FindObjectOfType<AudioManager>().Play("Iris_CaptureB");
                 GameObject e = Instantiate(Resources.Load("Prefabs/net") as
                                    GameObject);
                 e.transform.localPosition = transform.localPosition;
@@ -131,9 +135,11 @@ public class PlayerBehavior : MonoBehaviour
             }
             if (isCapturing == true)
             {
+                
                 isCapturing = capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);
-                if (isCapturing)
+                
+                if (isCapturing)                  
                     captureState = CaptureState.IDLE;
             }
         }
@@ -225,7 +231,7 @@ public class PlayerBehavior : MonoBehaviour
     private void HandleRolling()
     {
         rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.smoothDeltaTime);
-        slideSpeed -= slideSpeed * 4f * Time.smoothDeltaTime;
+        slideSpeed -= slideSpeed * 8f * Time.smoothDeltaTime;
         if(slideSpeed <= 20f)
         {
             movementState = PlayerState.NORMAL;
@@ -242,6 +248,7 @@ public class PlayerBehavior : MonoBehaviour
     */
     public void SetCapture(BubbleSpirit bubbleSpirit)
     {
+        FindObjectOfType<AudioManager>().Play("Iris_Capturing");
         isCapturing = true;
         capturedBubble = bubbleSpirit;
         captureState = CaptureState.CAPTURING;
