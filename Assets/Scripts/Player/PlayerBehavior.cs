@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBehavior : MonoBehaviour
 {
     public PlayerHitBox mPlayerHitbox = null;
+    public Animator irisAnimator = null;
 
     Rigidbody2D rbody;
     private float moveSpeed;
@@ -149,18 +150,81 @@ public class PlayerBehavior : MonoBehaviour
     {
         movementVector = new Vector2(Input.GetAxis("Horizontal"),
                                      Input.GetAxis("Vertical"));
-        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.deltaTime);
+
+        float horizontalSpeed = Mathf.Abs(Input.GetAxis("Horizontal") * moveSpeed);
+        float verticalSpeed = Mathf.Abs(Input.GetAxis("Vertical") * moveSpeed);
+
+        irisAnimator.SetFloat("Speed", horizontalSpeed + verticalSpeed);
+
+        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.smoothDeltaTime);
         rbody.angularVelocity = 0f;
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        directionHandling();
 
         moveDir = new Vector3(Input.GetAxis("Horizontal"),
             Input.GetAxis("Vertical")).normalized;
     }
 
+    private void directionHandling()
+    {
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        if (mousePos.x > transform.localPosition.x)
+        {
+            if ((mousePos.y - transform.localPosition.y) > 2.5)
+            {
+                irisAnimator.SetBool("isUp", true);
+                irisAnimator.SetBool("isDown", false);
+                irisAnimator.SetBool("isLeft", false);
+                irisAnimator.SetBool("isRight", false);
+            }
+            else if((mousePos.y - transform.localPosition.y) < -2.5)
+            {
+                irisAnimator.SetBool("isUp", false);
+                irisAnimator.SetBool("isDown", true);
+                irisAnimator.SetBool("isLeft", false);
+                irisAnimator.SetBool("isRight", false);
+            }
+            else
+            {
+                irisAnimator.SetBool("isUp", false);
+                irisAnimator.SetBool("isDown", false);
+                irisAnimator.SetBool("isLeft", false);
+                irisAnimator.SetBool("isRight", true);
+            }
+
+        }
+        else
+        {
+            if ((mousePos.y - transform.localPosition.y) > 2.5)
+            {
+                irisAnimator.SetBool("isUp", true);
+                irisAnimator.SetBool("isDown", false);
+                irisAnimator.SetBool("isLeft", false);
+                irisAnimator.SetBool("isRight", false);
+            }
+            else if ((mousePos.y - transform.localPosition.y) < -2.5)
+            {
+                irisAnimator.SetBool("isUp", false);
+                irisAnimator.SetBool("isDown", true);
+                irisAnimator.SetBool("isLeft", false);
+                irisAnimator.SetBool("isRight", false);
+            }
+            else
+            {
+                irisAnimator.SetBool("isUp", false);
+                irisAnimator.SetBool("isDown", false);
+                irisAnimator.SetBool("isLeft", true);
+                irisAnimator.SetBool("isRight", false);
+            }
+        }
+    }
+
     private void HandleRolling()
     {
-        rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.deltaTime);
-        slideSpeed -= slideSpeed * 4f * Time.deltaTime;
+        rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.smoothDeltaTime);
+        slideSpeed -= slideSpeed * 4f * Time.smoothDeltaTime;
         if(slideSpeed <= 20f)
         {
             movementState = PlayerState.NORMAL;

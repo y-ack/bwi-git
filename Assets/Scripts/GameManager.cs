@@ -325,7 +325,19 @@ public class GameManager : MonoBehaviour
                 Destroy(currentBubbleUnit[j]);
             }
         }
-        
+
+        currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        for(int i = 0; i < currentBubbleProjectile.Length; i++)
+        {
+            Destroy(currentBubbleProjectile[i]);
+        }
+
+        GameObject[] currentProjectile = GameObject.FindGameObjectsWithTag("Bullet");
+        for (int i = 0; i < currentProjectile.Length; i++)
+        {
+            Destroy(currentProjectile[i]);
+        }
+
         bubbleCounter = 0;
     }
 
