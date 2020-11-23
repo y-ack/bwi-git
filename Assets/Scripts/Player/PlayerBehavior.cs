@@ -106,6 +106,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && (dashAfterSec <= 0))
         {
+            FindObjectOfType<AudioManager>().Play("Iris_Rolling");
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
         }
