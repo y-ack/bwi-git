@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviour
     {
         RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
-        RunStatistics.Instance.currentStage = 1;
+        RunStatistics.Instance.currentStage = 44;
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
         RunStatistics.Instance.currentLife = 3;      
@@ -212,6 +212,7 @@ public class GameManager : MonoBehaviour
     private void generateStage()
     {
         float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
+        Debug.Log("difficulty: "+ difficulty);
         //spawn boss bubble every 3 level for alpha playtest
         if (RunStatistics.Instance.currentStage % 3 == 0)
         {
@@ -301,6 +302,7 @@ public class GameManager : MonoBehaviour
         int curve = 2;
         difficulty = 100/(1 + Mathf.Exp(-((stage/curve) - (1.7f * Mathf.Exp(1)))));
         return difficulty;
+        Debug.Log("Current State difficulty: " + difficulty);
     }
 
     // Method used to clear all the bubblet spirits and their projectile for a new game

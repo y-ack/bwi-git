@@ -58,7 +58,8 @@ public class BulletPatternGenerator : MonoBehaviour
         {
             if (Random.value <= patternChance) //chance to not use pattern?
             {
-                var bucket = patterns[(int)(difficulty / (100 / 5))];
+                // difficulty - 0.001f so that difficulty won't never get to exactly 100
+                var bucket = patterns[(int)((difficulty - 0.001f) / (100 / 5))];                
                 var choice = bucket[Random.Range(0, bucket.Length - 1)];
                 b.pattern = Instantiate(choice, b.transform);
                 b.pattern.parentBubble = b;

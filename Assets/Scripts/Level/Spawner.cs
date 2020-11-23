@@ -19,10 +19,9 @@ public class Spawner : MonoBehaviour
 
     private int bossCap;
     private int minBoss = 30;
-    private int maxBoss = 75;
+    private int maxBoss = 120;
     public GameObject[] boss;
     public BubbleSpirit[] bossChild;
-
     public List<int> unitsSize = new List<int>();
     public GameObject[] bubbles;
     public BubbleSpirit[] bubbleChild;
@@ -82,7 +81,6 @@ public class Spawner : MonoBehaviour
             GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
             BubbleUnit bubbleParent = e.GetComponent<BubbleUnit>();
             bubbleParent.transform.localPosition = new Vector3(ranX, ranY, 0);
-            
             bubbles = new GameObject[unit];
             bubbleChild = new BubbleSpirit[unit];
             int bx = 0;
@@ -91,6 +89,8 @@ public class Spawner : MonoBehaviour
             {              
                 bubbles[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
                 bubbleChild[i] = bubbles[i].GetComponent<BubbleSpirit>();
+                //Don't be mad with those magic numbers, I calculated the total cells each ring
+                //and got those but i'm too lazy to formular them :(
                 if(i == 0)
                 {
                     
@@ -98,13 +98,67 @@ public class Spawner : MonoBehaviour
                     bubbleChild[i].SetColor(Random.Range(0, 3));
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
-                else if (i > 0 && i <= 6)
+                else if (i < 7)
                 {
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
                         bx = Random.Range(-1,2);
                         by = Random.Range(-1,2);
+                        Vector2Int tmp = new Vector2Int(bx,by);
+                        if (bubbleParent.cellOrNull(tmp) == null)
+                        {
+                            spawnPosFound = true;                        
+                        }                       
+                    }
+                    spawnPosFound = false;
+                    bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
+                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                }
+                else if (i < 22)
+                {
+                    //Try to spawn a bubble if the cell is not occupied
+                    while (spawnPosFound == false)
+                    {
+                        bx = Random.Range(-2,3);
+                        by = Random.Range(-2,3);
+                        Vector2Int tmp = new Vector2Int(bx,by);
+                        if (bubbleParent.cellOrNull(tmp) == null)
+                        {
+                            spawnPosFound = true;                        
+                        }                       
+                    }
+                    spawnPosFound = false;
+                    bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
+                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                }
+                else if (i < 43)
+                {
+                    //Try to spawn a bubble if the cell is not occupied
+                    while (spawnPosFound == false)
+                    {
+                        bx = Random.Range(-3,4);
+                        by = Random.Range(-3,4);
+                        Vector2Int tmp = new Vector2Int(bx,by);
+                        if (bubbleParent.cellOrNull(tmp) == null)
+                        {
+                            spawnPosFound = true;                        
+                        }                       
+                    }
+                    spawnPosFound = false;
+                    bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
+                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                }
+                else if (i < 79)
+                {
+                    //Try to spawn a bubble if the cell is not occupied
+                    while (spawnPosFound == false)
+                    {
+                        bx = Random.Range(-4,5);
+                        by = Random.Range(-4,5);
                         Vector2Int tmp = new Vector2Int(bx,by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
@@ -163,24 +217,25 @@ public class Spawner : MonoBehaviour
         spawnPosFound = false;
         GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
         BubbleUnit bossParent = e.GetComponent<BubbleUnit>();
-        bossParent.transform.localPosition = new Vector3(ranX, ranY, 0);
-        
-        boss = new GameObject[bossCap];
+        bossParent.transform.localPosition = new Vector3(ranX, ranY, 0);     
+        boss = new GameObject[bossCap];    
         bossChild = new BubbleSpirit[bossCap];
         int bx = 0;
         int by = 0;
         for(int i = 0; i < bossCap;i++)
-        {              
-            boss[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
+        {     
+            
+            boss[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;    
             bossChild[i] = boss[i].GetComponent<BubbleSpirit>();
+            //Don't be mad with those magic numbers, I calculated the total cells each ring
+            //and got those but i don't know how :(
             if(i == 0)
-            {
-                
+            {             
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, 4));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
-            else if (i > 0 && i <= 6)
+            else if (i < 7)
             {
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
@@ -198,7 +253,7 @@ public class Spawner : MonoBehaviour
                 bossChild[i].SetColor(Random.Range(0, 4));  
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
-            else if (i > 6 && i <= 21)
+            else if (i < 22)
             {
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
@@ -216,12 +271,116 @@ public class Spawner : MonoBehaviour
                 bossChild[i].SetColor(Random.Range(0, 3));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
+            else if (i < 43)
+            {
+                //Try to spawn a bubble if the cell is not occupied
+                while (spawnPosFound == false)
+                {
+                    bx = Random.Range(-3,4);
+                    by = Random.Range(-3,4);
+                    Vector2Int tmp = new Vector2Int(bx,by);
+                    if (bossParent.cellOrNull(tmp) == null)
+                    {
+                        spawnPosFound = true;                         
+                    }
+                }
+                spawnPosFound = false;
+                bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
+                bossChild[i].SetColor(Random.Range(0, 3));
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+            }
+            else if (i < 79)
+            {
+                //Try to spawn a bubble if the cell is not occupied
+                while (spawnPosFound == false)
+                {
+                    bx = Random.Range(-4,5);
+                    by = Random.Range(-4,5);
+                    Vector2Int tmp = new Vector2Int(bx,by);
+                    if (bossParent.cellOrNull(tmp) == null)
+                    {
+                        spawnPosFound = true;                         
+                    }
+                }
+                spawnPosFound = false;
+                bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
+                bossChild[i].SetColor(Random.Range(0, 3));
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+            }
+            else if (i < 122)
+            {
+                //Try to spawn a bubble if the cell is not occupied
+                while (spawnPosFound == false)
+                {
+                    bx = Random.Range(-5,6);
+                    by = Random.Range(-5,6);
+                    Vector2Int tmp = new Vector2Int(bx,by);
+                    if (bossParent.cellOrNull(tmp) == null)
+                    {
+                        spawnPosFound = true;                         
+                    }
+                }
+                spawnPosFound = false;
+                bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
+                bossChild[i].SetColor(Random.Range(0, 3));
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+            }
+            else
+            {
+                //For spawning bigger units 
+                //To find the next hexagon ring area: 
+            }
+            //Destroy(c.gameObject);
+            /*if(i == 0)
+            {             
+                bossChild.setParent(bossParent, new Vector2Int(bx, by));
+                bossChild.SetColor(Random.Range(0, 4));
+                BulletPatternGenerator.instance.addToBubble(bossChild, bossCap, difficulty);
+            }
+            else if (i > 0 && i <= 6)
+            {
+                //Try to spawn a bubble if the cell is not occupied
+                while (spawnPosFound == false)
+                {
+                    bx = Random.Range(-1,2);
+                    by = Random.Range(-1,2);
+                    Vector2Int tmp = new Vector2Int(bx,by);
+                    if (bossParent.cellOrNull(tmp) == null)
+                    {
+                        spawnPosFound = true;                        
+                    }
+                }
+                spawnPosFound = false;
+                bossChild.setParent(bossParent, new Vector2Int(bx, by));
+                bossChild.SetColor(Random.Range(0, 4));  
+                BulletPatternGenerator.instance.addToBubble(bossChild, bossCap, difficulty);
+            }
+            else if (i > 6 && i <= 21)
+            {
+                //Try to spawn a bubble if the cell is not occupied
+                while (spawnPosFound == false)
+                {
+                    bx = Random.Range(-2,3);
+                    by = Random.Range(-2,3);
+                    Vector2Int tmp = new Vector2Int(bx,by);
+                    if (bossParent.cellOrNull(tmp) == null)
+                    {
+                        spawnPosFound = true;                         
+                    }
+                }
+                spawnPosFound = false;
+                bossChild.setParent(bossParent, new Vector2Int(bx, by));
+                bossChild.SetColor(Random.Range(0, 3));
+                BulletPatternGenerator.instance.addToBubble(bossChild, bossCap, difficulty);
+            }
             else
             {
                 //For spawning bigger units 
             }
-            GameManager.theManager.addBubble();
-            
+            Debug.Log("after set");    
+            //Destroy(c.gameObject);*/
+
+            GameManager.theManager.addBubble();         
         }
     yield return new WaitForSeconds(3f);
     }
