@@ -15,6 +15,7 @@ public struct BubbleNeighbors
     public const int SE = 3;
     public const int SW = 4;
     public const int W  = 5;
+
     
     public Dictionary<Vector2Int,BubbleSpirit> Dictionary()
     {
@@ -30,6 +31,12 @@ public struct BubbleNeighbors
 public class BubbleUnit : MonoBehaviour
 {
     //TODO change to List<> :(
+    private Vector3 initialPosition;
+    private Vector3 movePosition;
+    public float timeToMove = 4f;
+    private float moveTimer;
+    private float radius = 3f;
+
     public Vector2Int[][] oddr_directions = new Vector2Int[][]
     {
         new Vector2Int[] {
@@ -41,7 +48,7 @@ public class BubbleUnit : MonoBehaviour
             new Vector2Int(+1, +1), new Vector2Int( 0, +1), new Vector2Int(-1, 0),
         }
     };
-    private float moveTimer;
+
     private Dictionary<Vector2Int, BubbleSpirit> grid = new
         Dictionary<Vector2Int, BubbleSpirit>();
     private int bubbleCount;
@@ -129,11 +136,28 @@ public class BubbleUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        initialPosition = transform.position;
+        movePosition = new Vector3(initialPosition.x + UnityEngine.Random.Range(-radius, radius),
+                               initialPosition.y + UnityEngine.Random.Range(-radius, radius), 0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // movement code
+        if (moveTimer > 0){ moveTimer -=  Time.deltaTime; }
+        transform.position = Vector2.MoveTowards(transform.position, movePosition, 1f * Time.deltaTime);
+        if(Vector2.Distance(transform.position, movePosition) < 0.2f)
+        {
+            if (moveTimer <= 0)
+            {
+                movePosition = new Vector2(initialPosition.x + UnityEngine.Random.Range(-radius, radius), initialPosition.y + UnityEngine.Random.Range(-radius, radius));
+                moveTimer = timeToMove;
+            }   
+        }
+    }
+
+    public void hitWall()
+    {
+        movePosition = new Vector2(initialPosition.x, initialPosition.y);
     }
 }

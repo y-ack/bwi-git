@@ -58,19 +58,25 @@ public class BubbleSpirit : MonoBehaviour
     {
         state = State.NORMAL;
         playerTarget = (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
+        /*
+        initialPosition = transform.position;
+        //moveTimer = timeToMove;
+        movePosition = new Vector3(initialPosition.x + UnityEngine.Random.Range(-radius, radius),
+                               initialPosition.y + UnityEngine.Random.Range(-radius, radius), 0f);
+                               */
     }
 
     [SerializeField] private float orbit_x = 0.9f;
     [SerializeField] private float orbit_y = 0.4f;
     void Update()
     {
-        // searched = false; // ... this is bad.
-        
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
         float delta = bubbleSpeed * Time.smoothDeltaTime;
         switch (state)
         {
+            case State.NORMAL: 
+                break;
             case State.CAPTURED:
                 float a = transform.parent.GetComponent<PlayerBehavior>().angle;
                 var lookDir = Vector3.RotateTowards(transform.parent.up, -transform.parent.right,
@@ -112,6 +118,13 @@ public class BubbleSpirit : MonoBehaviour
                 {
                     other.GetComponent<CaptureBulletBehavior>().disabled = true;
                     Captured();
+                }
+                if(other.gameObject.tag == "Wall Top")
+                {
+                    BubbleUnit parentScript = this.transform.parent.GetComponent<BubbleUnit>();
+
+                    parentScript.hitWall();
+                    Debug.Log("hitting wall");
                 }
                 break;
 
