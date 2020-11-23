@@ -19,7 +19,7 @@ public class CameraBehavior : MonoBehaviour
         minValues.y = 10f - scale;
         minValues.z = -10;
         
-        maxValue.x = 45f + scale;
+        maxValue.x = 44.2f + scale;
         maxValue.y = 29f + scale;
         maxValue.z = -10;  
 
