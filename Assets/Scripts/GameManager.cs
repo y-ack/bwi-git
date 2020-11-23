@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     public GameObject[] currentBubbleProjectile;
     public int unitCounter = 0;
     public int bubbleCounter = 0;
-    private float waitTime;
     public bool canMove;
     private bool isHelp;
     public bool isInvincible = true;
@@ -197,7 +196,6 @@ public class GameManager : MonoBehaviour
         generateStage();
         originalPos = mPlayer.transform.position;
         uiControl.updateStage();
-        waitTime = 1f;
         if (RunStatistics.Instance.isNew == true)
         {
             setHelp();
@@ -256,11 +254,7 @@ public class GameManager : MonoBehaviour
 
         if (bubbleCounter == 0)
         {
-            waitTime -= Time.deltaTime * 3;
-            if(waitTime <= 0)
-            {
                 setCleared();
-            }
         }
     }
 
@@ -294,7 +288,6 @@ public class GameManager : MonoBehaviour
         generateStage();
         uiControl.updateStage();
         originalPos = mPlayer.transform.position;
-        waitTime = 1f;
         currentState = gameState.RUN;
         unpauseGame();
     }

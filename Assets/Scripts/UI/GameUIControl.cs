@@ -35,7 +35,7 @@ public class GameUIControl : MonoBehaviour
         helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
 
         rollCooldown = thePlayer.dashCoolDown;
-        trapCooldown = thePlayer.shootCoolDown;
+        trapCooldown = thePlayer.shootCoolDown - 0.0825f;
         captureCooldown = thePlayer.captureCoolDown;
     }
 

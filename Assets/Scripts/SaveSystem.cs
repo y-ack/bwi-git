@@ -39,6 +39,7 @@ public static class SaveSystem
         data.playerName = playerName;
         data.setSessionTime(RunStatistics.Instance.time);
         data.setStageCleared(RunStatistics.Instance.stagesCleared);
+        data.setScore(RunStatistics.Instance.totalScore);
         data.setBubbleCleared(RunStatistics.Instance.bubblesCleared);
         data.setbubbleMatched(RunStatistics.Instance.bubblesChainCleared.Length);
         data.setBossCleared(RunStatistics.Instance.bossCleared);

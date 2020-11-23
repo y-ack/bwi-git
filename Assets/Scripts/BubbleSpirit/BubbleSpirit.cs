@@ -89,6 +89,9 @@ public class BubbleSpirit : MonoBehaviour
                 // travel in launchDirection until a collision happens
                 transform.position += launchDirection * delta; //delta bugged
                 break;
+            case State.CLEARED:
+                clearAnimation();
+                break;
         }        
         // TODO[RETRO] add gleam animation for bubble spirits
     }
@@ -264,12 +267,75 @@ public class BubbleSpirit : MonoBehaviour
     {
         cleared = true;
         state = State.CLEARED;
-        RunStatistics.Instance.bubblesCleared++;
-        GameManager.theManager.bubbleCleared();
+        
         Unparent();
         //trigger animation, yield and delete
+    }
 
-        Destroy(gameObject, 0.2f);
+    // Method used to animate the bubble spirit after getting hit by a 
+    private void clearAnimation()
+    {
+        Vector3 bubbleSize = transform.localScale;
+
+        if (bubbleSize.x > 1f)
+        {
+                bubbleSize.x -= 16f * Time.deltaTime;
+                bubbleSize.y -= 16f * Time.deltaTime;
+                transform.localScale = bubbleSize;
+        }
+        else
+        {
+            // Change the opacity of the bubble spirit to indicate that it is cleared
+            SpriteRenderer bubbleRender = GetComponent<SpriteRenderer>();
+            Color bubbleColor = bubbleRender.color;
+
+            if (bubbleColor.a != 0.4f)
+            {
+                bubbleColor.a = 0.4f;
+                bubbleRender.color = bubbleColor;
+            }
+
+            // Hard code making sure that the scale of the bubble spirit is 1x1
+            if (bubbleSize.x != 1f)
+            {
+                bubbleSize.x = 1f;
+                bubbleSize.y = 1f;
+                transform.localScale = bubbleSize;
+            }
+
+            Vector3 IrisPos = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
+
+            // initialize a distanceFrom(Iris) float to keep track of distance
+            float distanceFrom = Vector3.Distance(IrisPos, transform.localPosition);
+
+            if (distanceFrom > 0.5f)
+            {
+                
+                // Two different lerp function to facilitate a specific look for the bubble spirit travel speed
+                if(distanceFrom > 1f)
+                {
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 4f * Time.deltaTime); 
+                }
+                else
+                {
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 2f * Time.deltaTime);
+                }
+            }
+            else
+            {
+                // call clear destroy once reach 0.5f distance from Iris
+                clearDestroy();
+            }
+        }
+    }
+
+
+    private void clearDestroy()
+    {
+        RunStatistics.Instance.bubblesCleared++;
+        RunStatistics.Instance.totalScore += 15;
+        GameManager.theManager.bubbleCleared();
+        Destroy(gameObject);
     }
 
     public void ChainClear()
