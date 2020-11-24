@@ -37,14 +37,19 @@ public class GameUIControl : MonoBehaviour
         upgradeScreenGroup = upgradeScreenUI.GetComponent<CanvasGroup>();
         helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
 
+        /*
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;
         captureCooldown = thePlayer.captureCoolDown;
+        */
     }
 
     // Update is called once per frame
     void Update()
     {
+        rollCooldown = thePlayer.dashCoolDown;
+        trapCooldown = thePlayer.shootCoolDown - 0.0825f;
+        captureCooldown = thePlayer.captureCoolDown;
         if(GameManager.theManager.canMove == true)
         {
             buttonControl();
