@@ -197,7 +197,7 @@ public class GameUIControl : MonoBehaviour
         GameObject rollText = upgradeBG.transform.Find("rollText").gameObject;
         GameObject lifeText = upgradeBG.transform.Find("lifeText").gameObject;
 
-        speedText.GetComponent<Text>().text = "Iris Movement Speed: " + thePlayer.normalSpeed + " (Max 18)";
+        speedText.GetComponent<Text>().text = "Iris Movement Speed: " + thePlayer.moveSpeed + " (Max 18)";
         trapText.GetComponent<Text>().text = "Bubble Trap Cooldown: " + thePlayer.shootCoolDown + " (Max 0.3)";
         captureText.GetComponent<Text>().text = "Bubble Capture Cooldown: " + thePlayer.captureCoolDown + " (Max 2)";
         rollText.GetComponent<Text>().text = "Roll Cooldown: " + thePlayer.dashCoolDown + " (Max 4)";

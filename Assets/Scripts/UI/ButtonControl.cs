@@ -51,16 +51,15 @@ public class ButtonControl : MonoBehaviour
     {
         if(RunStatistics.Instance.totalScore >= 1000)
         {
-            if(thePlayer.normalSpeed < 18f)
+            if(thePlayer.moveSpeed < 18f)
             {
-                if((thePlayer.normalSpeed += 0.2f) == 18f)
+                if((thePlayer.moveSpeed += 0.2f) >= 18f)
                 {
-                    thePlayer.normalSpeed = 18f;
+                    thePlayer.moveSpeed = 18f;
                     RunStatistics.Instance.totalScore -= 1000;
                 }
                 else
                 {
-                    thePlayer.normalSpeed += 0.2f;
                     RunStatistics.Instance.totalScore -= 1000;
                 }
             }
@@ -88,7 +87,6 @@ public class ButtonControl : MonoBehaviour
                 }
                 else
                 {
-                    thePlayer.shootCoolDown -= 0.01f;
                     RunStatistics.Instance.totalScore -= 1000;
                 }
             }
@@ -116,7 +114,6 @@ public class ButtonControl : MonoBehaviour
                 }
                 else
                 {
-                    thePlayer.captureCoolDown -= 0.1f;
                     RunStatistics.Instance.totalScore -= 1000;
                 }
             }
@@ -144,7 +141,6 @@ public class ButtonControl : MonoBehaviour
                 }
                 else
                 {
-                    thePlayer.dashCoolDown -= 0.1f;
                     RunStatistics.Instance.totalScore -= 1000;
                 }
             }

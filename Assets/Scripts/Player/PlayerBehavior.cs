@@ -10,8 +10,8 @@ public class PlayerBehavior : MonoBehaviour
     public Animator irisAnimator = null;
 
     Rigidbody2D rbody;
-    private float moveSpeed;
-    public float normalSpeed = 15f;
+    public float moveSpeed;
+    private float normalSpeed = 15f;
     private float focusSpeed;
 
     Vector2 mousePos;
@@ -64,11 +64,7 @@ public class PlayerBehavior : MonoBehaviour
 
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
-        moveSpeed = normalSpeed;
-        focusSpeed = normalSpeed / 2;
-        dashCoolDown = 5f;
-        captureCoolDown = 3f;
-        shootCoolDown = 0.4f;
+        setDefaultStat();
     }
 
     // Update is called once per frame
@@ -237,6 +233,15 @@ public class PlayerBehavior : MonoBehaviour
                 irisAnimator.SetBool("isRight", false);
             }
         }
+    }
+
+    public void setDefaultStat()
+    {
+        moveSpeed = normalSpeed;
+        focusSpeed = normalSpeed / 2;
+        dashCoolDown = 5f;
+        captureCoolDown = 3f;
+        shootCoolDown = 0.4f;
     }
 
     private void HandleRolling()
