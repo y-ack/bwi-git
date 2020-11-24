@@ -38,12 +38,15 @@ public class ButtonControl : MonoBehaviour
     public void gameToMenu()
     {
         GameManager.theManager.saveGame();
+        FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         FindObjectOfType<AudioManager>().Play("Title_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
 
     public void menuToTitle()
-    {
+    {      
+        FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
+        FindObjectOfType<AudioManager>().Play("Title_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
 
