@@ -24,14 +24,14 @@ public class PlayerBehavior : MonoBehaviour
 
     private bool isDashButtonDown;
     private float DashAmount = 5f;
-    public float dashCoolDown = 5f;
-    private float dashAfterSec = 0;
+    public float dashCoolDown;
+    private float dashAfterSec;
 
-    public float captureCoolDown = 3f;
-    private float captureAfterSec = 0;
+    public float captureCoolDown;
+    private float captureAfterSec;
 
-    public float shootCoolDown = 0.4f;
-    public float shootAfterSec = 0;
+    public float shootCoolDown;
+    public float shootAfterSec;
 
     public bool isCapturing = false;
     private BubbleSpirit capturedBubble;
@@ -66,11 +66,15 @@ public class PlayerBehavior : MonoBehaviour
         //set to 10 for testing, should discuss this later on.
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
+        dashCoolDown = 5f;
+        captureCoolDown = 3f;
+        shootCoolDown = 0.4f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        countdownCooldown();
         if(GameManager.theManager.canMove == true)
         {
             buttonControl();
@@ -113,10 +117,11 @@ public class PlayerBehavior : MonoBehaviour
         {
             FindObjectOfType<AudioManager>().Play("Iris_Rolling");
             dashAfterSec = dashCoolDown;
+            Debug.Log("cool down " + dashAfterSec);
+            Debug.Log(dashCoolDown);
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
         }
-        countdownCooldown();
         if (Input.GetMouseButton(0) && shootAfterSec <= 0)
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
