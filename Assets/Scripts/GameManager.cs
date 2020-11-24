@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
         if (!theManager)
         {
             theManager = this;
