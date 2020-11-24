@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public int bubbleCounter = 0;
     public bool canMove;
     private bool isHelp;
-    public bool isInvincible = true;
+    public bool isInvincible = false;
     private Vector3 originalPos;
 
 
@@ -77,30 +77,30 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.L))
             {
-                saveGame();
+                //saveGame();
             }
 
             if (Input.GetKeyDown(KeyCode.K))
-                playerHit();
+                //playerHit();
 
             if (Input.GetKeyDown(KeyCode.P))
             {
-                currentState = gameState.LOSE;
+                //currentState = gameState.LOSE;
             }
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                setCleared();
+                //setCleared();
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
                 if (isInvincible == false)
                 {
-                    isInvincible = true;
+                    //isInvincible = true;
                 }
                 else
                 {
-                    isInvincible = false;
+                    //isInvincible = false;
                 }
             }
         
