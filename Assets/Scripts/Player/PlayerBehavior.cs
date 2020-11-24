@@ -143,10 +143,10 @@ public class PlayerBehavior : MonoBehaviour
             if (isCapturing == true)
             {
                 
-                isCapturing = capturedBubble.tryLaunch(
+                isCapturing = !capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);
                 
-                if (isCapturing)                  
+                if (!isCapturing)                  
                     captureState = CaptureState.IDLE;
             }
         }

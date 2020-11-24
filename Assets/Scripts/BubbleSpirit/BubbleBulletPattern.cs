@@ -72,9 +72,8 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     const float activationRadius = 15f;
     public void Update()
     {
-        if(GameManager.theManager.canMove// &&
-           //parentBubble.state == BubbleSpirit.State.NORMAL
-        )
+        if(GameManager.theManager.canMove &&
+           parentBubble.state == BubbleSpirit.State.NORMAL)
         {
             patternLifetime -= Time.deltaTime;
             var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
