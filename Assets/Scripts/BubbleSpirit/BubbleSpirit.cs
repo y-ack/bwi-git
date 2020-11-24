@@ -282,9 +282,9 @@ public class BubbleSpirit : MonoBehaviour
     
     public void Clear()
     {
-        FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
-        StartCoroutine(BubbleClearSound());
-        FindObjectOfType<AudioManager>().Play("Bubble_Clear");
+        //FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+        //StartCoroutine(BubbleClearSound());
+        //FindObjectOfType<AudioManager>().Play("Bubble_Clear");
 
         cleared = true;
         state = State.CLEARED;       

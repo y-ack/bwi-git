@@ -13,6 +13,7 @@ public class StatisticUI : MonoBehaviour
 
     void Start()
     {
+        FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
         localCanvas = localStatistic.GetComponent<CanvasGroup>();
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
         updateLocal();

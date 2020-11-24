@@ -120,7 +120,7 @@ public class PlayerBehavior : MonoBehaviour
         }
         if (Input.GetMouseButton(0) && shootAfterSec <= 0)
         {
-            FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
+            //FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
             GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
                                    GameObject);
