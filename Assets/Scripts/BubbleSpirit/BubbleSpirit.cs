@@ -110,6 +110,8 @@ public class BubbleSpirit : MonoBehaviour
                 if(other.gameObject.tag == "Bullet"
                    && !other.GetComponent<PlayerBulletBehavior>().disabled)
                 {
+                    FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+                    FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
                     other.GetComponent<PlayerBulletBehavior>().disabled = true;
                     Clear();
                 }
@@ -139,6 +141,9 @@ public class BubbleSpirit : MonoBehaviour
                     tryMatch();
                 } else if (other.gameObject.tag == "Wall Top")
                 {
+                    //Change this to something else like impact collision with wall
+                    //FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+                    FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
                     Clear();
                 }
                 //TODO if hits a wall, reparent into new unit instead? discuss
@@ -282,10 +287,6 @@ public class BubbleSpirit : MonoBehaviour
     
     public void Clear()
     {
-        //FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
-        //StartCoroutine(BubbleClearSound());
-        //FindObjectOfType<AudioManager>().Play("Bubble_Clear");
-
         cleared = true;
         state = State.CLEARED;       
         Unparent();
@@ -293,11 +294,6 @@ public class BubbleSpirit : MonoBehaviour
             Destroy(pattern.gameObject);
         //trigger animation, yield and delete
     }
-    IEnumerator BubbleClearSound()
-    {      
-        yield return new WaitForSeconds(0.5f);
-    }
-
     // Method used to animate the bubble spirit after getting hit by a 
     private void clearAnimation()
     {
@@ -358,8 +354,7 @@ public class BubbleSpirit : MonoBehaviour
 
 
     private void clearDestroy()
-    {
-        
+    {       
         RunStatistics.Instance.bubblesCleared++;
         RunStatistics.Instance.totalScore += 15;
         GameManager.theManager.bubbleCleared();

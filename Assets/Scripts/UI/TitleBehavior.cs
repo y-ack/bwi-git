@@ -36,7 +36,9 @@ public class TitleBehavior : MonoBehaviour
         CREDITS
     };
 
-
+    private void Awake() {
+        GameObject audioManager = Instantiate(Resources.Load("Prefabs/AudioManager") as GameObject);
+    }
     void Start()
     {
         FindObjectOfType<AudioManager>().Play("Title_Theme");

@@ -40,6 +40,7 @@ public class TitleButton : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
             RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
             RunStatistics.Instance.isNew = true;
+            FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
             SceneManager.LoadScene("Main");
         }
         else
@@ -60,6 +61,7 @@ public class TitleButton : MonoBehaviour
             PlayerData playerData = SaveSystem.loadPlayer();
             RunStatistics.Instance.playerName = playerData.playerName;
             RunStatistics.Instance.isNew = false;
+            FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
             SceneManager.LoadScene("Main");
         }
         else

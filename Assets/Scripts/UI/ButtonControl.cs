@@ -38,6 +38,7 @@ public class ButtonControl : MonoBehaviour
     public void gameToMenu()
     {
         GameManager.theManager.saveGame();
+        FindObjectOfType<AudioManager>().Play("Title_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
 
@@ -49,6 +50,7 @@ public class ButtonControl : MonoBehaviour
     // Function used to move the player to the title screen from statistic scene
     public void statisticToMenu()
     {
+        FindObjectOfType<AudioManager>().Play("Title_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
 
