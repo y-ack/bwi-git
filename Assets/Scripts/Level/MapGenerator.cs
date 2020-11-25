@@ -114,8 +114,8 @@ public class MapGenerator : MonoBehaviour
         float scaleStep = 0.05f;
         
         float maxThreshold = 0.32f;
-        float minThreshold = 0.2f;
-        float thresholdStep = 0.01f;
+        float minThreshold = 0.22f;
+        float thresholdStep = 0.001f;
         float maxDifficulty = 100f;
         if (difficulty < 0)
         {
@@ -142,11 +142,11 @@ public class MapGenerator : MonoBehaviour
         float minYScale = height / 10f; 
         float maxXScale = width / 5f;
         float maxYScale = height / 5f; 
-        float scaleStep = 0.05f;
+        float scaleStep = 0.045f;
 
         float maxThreshold = 0.43f;
-        float minThreshold = 0.3f;
-        float thresholdStep = 0.01f;
+        float minThreshold = 0.33f;
+        float thresholdStep = 0.001f;
 
         float maxDifficulty = 100f;
         if (difficulty < 0)
@@ -172,7 +172,7 @@ public class MapGenerator : MonoBehaviour
     {
         ClearAllTiles();
         cavePoints = new int[width, height];
-        smoothCycles = 1;
+        smoothCycles = 2;
         seed = Random.Range(0,200f);
         //normalGeneration(1); 
 

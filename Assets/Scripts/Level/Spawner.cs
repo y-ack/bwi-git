@@ -8,7 +8,7 @@ public class Spawner : MonoBehaviour
     public Grid mGrid;
     public Camera cam = null;
     private MapGenerator currentLevel;
-    private float spawnRadius = 15f;
+    private float spawnRadius = 12f;
     private int ranX = 0;
     private int ranY = 0;
     private int normalCap;
@@ -49,18 +49,18 @@ public class Spawner : MonoBehaviour
         if (currentLevel.canSpawn() == true)
         {
             StartCoroutine(setPlayerNormal());
-            setMaxUnitSize(difficulty);
-            StartCoroutine(setNormal(normalCap, difficulty));
+            setTotalUnit(normalCap, difficulty);
+            setTotalColor(difficulty);
+            StartCoroutine(setNormal(difficulty));
         }
     }
     
 
-    public IEnumerator setNormal(int totalBubble, float difficulty)
+    public IEnumerator setNormal(float difficulty)
     {   
-        setTotalUnit(difficulty, totalBubble);
-        setTotalColor(difficulty);
+        
         Vector2 p = player.transform.position;    
-
+        int ring = 1;
         foreach(int unit in unitsSize) 
         { 
             //Trying to get a spawnable location
@@ -69,10 +69,14 @@ public class Spawner : MonoBehaviour
                 ranX = Random.Range(2,currentLevel.width);
                 ranY = Random.Range(2,currentLevel.height);
                 if (currentLevel.cavePoints[ranX,ranY] == 0 &&
-                    currentLevel.cavePoints[ranX + 2,ranY] == 0 &&
-                    currentLevel.cavePoints[ranX - 2,ranY] == 0 &&
-                    currentLevel.cavePoints[ranX,ranY + 2] == 0 &&
-                    currentLevel.cavePoints[ranX,ranY - 2] == 0)
+                    currentLevel.cavePoints[ranX + ring,ranY] == 0 &&
+                    currentLevel.cavePoints[ranX - ring,ranY] == 0 &&
+                    currentLevel.cavePoints[ranX,ranY + ring] == 0 &&
+                    currentLevel.cavePoints[ranX,ranY - ring] == 0 &&
+                    currentLevel.cavePoints[ranX + ring,ranY + ring] == 0 &&
+                    currentLevel.cavePoints[ranX - ring,ranY - ring] == 0 &&
+                    currentLevel.cavePoints[ranX + ring,ranY - ring] == 0 &&
+                    currentLevel.cavePoints[ranX - ring,ranY + ring] == 0)
                 {
                     if((Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
                     { 
@@ -96,18 +100,19 @@ public class Spawner : MonoBehaviour
                 //and got those but i'm too lazy to formular them :(
                 if(i == 0)
                 {
-                    
+                    ring = 1;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, totalColor));
-                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 7)
                 {
+                    ring = 2;
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-1,2);
-                        by = Random.Range(-1,2);
+                        bx = Random.Range(-ring + 1,ring);
+                        by = Random.Range(-ring + 1,ring);
                         Vector2Int tmp = new Vector2Int(bx,by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
@@ -117,15 +122,16 @@ public class Spawner : MonoBehaviour
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, totalColor));  
-                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 22)
                 {
+                    ring = 3;
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-2,3);
-                        by = Random.Range(-2,3);
+                        bx = Random.Range(-ring + 1,ring);
+                        by = Random.Range(-ring + 1,ring);
                         Vector2Int tmp = new Vector2Int(bx,by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
@@ -135,15 +141,16 @@ public class Spawner : MonoBehaviour
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, totalColor));  
-                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 43)
                 {
+                    ring = 4;
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-3,4);
-                        by = Random.Range(-3,4);
+                        bx = Random.Range(-ring + 1,ring);
+                        by = Random.Range(-ring + 1,ring);
                         Vector2Int tmp = new Vector2Int(bx,by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
@@ -153,15 +160,16 @@ public class Spawner : MonoBehaviour
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, totalColor));  
-                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 79)
                 {
+                    ring = 5;
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-4,5);
-                        by = Random.Range(-4,5);
+                        bx = Random.Range(-ring + 1,ring);
+                        by = Random.Range(-ring + 1,ring);
                         Vector2Int tmp = new Vector2Int(bx,by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
@@ -171,7 +179,7 @@ public class Spawner : MonoBehaviour
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
                     bubbleChild[i].SetColor(Random.Range(0, totalColor));  
-                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
+                    BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else
                 {
@@ -196,24 +204,33 @@ public class Spawner : MonoBehaviour
         {
             StartCoroutine(setPlayerBoss());
             StartCoroutine(setBoss(bossCap, difficulty));
-            StartCoroutine(setNormal((int)(bossCap / 3f), difficulty / 3f));
+            //StartCoroutine(setNormal(Mathf.RoundToInt(bossCap / 4f), difficulty));
+            setTotalUnit(Mathf.RoundToInt(bossCap / 4f), difficulty);
+            setTotalColor(difficulty);
+            StartCoroutine(setNormal(difficulty));
         }
     }
 
 
     public IEnumerator setBoss(int bossCap, float difficulty)
     {     
+        int ring = 1;
         while (spawnPosFound == false)
         {
             //Spawn in the middle of the map
-            ranX = Random.Range(Mathf.RoundToInt(currentLevel.width/2 - currentLevel.width/4), Mathf.RoundToInt(currentLevel.width/2 + currentLevel.width/4));
-            ranY = Random.Range(Mathf.RoundToInt(currentLevel.height/2 - currentLevel.height/4), Mathf.RoundToInt(currentLevel.height/2 + currentLevel.height/4));  
-            //Spawn 5 units away from a wall             
+            ranX = Random.Range(Mathf.RoundToInt(currentLevel.width/2f - currentLevel.width/4f), Mathf.RoundToInt(currentLevel.width/2f + currentLevel.width/4f));
+            ranY = Random.Range(Mathf.RoundToInt(currentLevel.height/2f - currentLevel.height/4f), Mathf.RoundToInt(currentLevel.height/2f + currentLevel.height/4f));  
+            //Spawn 6 units away from a wall in all directions             
             if (currentLevel.cavePoints[ranX,ranY] == 0 &&
-                currentLevel.cavePoints[ranX + 5,ranY] == 0 &&
-                currentLevel.cavePoints[ranX - 5,ranY] == 0 &&
-                currentLevel.cavePoints[ranX,ranY + 5] == 0 &&
-                currentLevel.cavePoints[ranX,ranY - 5] == 0)
+                currentLevel.cavePoints[ranX + ring,ranY] == 0 &&
+                currentLevel.cavePoints[ranX - ring,ranY] == 0 &&
+                currentLevel.cavePoints[ranX,ranY + ring] == 0 &&
+                currentLevel.cavePoints[ranX,ranY - ring] == 0 &&
+                currentLevel.cavePoints[ranX + ring,ranY + ring] == 0 &&
+                currentLevel.cavePoints[ranX - ring,ranY - ring] == 0 &&
+                currentLevel.cavePoints[ranX + ring,ranY - ring] == 0 &&
+                currentLevel.cavePoints[ranX - ring,ranY + ring] == 0
+                )
             {
                 spawnPosFound = true;
             }              
@@ -231,21 +248,23 @@ public class Spawner : MonoBehaviour
             
             boss[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;    
             bossChild[i] = boss[i].GetComponent<BubbleSpirit>();
-            //Don't be mad with those magic numbers, I calculated the total cells each ring
-            //and got those but i don't know how :(
+            //Don't be mad with those magic numbers, I calculated the total cells for each ring
+            //and got those but i'm too lazy to formular them :(
             if(i == 0)
-            {             
+            {    
+                ring = 1;         
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));
-                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else if (i < 7)
             {
+                ring = 2;
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-1,2);
-                    by = Random.Range(-1,2);
+                    bx = Random.Range(-ring + 1,ring);
+                    by = Random.Range(-ring + 1,ring);
                     Vector2Int tmp = new Vector2Int(bx,by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
@@ -255,15 +274,16 @@ public class Spawner : MonoBehaviour
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));  
-                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else if (i < 22)
             {
+                ring = 3;
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-2,3);
-                    by = Random.Range(-2,3);
+                    bx = Random.Range(-ring + 1,ring);
+                    by = Random.Range(-ring + 1,ring);
                     Vector2Int tmp = new Vector2Int(bx,by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
@@ -273,15 +293,16 @@ public class Spawner : MonoBehaviour
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));
-                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else if (i < 43)
             {
+                ring = 4;
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-3,4);
-                    by = Random.Range(-3,4);
+                    bx = Random.Range(-ring + 1,ring);
+                    by = Random.Range(-ring + 1,ring);
                     Vector2Int tmp = new Vector2Int(bx,by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
@@ -291,15 +312,16 @@ public class Spawner : MonoBehaviour
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));
-                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else if (i < 79)
             {
+                ring = 5;
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-4,5);
-                    by = Random.Range(-4,5);
+                    bx = Random.Range(-ring + 1,ring);
+                    by = Random.Range(-ring + 1,ring);
                     Vector2Int tmp = new Vector2Int(bx,by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
@@ -309,15 +331,16 @@ public class Spawner : MonoBehaviour
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));
-                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else if (i < 122)
             {
+                ring = 6;
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-5,6);
-                    by = Random.Range(-5,6);
+                    bx = Random.Range(-ring + 1,ring);
+                    by = Random.Range(-ring + 1,ring);
                     Vector2Int tmp = new Vector2Int(bx,by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
@@ -327,7 +350,7 @@ public class Spawner : MonoBehaviour
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));
-                BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
+                BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else
             {
@@ -365,33 +388,33 @@ public class Spawner : MonoBehaviour
     { 
         /* Trying to get spawnable location Xs
         -----------------------------
-        |            5          x   |
+        |            3          x   |
         |  x   ---------------      |
         |      |             |      |
-        |  10  |             |  10  |
+        |  5   |             |  5   |
         |      |             |      |
         |      ---------------      |
-        |            5     x        |
+        |            3     x        |
         -----------------------------  */
         while (spawnPosFound == false)
         {           
             ranX = Random.Range(0,2);
             if (ranX == 0)
             {
-                ranX = Random.Range(2,currentLevel.width - 50);
+                ranX = Random.Range(2,Mathf.RoundToInt(currentLevel.width/10f) + 2);
             }
             else
             {
-                ranX = Random.Range(currentLevel.width - 10, currentLevel.width - 2);
+                ranX = Random.Range(Mathf.RoundToInt(currentLevel.width - (currentLevel.width/10f)) - 2, currentLevel.width - 2);
             }
             ranY = Random.Range(0,2);
             if (ranY == 0)
             {
-                ranY = Random.Range(2,currentLevel.height - 33);          
+                ranY = Random.Range(2,Mathf.RoundToInt(currentLevel.height/10f) + 2);          
             }
             else
             {
-                ranY = Random.Range(currentLevel.height - 7, currentLevel.height - 2);
+                ranY = Random.Range(Mathf.RoundToInt(currentLevel.height - (currentLevel.height/5f)) - 2, currentLevel.height - 2);
             }
             if (currentLevel.cavePoints[ranX,ranY] == 0 &&
                 currentLevel.cavePoints[ranX + 1,ranY] == 0 &&
@@ -409,7 +432,7 @@ public class Spawner : MonoBehaviour
 
     public int getNormalCap(float difficulty)
     {
-        int normalCap = minNormal + Mathf.RoundToInt(difficulty * 0.25f);
+        int normalCap = minNormal + Mathf.RoundToInt(difficulty * 0.5f);
         if (normalCap >= maxNormal)
             return maxNormal;
         else
@@ -417,7 +440,7 @@ public class Spawner : MonoBehaviour
     }
     public int getBossCap(float difficulty)
     {
-        int bossCap = minBoss + Mathf.RoundToInt(difficulty * 0.25f);
+        int bossCap = minBoss + Mathf.RoundToInt(difficulty * 0.5f);
         if (bossCap >= maxBoss)
             return maxBoss;
         else
@@ -425,27 +448,29 @@ public class Spawner : MonoBehaviour
     }
 
     //Placeholder for difficulty, can be set to curve later.
-    public void setMaxUnitSize(float difficulty)
+    //Set unit size min and max based on difficulty
+    public void setUnitSize(float difficulty)
     {
-        if (difficulty <= 25f)
+        //Equivalent to level 2 if curve is 2
+        if (difficulty < 4)
         {
-            maxUnitSize = 3;
-        }
-        else if (difficulty <= 50f)
-        {
+            minUnitSize = 2;
             maxUnitSize = 4;
         }
-        else if (difficulty <= 75f)
+         //Equivalent to level 7 if curve is 2
+        else if (difficulty < 25)
         {
+            minUnitSize = 3;
             maxUnitSize = 5;
         }
         else
         {
+            minUnitSize = 4;
             maxUnitSize = 6;
         }
     }
-
-    public void setTotalUnit(float difficulty, int totalBubble)
+    //Set total units from the number of bubbles
+    public void setTotalUnit( int totalBubble,float difficulty)
     {
         int bubbleLeft = totalBubble;  
         setUnitSize(difficulty);    
@@ -453,6 +478,11 @@ public class Spawner : MonoBehaviour
         {
             if (bubbleLeft <= 0)
             {
+                break;
+            }
+            if (bubbleLeft == 1)
+            {
+                unitsSize.Add(1);
                 break;
             }
             int ranUnitSize = Random.Range(minUnitSize,maxUnitSize + 1);
@@ -464,23 +494,7 @@ public class Spawner : MonoBehaviour
             bubbleLeft -= ranUnitSize;
         }
     }
-    public void setUnitSize(float difficulty)
-    {
-        //Equivalent to level 2 if curve is 2
-        if (difficulty < 4)
-        {
-            minUnitSize = 2;
-        }
-         //Equivalent to level 7 if curve is 2
-        else if (difficulty < 24)
-        {
-            minUnitSize = 3;
-        }
-        else
-        {
-            minUnitSize = 4;
-        }
-    }
+    
     public void setTotalColor(float difficulty)
     {
         
@@ -490,7 +504,7 @@ public class Spawner : MonoBehaviour
             totalColor = 2;
         }
         //Equivalent to level 7 if curve is 2
-        else if (difficulty < 24)
+        else if (difficulty < 10)
         {
             totalColor = 3;
         }
@@ -499,7 +513,6 @@ public class Spawner : MonoBehaviour
             totalColor = 4;
         }
     }
-
 }
 
 
