@@ -8,19 +8,19 @@ public class Spawner : MonoBehaviour
     public Grid mGrid;
     public Camera cam = null;
     private MapGenerator currentLevel;
-    private float spawnRadius = 20f;
+    private float spawnRadius = 15f;
     private int ranX = 0;
     private int ranY = 0;
     private int normalCap;
     //minNormal and maxNormal can be set based on the level difficulty.
-    private int minNormal = 20;
+    private int minNormal;
     private int maxNormal = 50;
     private int minUnitSize = 2;
     private int maxUnitSize;
     private int totalColor = 2;
 
     private int bossCap;
-    private int minBoss = 30;
+    private int minBoss;
     private int maxBoss = 120;
     public GameObject[] boss;
     public BubbleSpirit[] bossChild;
@@ -32,8 +32,8 @@ public class Spawner : MonoBehaviour
     List<List<MapGenerator.Coord>> spawnPool;
     private void Start()
     {
-
-
+        minNormal = Random.Range(15,20);
+        minBoss = Random.Range(25,30);
     }
     
 
@@ -205,9 +205,9 @@ public class Spawner : MonoBehaviour
     {     
         while (spawnPosFound == false)
         {
-            //Spawn in the middle of the map in an 30x15 area
-            ranX = Random.Range(currentLevel.width/2 - 15, currentLevel.width/2 + 16);
-            ranY = Random.Range(currentLevel.height/2 - 7, currentLevel.height/2 + 8);  
+            //Spawn in the middle of the map
+            ranX = Random.Range(Mathf.RoundToInt(currentLevel.width/2 - currentLevel.width/4), Mathf.RoundToInt(currentLevel.width/2 + currentLevel.width/4));
+            ranY = Random.Range(Mathf.RoundToInt(currentLevel.height/2 - currentLevel.height/4), Mathf.RoundToInt(currentLevel.height/2 + currentLevel.height/4));  
             //Spawn 5 units away from a wall             
             if (currentLevel.cavePoints[ranX,ranY] == 0 &&
                 currentLevel.cavePoints[ranX + 5,ranY] == 0 &&

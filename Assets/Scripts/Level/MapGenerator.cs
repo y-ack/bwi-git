@@ -27,9 +27,9 @@ public class MapGenerator : MonoBehaviour
 
     public int[,] cavePoints;
 
-    public int width;
+    public int width = 45;
 
-    public int height;
+    public int height = 30;
 
     private int smoothCycles;
 
@@ -42,18 +42,21 @@ public class MapGenerator : MonoBehaviour
     public float tileSize = 0.32f;
     public float tileOffset = 0.16f;
     private int wallThresholdSize = 10;
-    private int deadZoneArea = 1000;
-    int floraMin = 50;
-    int floraMax = 100;
+    private int deadZoneArea ;
+    int floraMin = 40;
+    int floraMax = 80;
     int obstacleMin = 10;
     int obstacleMax = 30;
     int obstacleCap = 50;
-    int floraCap = 150;
+    int floraCap = 100;
 
     private bool generationDone = false;
     
     private void Awake() 
     {
+        width = 45;
+        height = 30;
+        deadZoneArea = Mathf.RoundToInt(width * height / 3);
         generationDone = false;
     }
     /*//All possible generation result
@@ -104,14 +107,15 @@ public class MapGenerator : MonoBehaviour
     
     public void bossGeneration(float difficulty)
     {
-        float minXScale = 15f;
-        float minYScale = 13f; //bias toward xscale
-        float maxThreshold = 0.3f;
-        float maxXScale = 20f;
-        float maxYScale = 18f; 
-        float minThreshold = 0.2f;
+        float minXScale = width / 5f;
+        float minYScale = height / 5f; ;
+        float maxXScale = width / 3f;
+        float maxYScale = height / 3f;
         float scaleStep = 0.05f;
-        float thresholdStep = 0.001f;
+        
+        float maxThreshold = 0.32f;
+        float minThreshold = 0.2f;
+        float thresholdStep = 0.01f;
         float maxDifficulty = 100f;
         if (difficulty < 0)
         {
@@ -134,14 +138,16 @@ public class MapGenerator : MonoBehaviour
     
     public void normalGeneration(float difficulty)
     {
-        float minXScale = 5f;
-        float minYScale = 3f; //bias toward xscale
-        float maxThreshold = 0.4f;
-        float maxXScale = 15f;
-        float maxYScale = 13f; 
-        float minThreshold = 0.3f;
+        float minXScale = width / 10f;
+        float minYScale = height / 10f; 
+        float maxXScale = width / 5f;
+        float maxYScale = height / 5f; 
         float scaleStep = 0.05f;
-        float thresholdStep = 0.001f;
+
+        float maxThreshold = 0.43f;
+        float minThreshold = 0.3f;
+        float thresholdStep = 0.01f;
+
         float maxDifficulty = 100f;
         if (difficulty < 0)
         {
@@ -166,7 +172,7 @@ public class MapGenerator : MonoBehaviour
     {
         ClearAllTiles();
         cavePoints = new int[width, height];
-        smoothCycles = 2;
+        smoothCycles = 1;
         seed = Random.Range(0,200f);
         //normalGeneration(1); 
 
@@ -182,8 +188,7 @@ public class MapGenerator : MonoBehaviour
                     }
                     else
                     {
-                        float sample = Mathf.PerlinNoise(x / xscale + seed, y / yscale + seed);               
-                    
+                        float sample = Mathf.PerlinNoise(x / xscale + seed, y / yscale + seed);                                 
                         if (sample > threshold)
                         {
                             cavePoints[x,y] = 0;
