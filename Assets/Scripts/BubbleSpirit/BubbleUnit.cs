@@ -1,6 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
+
 
 [StructLayout(LayoutKind.Sequential)]
 public struct BubbleNeighbors
@@ -37,6 +39,9 @@ public class BubbleUnit : MonoBehaviour
     private float moveTimer;
     private float radius = 3f;
 
+
+    private Light2D myLight;
+
     public Vector2Int[][] oddr_directions = new Vector2Int[][]
     {
         new Vector2Int[] {
@@ -52,7 +57,6 @@ public class BubbleUnit : MonoBehaviour
     private Dictionary<Vector2Int, BubbleSpirit> grid = new
         Dictionary<Vector2Int, BubbleSpirit>();
     private int bubbleCount;
-
 
     public BubbleSpirit cellOrNull(Vector2Int cellPos)
     {
@@ -133,17 +137,28 @@ public class BubbleUnit : MonoBehaviour
         Destroy(gameObject);
     }
 
+    float maxRange;
+    float minRange;
+    float flickerSpeed;
     // Start is called before the first frame update
     void Start()
     {
+        myLight = GetComponent<Light2D>();
         initialPosition = transform.position;
         movePosition = new Vector3(initialPosition.x + UnityEngine.Random.Range(-radius, radius),
                                initialPosition.y + UnityEngine.Random.Range(-radius, radius), 0f);
+        maxRange = Random.Range(1f,1.2f);
+        minRange = Random.Range(0.8f,1f);
+        flickerSpeed = Random.Range(3f,5f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        myLight.intensity = Mathf.Lerp(minRange,maxRange, Mathf.PingPong(Time.time, flickerSpeed));   
+
+
+        
         if (moveTimer > 0){ moveTimer -=  Time.deltaTime; }
         transform.position = Vector2.MoveTowards(transform.position, movePosition, 1f * Time.deltaTime);
         if(Vector2.Distance(transform.position, movePosition) < 0.2f)

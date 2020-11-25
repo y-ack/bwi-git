@@ -6,7 +6,6 @@ public class PlayerBulletBehavior : MonoBehaviour
 {
     static private PlayerBehavior ParentPlayer = null;
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
-
     private const float bulletSpeed = 15f;
     Vector2 bulletDirection;
     private float lifeSpan;
@@ -15,7 +14,6 @@ public class PlayerBulletBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         lifeSpan = 1.5f;
     }
 
@@ -23,7 +21,6 @@ public class PlayerBulletBehavior : MonoBehaviour
     void Update()
     {
         transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
-        
         lifeSpan -= Time.deltaTime;
         if(lifeSpan <= 0 && Vector3.Distance(ParentPlayer.transform.position,transform.position) > 4f)
         {

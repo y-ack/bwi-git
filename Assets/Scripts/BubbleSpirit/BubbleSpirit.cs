@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
+
 
 //pseudo enum
 [Serializable]
@@ -31,6 +33,7 @@ public class BubbleSpirit : MonoBehaviour
     public Texture2D yellowTexture = null;
     public Texture2D purpleTexture = null;
     private Sprite mySprite;
+    private Light2D myLight;
     //public Texture2D[] colorTextures = new Texture2D[]{redTexture, blueTexture, yellowTexture};
 
     public enum State {
@@ -54,8 +57,12 @@ public class BubbleSpirit : MonoBehaviour
     public BubbleBulletPattern pattern; //maybe an array
     bool cleared;
 
+    public float maxRange = 1.5f;
+    public float minRange = 0.5f;
+    public float flickerSpeed = 0.5f;
     void Start()
     {
+        myLight = GetComponent<Light2D>();
         state = State.NORMAL;
         playerTarget = (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
         /*
@@ -70,6 +77,8 @@ public class BubbleSpirit : MonoBehaviour
     [SerializeField] private float orbit_y = 0.4f;
     void Update()
     {
+            
+        //myLight.pointLightOuterRadius = Mathf.Lerp(minRange, maxRange, Mathf.PingPong(Time.time, flickerSpeed));
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
         float delta = bubbleSpeed * Time.smoothDeltaTime;
@@ -96,6 +105,7 @@ public class BubbleSpirit : MonoBehaviour
                 transform.position += launchDirection * delta; //delta bugged
                 break;
             case State.CLEARED:
+                myLight.enabled = false;
                 clearAnimation();
                 break;
         }        
@@ -165,18 +175,34 @@ public class BubbleSpirit : MonoBehaviour
         // maybe need to be looked into more
         // alternate method: create sprite and swap out sprites completely
         if (color == BubbleColor.red)
+        {
+            myLight = GetComponent<Light2D>();
+            myLight.color = Color.red / 2 + (Color.yellow / 10);
             mySprite = Sprite.Create(redTexture, new Rect(0.0f, 0.0f, redTexture.width, redTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             //sr.material.mainTexture = redTexture;
+        }
         if (color == BubbleColor.blue)
+        {
+            myLight = GetComponent<Light2D>();
+            myLight.color = Color.blue + (Color.yellow / 10); 
             mySprite = Sprite.Create(blueTexture, new Rect(0.0f, 0.0f, blueTexture.width, blueTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             //sr.material.mainTexture = blueTexture;
+        }
         if (color == BubbleColor.yellow)
+        {
+            myLight = GetComponent<Light2D>();
+            myLight.color = Color.yellow / 3;
             mySprite = Sprite.Create(yellowTexture, new Rect(0.0f, 0.0f, yellowTexture.width, yellowTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
            //sr.material.mainTexture = yellowTexture;
+        }
         if (color == BubbleColor.purple)
+        {
+            myLight = GetComponent<Light2D>();
+            myLight.color = Color.red + Color.blue;
             mySprite = Sprite.Create(purpleTexture, new Rect(0.0f, 0.0f, purpleTexture.width, purpleTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
            //sr.material.mainTexture = purpleTexture;
-        
+        }
+        //myLight.intensity = 1f;
         sr.sprite = mySprite;
     }
 

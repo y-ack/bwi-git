@@ -21,7 +21,7 @@ public class CaptureBulletBehavior : MonoBehaviour
         {
             case "BubbleSpirit":               
                 BubbleSpirit capturedBubble = collision.GetComponent<BubbleSpirit>();
-                ParentPlayer.SetCapture(capturedBubble);
+                ParentPlayer.SetCapture(capturedBubble);               
                 destroySelf();
                 break;
             case "Wall Top":

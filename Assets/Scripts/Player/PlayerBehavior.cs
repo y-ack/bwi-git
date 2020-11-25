@@ -122,10 +122,14 @@ public class PlayerBehavior : MonoBehaviour
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
-            GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+            GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
             e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
+            GameObject l = Instantiate(Resources.Load("Prefabs/LightSources/PlayerTrapPointLight") as
+                                   GameObject);
+            l.transform.localPosition = transform.localPosition;
+            l.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             shootAfterSec = shootCoolDown;
         }
         if (Input.GetMouseButtonDown(1))
@@ -134,7 +138,7 @@ public class PlayerBehavior : MonoBehaviour
             {
                 FindObjectOfType<AudioManager>().Play("Iris_CaptureA");
                 FindObjectOfType<AudioManager>().Play("Iris_CaptureB");
-                GameObject e = Instantiate(Resources.Load("Prefabs/net") as
+                GameObject e = Instantiate(Resources.Load("Prefabs/Capture") as
                                    GameObject);
                 e.transform.localPosition = transform.localPosition;
                 e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;

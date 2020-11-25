@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
     {
         RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
-        RunStatistics.Instance.currentStage = 1;
+        RunStatistics.Instance.currentStage = 7;
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
         RunStatistics.Instance.currentLife = 3;
