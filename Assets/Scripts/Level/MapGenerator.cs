@@ -142,10 +142,10 @@ public class MapGenerator : MonoBehaviour
         float minYScale = height / 10f; 
         float maxXScale = width / 5f;
         float maxYScale = height / 5f; 
-        float scaleStep = 0.045f;
+        float scaleStep = 0.05f;
 
-        float maxThreshold = 0.43f;
-        float minThreshold = 0.33f;
+        float maxThreshold = 0.40f;
+        float minThreshold = 0.30f;
         float thresholdStep = 0.001f;
 
         float maxDifficulty = 100f;
