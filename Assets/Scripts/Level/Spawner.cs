@@ -15,7 +15,9 @@ public class Spawner : MonoBehaviour
     //minNormal and maxNormal can be set based on the level difficulty.
     private int minNormal = 20;
     private int maxNormal = 50;
+    private int minUnitSize = 2;
     private int maxUnitSize;
+    private int totalColor = 2;
 
     private int bossCap;
     private int minBoss = 30;
@@ -55,7 +57,8 @@ public class Spawner : MonoBehaviour
 
     public IEnumerator setNormal(int totalBubble, float difficulty)
     {   
-        setTotalUnit(totalBubble);
+        setTotalUnit(difficulty, totalBubble);
+        setTotalColor(difficulty);
         Vector2 p = player.transform.position;    
 
         foreach(int unit in unitsSize) 
@@ -95,7 +98,7 @@ public class Spawner : MonoBehaviour
                 {
                     
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, 3));
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else if (i < 7)
@@ -113,7 +116,7 @@ public class Spawner : MonoBehaviour
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else if (i < 22)
@@ -131,7 +134,7 @@ public class Spawner : MonoBehaviour
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else if (i < 43)
@@ -149,7 +152,7 @@ public class Spawner : MonoBehaviour
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else if (i < 79)
@@ -167,7 +170,7 @@ public class Spawner : MonoBehaviour
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, 3));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 3, difficulty);
                 }
                 else
@@ -193,6 +196,7 @@ public class Spawner : MonoBehaviour
         {
             StartCoroutine(setPlayerBoss());
             StartCoroutine(setBoss(bossCap, difficulty));
+            StartCoroutine(setNormal((int)(bossCap / 3f), difficulty / 3f));
         }
     }
 
@@ -232,7 +236,7 @@ public class Spawner : MonoBehaviour
             if(i == 0)
             {             
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 4));
+                bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i < 7)
@@ -250,7 +254,7 @@ public class Spawner : MonoBehaviour
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 4));  
+                bossChild[i].SetColor(Random.Range(0, totalColor));  
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i < 22)
@@ -268,7 +272,7 @@ public class Spawner : MonoBehaviour
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 3));
+                bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i < 43)
@@ -286,7 +290,7 @@ public class Spawner : MonoBehaviour
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 3));
+                bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i < 79)
@@ -304,7 +308,7 @@ public class Spawner : MonoBehaviour
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 3));
+                bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else if (i < 122)
@@ -322,67 +326,17 @@ public class Spawner : MonoBehaviour
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, 3));
+                bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], bossCap, difficulty);
             }
             else
             {
                 //For spawning bigger units 
                 //To find the next hexagon ring area: 
-            }
-            //Destroy(c.gameObject);
-            /*if(i == 0)
-            {             
-                bossChild.setParent(bossParent, new Vector2Int(bx, by));
-                bossChild.SetColor(Random.Range(0, 4));
-                BulletPatternGenerator.instance.addToBubble(bossChild, bossCap, difficulty);
-            }
-            else if (i > 0 && i <= 6)
-            {
-                //Try to spawn a bubble if the cell is not occupied
-                while (spawnPosFound == false)
-                {
-                    bx = Random.Range(-1,2);
-                    by = Random.Range(-1,2);
-                    Vector2Int tmp = new Vector2Int(bx,by);
-                    if (bossParent.cellOrNull(tmp) == null)
-                    {
-                        spawnPosFound = true;                        
-                    }
-                }
-                spawnPosFound = false;
-                bossChild.setParent(bossParent, new Vector2Int(bx, by));
-                bossChild.SetColor(Random.Range(0, 4));  
-                BulletPatternGenerator.instance.addToBubble(bossChild, bossCap, difficulty);
-            }
-            else if (i > 6 && i <= 21)
-            {
-                //Try to spawn a bubble if the cell is not occupied
-                while (spawnPosFound == false)
-                {
-                    bx = Random.Range(-2,3);
-                    by = Random.Range(-2,3);
-                    Vector2Int tmp = new Vector2Int(bx,by);
-                    if (bossParent.cellOrNull(tmp) == null)
-                    {
-                        spawnPosFound = true;                         
-                    }
-                }
-                spawnPosFound = false;
-                bossChild.setParent(bossParent, new Vector2Int(bx, by));
-                bossChild.SetColor(Random.Range(0, 3));
-                BulletPatternGenerator.instance.addToBubble(bossChild, bossCap, difficulty);
-            }
-            else
-            {
-                //For spawning bigger units 
-            }
-            Debug.Log("after set");    
-            //Destroy(c.gameObject);*/
-
+            }            
             GameManager.theManager.addBubble();         
         }
-    yield return new WaitForSeconds(3f);
+    yield return new WaitForSeconds(2f);
     }
 
 
@@ -491,25 +445,60 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void setTotalUnit( int totalBubble)
+    public void setTotalUnit(float difficulty, int totalBubble)
     {
-        int bubbleLeft = totalBubble;      
+        int bubbleLeft = totalBubble;  
+        setUnitSize(difficulty);    
         while (bubbleLeft > 0)
         {
             if (bubbleLeft <= 0)
             {
                 break;
             }
-            int ranUnitSize = Random.Range(1,maxUnitSize + 1);
+            int ranUnitSize = Random.Range(minUnitSize,maxUnitSize + 1);
             if (ranUnitSize > bubbleLeft)
             {
-                ranUnitSize = Random.Range(1,bubbleLeft + 1);
+                ranUnitSize = Random.Range(minUnitSize,bubbleLeft + 1);
             } 
             unitsSize.Add(ranUnitSize);
             bubbleLeft -= ranUnitSize;
         }
     }
-
+    public void setUnitSize(float difficulty)
+    {
+        //Equivalent to level 2 if curve is 2
+        if (difficulty < 4)
+        {
+            minUnitSize = 2;
+        }
+         //Equivalent to level 7 if curve is 2
+        else if (difficulty < 24)
+        {
+            minUnitSize = 3;
+        }
+        else
+        {
+            minUnitSize = 4;
+        }
+    }
+    public void setTotalColor(float difficulty)
+    {
+        
+        //Equivalent to level 2 if curve is 2
+        if (difficulty < 4)
+        {
+            totalColor = 2;
+        }
+        //Equivalent to level 7 if curve is 2
+        else if (difficulty < 24)
+        {
+            totalColor = 3;
+        }
+        else
+        {
+            totalColor = 4;
+        }
+    }
 
 }
 
