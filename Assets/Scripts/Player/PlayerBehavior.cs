@@ -118,7 +118,7 @@ public class PlayerBehavior : MonoBehaviour
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
         }
-        if (Input.GetMouseButton(0) && shootAfterSec <= 0)
+        if (Input.GetMouseButton(0) && shootAfterSec <= 0 || Input.GetKey(KeyCode.K) && shootAfterSec <= 0)
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
@@ -132,7 +132,7 @@ public class PlayerBehavior : MonoBehaviour
             l.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             shootAfterSec = shootCoolDown;
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.L))
         {
             if (captureAfterSec <= 0 && isCapturing == false)
             {
@@ -152,6 +152,7 @@ public class PlayerBehavior : MonoBehaviour
                 
                 if (isCapturing)                  
                     captureState = CaptureState.IDLE;
+                    isCapturing = false;
             }
         }
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
@@ -244,7 +245,7 @@ public class PlayerBehavior : MonoBehaviour
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
         dashCoolDown = 5f;
-        captureCoolDown = 3f;
+        captureCoolDown = 1f;
         shootCoolDown = 0.4f;
     }
 
@@ -267,18 +268,9 @@ public class PlayerBehavior : MonoBehaviour
 
     public void countdownCooldown()
     {
-        if (dashAfterSec > 0)
-        {
-            dashAfterSec -= Time.deltaTime;
-        }
-        if (captureAfterSec > 0)
-        {
-            captureAfterSec -= Time.deltaTime;
-        }
-        if (shootAfterSec > 0)
-        {
-            shootAfterSec -= Time.deltaTime;
-        }
+        if (dashAfterSec > 0) { dashAfterSec -= Time.deltaTime; }
+        if (captureAfterSec > 0) { captureAfterSec -= Time.deltaTime; }
+        if (shootAfterSec > 0) { shootAfterSec -= Time.deltaTime; }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
