@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] currentBubbleUnit;
     public GameObject[] currentBubbleSpirit;
     public GameObject[] currentBubbleProjectile;
+    public GameObject[] currentProjectile;
     public int unitCounter = 0;
     public int bubbleCounter = 0;
     public bool canMove;
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
     private enum gameState
     {
         LOAD,
+        QUICK,
         PAUSE,
         HELP,
         RUN,
@@ -59,7 +61,14 @@ public class GameManager : MonoBehaviour
         uiControl.hideResult();
         uiControl.hideUpgrade();
 
-        currentState = gameState.LOAD;
+        if(RunStatistics.Instance.isQuick == true)
+        {
+            currentState = gameState.QUICK;
+        }
+        else
+        {
+            currentState = gameState.LOAD;
+        }
     }
 
     // Update is called once per frame
@@ -161,6 +170,9 @@ public class GameManager : MonoBehaviour
             case gameState.LOAD:
                 loadSequence();
                 break;
+            case gameState.QUICK:
+                quickSequence();
+                break;
             case gameState.RUN:               
                 runSequence();
                 break;
@@ -238,6 +250,57 @@ public class GameManager : MonoBehaviour
             mapGenerator.normalGeneration(difficulty);
             mapGenerator.generateNewGrid();           
             gameSpawner.spawnNormal(difficulty);
+        }
+    }
+
+    private void quickSequence()
+    {
+        quickLoad();
+        quickSpawnWorld();
+        FindObjectOfType<AudioManager>().Play("Stage_BG");
+        uiControl.updateStage();
+        unpauseGame();
+        setRun();
+    }
+
+    private void quickLoad()
+    {
+        QuickSaveData quickSave = SaveSystem.quickLoad();
+
+        RunStatistics.Instance.playerName = quickSave.playerName;
+        RunStatistics.Instance.currentLife = quickSave.currentLife;
+        RunStatistics.Instance.time = quickSave.time;
+        RunStatistics.Instance.stagesCleared = quickSave.stagesCleared;
+        RunStatistics.Instance.totalScore = quickSave.totalScore;
+        RunStatistics.Instance.bubblesCleared = quickSave.bubblesCleared;
+        RunStatistics.Instance.bubblesChainCleared = quickSave.bubblesChainCleared;
+        RunStatistics.Instance.bossCleared = quickSave.bossCleared;
+
+        // Procedural Saves go here
+        mPlayer = quickSave.thePlayer;
+        currentBubbleUnit = quickSave.currentBubbleUnit;
+        currentBubbleSpirit = quickSave.currentBubbleSpirit;
+        currentBubbleProjectile = quickSave.currentBubbleProjectile;
+        currentProjectile = quickSave.currentPlayerProjectile;
+    }
+
+    private void quickSpawnWorld()
+    {
+        // Procedural World Spawn Goes Here
+
+        for(int i = 0; i < currentBubbleUnit.Length; i++)
+        {
+            GameObject e = Instantiate(currentBubbleUnit[i]);
+        }
+
+        for( int i = 0; i < currentBubbleUnit.Length; i++)
+        {
+            GameObject e = Instantiate(currentBubbleUnit[i]);
+        }
+
+        for(int i = 0; i < currentProjectile.Length; i++)
+        {
+            GameObject e = Instantiate(currentProjectile[i]);
         }
     }
 
@@ -353,7 +416,7 @@ public class GameManager : MonoBehaviour
             Destroy(currentBubbleProjectile[i]);
         }
 
-        GameObject[] currentProjectile = GameObject.FindGameObjectsWithTag("Bullet");
+        currentProjectile = GameObject.FindGameObjectsWithTag("Bullet");
         for (int i = 0; i < currentProjectile.Length; i++)
         {
             Destroy(currentProjectile[i]);
@@ -382,6 +445,29 @@ public class GameManager : MonoBehaviour
     public void saveGame()
     {
         SaveSystem.savePlayer();
+    }
+
+    public void quickSave()
+    {
+        QuickSaveData quickSave = new QuickSaveData();
+
+        quickSave.playerName = RunStatistics.Instance.playerName;
+        quickSave.currentLife = RunStatistics.Instance.currentLife;
+        quickSave.time = RunStatistics.Instance.time;
+        quickSave.stagesCleared = (RunStatistics.Instance.stagesCleared);
+        quickSave.totalScore = (RunStatistics.Instance.totalScore);
+        quickSave.bubblesCleared = (RunStatistics.Instance.bubblesCleared);
+        quickSave.bubblesChainCleared = (RunStatistics.Instance.bubblesChainCleared);
+        quickSave.bossCleared = (RunStatistics.Instance.bossCleared);
+
+        quickSave.thePlayer = mPlayer;
+        quickSave.currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
+        quickSave.currentBubbleSpirit = GameObject.FindGameObjectsWithTag("BubbleSpirit");
+        quickSave.currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        quickSave.currentPlayerProjectile = GameObject.FindGameObjectsWithTag("Bullet");
+
+
+        SaveSystem.quickSave(quickSave);
     }
 
     public void addBubble()
@@ -438,6 +524,7 @@ public class GameManager : MonoBehaviour
     {
         pauseGame();
         clearEnemy();
+        SaveSystem.deleteQuick();
         currentState = gameState.LOSE;
     }
 
@@ -445,6 +532,7 @@ public class GameManager : MonoBehaviour
     {
         pauseGame();
         RunStatistics.Instance.stagesCleared++;
+        SaveSystem.deleteQuick();
         currentState = gameState.CLEARED;
     }
 

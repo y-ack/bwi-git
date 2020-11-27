@@ -60,6 +60,7 @@ public class TitleButton : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
             PlayerData playerData = SaveSystem.loadPlayer();
             RunStatistics.Instance.playerName = playerData.playerName;
+            RunStatistics.Instance.isQuick = false;
             RunStatistics.Instance.isNew = false;
             FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
             SceneManager.LoadScene("Main");
@@ -72,6 +73,16 @@ public class TitleButton : MonoBehaviour
             shakeMagnitude = 1f;
         }
         
+    }
+
+    // Method used to let the player continue from quick saves
+    public void continueGame()
+    {
+        FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
+        RunStatistics.Instance.isQuick = true;
+        RunStatistics.Instance.isNew = false;
+        FindObjectOfType<AudioManager>().Stop("Title_Theme");
+        SceneManager.LoadScene("Main");
     }
 
     public void viewStatistic()

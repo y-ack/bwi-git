@@ -25,6 +25,7 @@ public class RunStatistics : Singleton<RunStatistics>
     public int bubblesCleared;
     public int bossCleared;
     public bool isNew; // If true, show the control.
+    public bool isQuick;
     public int trapCount;
     // index with BubbleColor.red etc. int value;
     public int[] bubblesChainCleared = new int[BubbleColor.count];

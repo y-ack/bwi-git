@@ -45,6 +45,7 @@ public class PlayerBehavior : MonoBehaviour
         IDLE,
         CAPTURING
     };
+
     private CaptureState captureState;
 
     public enum PlayerState
@@ -156,8 +157,8 @@ public class PlayerBehavior : MonoBehaviour
                 e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
                 captureAfterSec = captureCoolDown;
             }
-            //if (isCapturing == true)
-            //{
+            if (isCapturing == true)
+            {
                 
                 isCapturing = capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);
@@ -166,7 +167,7 @@ public class PlayerBehavior : MonoBehaviour
                     captureAfterSec = captureCoolDown;                  
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
-            //}
+            }
         }
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {

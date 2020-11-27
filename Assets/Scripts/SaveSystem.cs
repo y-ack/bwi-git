@@ -70,4 +70,67 @@ public static class SaveSystem
         }
     }
 
+    public static void quickSave(QuickSaveData newSave)
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+
+        string playerName = RunStatistics.Instance.playerName;
+
+        string savePath = Application.persistentDataPath + "/QuickData.quick";
+        FileStream stream = new FileStream(savePath, FileMode.Create);
+        QuickSaveData data = new QuickSaveData();
+
+
+        data.playerName = playerName;
+        data.time = RunStatistics.Instance.time;
+        data.stagesCleared = (RunStatistics.Instance.stagesCleared);
+        data.totalScore = (RunStatistics.Instance.totalScore);
+        data.bubblesCleared = (RunStatistics.Instance.bubblesCleared);
+        data.bubblesChainCleared = (RunStatistics.Instance.bubblesChainCleared);
+        data.bossCleared = (RunStatistics.Instance.bossCleared);
+
+        data.currentBubbleUnit = newSave.currentBubbleUnit;
+        data.currentBubbleSpirit = newSave.currentBubbleSpirit;
+        data.currentBubbleProjectile = newSave.currentBubbleSpirit;
+        data.thePlayer = newSave.thePlayer;
+        data.currentPlayerProjectile = newSave.currentPlayerProjectile;
+
+        formatter.Serialize(stream, data);
+        stream.Close();
+    }
+
+    public static QuickSaveData quickLoad()
+    {
+        string path = Application.persistentDataPath + "/QuickData.quick";
+
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            QuickSaveData data = formatter.Deserialize(stream) as QuickSaveData;
+            stream.Close();
+
+            return data;
+        }
+        else
+        {
+            Debug.Log("Save file not found in " + path);
+            return null;
+        }
+    }
+
+    public static void deleteQuick()
+    {
+        string path = Application.persistentDataPath + "/QuickData.quick";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        else
+        {
+            Debug.Log("No Files To Delete");
+        }
+    }
+
 }

@@ -57,6 +57,12 @@ public class ButtonControl : MonoBehaviour
         SceneManager.LoadScene("TitleScreen");
     }
 
+    public void quickSaveAndQuit()
+    {
+        //GameManager.theManager.quickSave();
+        //SceneManager.LoadScene("TitleScreen");
+    }
+
     public void upgradeSpeed()
     {
         if(RunStatistics.Instance.totalScore >= 1000)

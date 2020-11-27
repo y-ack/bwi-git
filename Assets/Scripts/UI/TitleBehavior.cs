@@ -13,6 +13,8 @@ public class TitleBehavior : MonoBehaviour
     public Image newGameUI;
     public Image optionUI;
     public Image creditUI;
+    public Image titleBubbleSpirit;
+    public Image continueButton;
     public Text userInput;
     public Text exampleUI;
 
@@ -26,6 +28,7 @@ public class TitleBehavior : MonoBehaviour
     private CanvasGroup exampleCanvas;
 
     private string[] saveFile;
+    private float introTime = 2f;
 
     public enum TitleState
     {
@@ -39,6 +42,7 @@ public class TitleBehavior : MonoBehaviour
     private void Awake() {
         GameObject audioManager = Instantiate(Resources.Load("Prefabs/AudioManager") as GameObject);
     }
+
     void Start()
     {
         FindObjectOfType<AudioManager>().Play("Title_Theme");
@@ -51,6 +55,7 @@ public class TitleBehavior : MonoBehaviour
         hideSaves();
         findSaves();
         createSaves();
+        findQuick();
     }
 
     // Update is called once per frame
@@ -78,9 +83,22 @@ public class TitleBehavior : MonoBehaviour
         }
     }
 
+    // Run the intro sequence to Bubble Witch Iris
     public void introSequence()
     {
-
+        /*
+         * 
+         * if(introTime > 0)
+        {
+            Vector3 introMove = titleBubbleSpirit.transform.position;
+            introMove.x = Mathf.Sqrt(2) * Mathf.Sqrt(Mathf.Cos(2 * Time.time)) * Time.smoothDeltaTime;
+            introMove.y = Mathf.Sqrt(2) * Mathf.Sqrt(Mathf.Cos(2 * Time.time)) * Time.smoothDeltaTime;
+            titleBubbleSpirit.transform.position = introMove;
+            introTime -= Time.smoothDeltaTime;
+        }
+         * 
+         * 
+         * */
     }
 
     public void mainSequence()
@@ -175,6 +193,16 @@ public class TitleBehavior : MonoBehaviour
                 userScore.text = sData.playerName; // Change the save file button's text
                 e.transform.SetParent(saveData.transform); // Set the Saved List Data As New Parent
             }
+        }
+    }
+
+    private void findQuick()
+    {
+        if(SaveSystem.quickLoad() != null)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/continueGameButton") as GameObject);
+            GameObject buttonGroupBG = mainMenuUI.transform.Find("buttonGroupBackGround").gameObject;
+            e.transform.SetParent(buttonGroupBG.transform);
         }
     }
 
