@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
         RunStatistics.Instance.currentLife = 3;
-        mPlayer.setDefaultStat();
+        mPlayer.setDefaultState();
         //Debug.Log("Diff: " + difficulty);
         generateStage();
         originalPos = mPlayer.transform.position;

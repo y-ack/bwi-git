@@ -64,7 +64,7 @@ public class PlayerBehavior : MonoBehaviour
 
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
-        setDefaultStat();
+        setDefaultState();
     }
 
     // Update is called once per frame
@@ -240,13 +240,17 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
 
-    public void setDefaultStat()
+    public void setDefaultState()
     {
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
         dashCoolDown = 5f;
         captureCoolDown = 1f;
         shootCoolDown = 0.4f;
+        isCapturing = false;
+        capturedBubble = null;
+        captureState = CaptureState.IDLE;
+        movementState = PlayerState.NORMAL;
     }
 
     private void HandleRolling()
@@ -258,6 +262,7 @@ public class PlayerBehavior : MonoBehaviour
             movementState = PlayerState.NORMAL;
         }
     }
+
     public void SetCapture(BubbleSpirit bubbleSpirit)
     {
         FindObjectOfType<AudioManager>().Play("Iris_Capturing");
@@ -284,6 +289,8 @@ public class PlayerBehavior : MonoBehaviour
                 break;
         }
     }
+
+  
     public void Hit()
     {
         if (GameManager.theManager.isInvincible == false)

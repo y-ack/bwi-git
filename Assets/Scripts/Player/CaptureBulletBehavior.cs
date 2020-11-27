@@ -19,10 +19,13 @@ public class CaptureBulletBehavior : MonoBehaviour
         if (disabled) return;
         switch (collision.gameObject.tag)
         {
-            case "BubbleSpirit":               
-                BubbleSpirit capturedBubble = collision.GetComponent<BubbleSpirit>();
-                ParentPlayer.SetCapture(capturedBubble);               
-                destroySelf();
+            case "BubbleSpirit":
+                if (collision.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
+                {
+                    BubbleSpirit capturedBubble = collision.GetComponent<BubbleSpirit>();
+                    ParentPlayer.SetCapture(capturedBubble);
+                    destroySelf();
+                }
                 break;
             case "Wall Top":
                 disabled = true;
