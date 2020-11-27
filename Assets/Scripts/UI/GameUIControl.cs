@@ -58,30 +58,42 @@ public class GameUIControl : MonoBehaviour
         updateLives();
         updateScore();
 
-        if(trapUI.fillAmount <= 1)
+        if(trapUI.fillAmount < 1)
         {
             updateTrap();
         }
+        else
+        {
+            colorTrap();
+        }
 
-        if(captureUI.fillAmount <= 1)
+        if(captureUI.fillAmount < 1)
         {
             updateCapture();
         }
+        else
+        {
+            colorCapture();
+        }
 
-        if(rollUI.fillAmount <= 1)
+        if(rollUI.fillAmount < 1)
         {
             updateRoll();
+        } 
+        else
+        {
+            colorRoll();
         }
     }
 
     private void buttonControl()
     {
         if (Input.GetMouseButton(0) && trapUI.fillAmount == 1)
-            trapUI.fillAmount = 0;
+            activateTrap();
         if (Input.GetMouseButtonDown(1) && captureUI.fillAmount == 1)
-            captureUI.fillAmount = 0;
+            activateCapture();
         if (Input.GetKeyDown(KeyCode.Space) && rollUI.fillAmount == 1)
-            rollUI.fillAmount = 0;
+            activateRoll();
     }
 
     // Method Used to show the menu screen
@@ -209,15 +221,59 @@ public class GameUIControl : MonoBehaviour
         lifeText.GetComponent<Text>().text = "Player Life: " + RunStatistics.Instance.currentLife + " (Max 3)";
     }
 
+    public void activateRoll()
+    {
+        rollUI.fillAmount = 0;
+        GameObject iconHUD = rollUI.transform.Find("rollHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
+    }
+
+    private void colorRoll()
+    {
+        GameObject iconHUD = rollUI.transform.Find("rollHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+    }
 
     public void updateRoll()
     {
         rollUI.fillAmount += 1 / rollCooldown * Time.deltaTime;
     }
 
+    public void activateTrap()
+    {
+        trapUI.fillAmount = 0;
+        GameObject iconHUD = trapUI.transform.Find("trapHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
+    }
+
+    private void colorTrap()
+    {
+        GameObject iconHUD = trapUI.transform.Find("trapHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+    }
+
     public void updateTrap() 
     {
         trapUI.fillAmount += 1 / trapCooldown * Time.deltaTime;
+    }
+
+    public void activateCapture()
+    {
+        captureUI.fillAmount = 0;
+        GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
+    }
+
+    private void colorCapture()
+    {
+        GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
     public void updateCapture()
