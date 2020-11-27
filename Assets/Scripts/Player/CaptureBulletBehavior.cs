@@ -8,7 +8,7 @@ public class CaptureBulletBehavior : MonoBehaviour
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
 
     public bool disabled = false;
-    private const float bulletSpeed = 15f;
+    private const float bulletSpeed = 25f;
     void Update()
     {
         transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);

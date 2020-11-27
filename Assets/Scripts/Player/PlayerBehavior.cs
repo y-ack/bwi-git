@@ -144,16 +144,17 @@ public class PlayerBehavior : MonoBehaviour
                 e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
                 captureAfterSec = captureCoolDown;
             }
-            if (isCapturing == true)
-            {
+            //if (isCapturing == true)
+            //{
                 
                 isCapturing = capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);
                 
-                if (isCapturing)                  
+                if (isCapturing)
+                    captureAfterSec = captureCoolDown;                  
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
-            }
+            //}
         }
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
@@ -245,7 +246,7 @@ public class PlayerBehavior : MonoBehaviour
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
         dashCoolDown = 5f;
-        captureCoolDown = 1f;
+        captureCoolDown = 1.8f;
         shootCoolDown = 0.4f;
         isCapturing = false;
         capturedBubble = null;

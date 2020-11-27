@@ -49,7 +49,7 @@ public class BubbleSpirit : MonoBehaviour
 
     public State state; // could probably be private
     public int color;
-    private float bubbleSpeed = 15f;
+    private float bubbleSpeed = 20f;
     private Vector3 launchDirection;
     public bool searched; // for parent path searching ... not impl yet.
     private PlayerBehavior playerTarget = null;
