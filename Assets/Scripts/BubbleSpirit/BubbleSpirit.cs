@@ -305,7 +305,7 @@ public class BubbleSpirit : MonoBehaviour
             }
         }
         if (hasMatch)
-        {
+        {            
             ChainClear();
         }
         
@@ -406,7 +406,8 @@ public class BubbleSpirit : MonoBehaviour
                 bn.ChainClear();
             }
         }
-        playerTarget.addBubbleChained();
+        Debug.Log("playerTarget.getTrapCount(): " + playerTarget.getTrapCount());
+        playerTarget.addtrapCount();
         Clear();
     }
 }

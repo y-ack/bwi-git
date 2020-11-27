@@ -37,8 +37,12 @@ public class PlayerBehavior : MonoBehaviour
     private BubbleSpirit capturedBubble;
 
     private int trapCount = 0;
-    private int bubbleChained = 0;
-    private float trapUpgrade = 1;
+    private float extraTrap = 0;
+    private int trapCountCap = 10;
+
+    //Increase by 0.25f or 0.5f when upgrading 
+    private float trapUpgrade = 0;
+
 
     public enum CaptureState
     {
@@ -75,11 +79,9 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (bubbleChained > 0 )
+        if (trapCount > trapCountCap)
         {
-            setTrapCount(bubbleChained);
-            Debug.Log("trapCount: " + trapCount);
-            bubbleChained = 0;
+           setTrapCount(trapCountCap);
         }
         countdownCooldown();
         if(GameManager.theManager.canMove == true)
@@ -329,9 +331,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         return trapCount;
     }
+
     public void setTrapCount(int amount)
     {
-        trapCount = Mathf.RoundToInt(amount * trapUpgrade);
+        trapCount = amount;
         RunStatistics.Instance.trapCount = trapCount;
     }
     public void resetTrapCount()
@@ -342,6 +345,12 @@ public class PlayerBehavior : MonoBehaviour
     public void addtrapCount()
     {
         trapCount++;
+        extraTrap += trapUpgrade;
+        if (extraTrap >= 1.0f)
+        {
+            trapCount++;
+            extraTrap--;
+        }
         RunStatistics.Instance.trapCount = trapCount;
     }
     public void subtrapCount()
@@ -351,16 +360,4 @@ public class PlayerBehavior : MonoBehaviour
         RunStatistics.Instance.trapCount = trapCount;
     }
 
-    public void addBubbleChained()
-    {
-        bubbleChained++;
-    }
-    public void setBubbleChained(int amount)
-    {
-        bubbleChained = amount;
-    }
-    public int getBubbleChained()
-    {
-        return bubbleChained;
-    }
 }
