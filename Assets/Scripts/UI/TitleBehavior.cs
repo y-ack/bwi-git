@@ -55,7 +55,7 @@ public class TitleBehavior : MonoBehaviour
         hideSaves();
         findSaves();
         createSaves();
-        findQuick();
+        //findQuick();
     }
 
     // Update is called once per frame
