@@ -199,6 +199,7 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.time = 0f;
         RunStatistics.Instance.bubblesCleared = 0;
         RunStatistics.Instance.currentLife = 3;
+        RunStatistics.Instance.trapCount = 0;
         mPlayer.setDefaultState();
         //Debug.Log("Diff: " + difficulty);
         generateStage();
@@ -215,13 +216,15 @@ public class GameManager : MonoBehaviour
             currentState = gameState.RUN;
             unpauseGame();
         }
+        
     }
 
     //set
     private void generateStage()
     {
-        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
-        Debug.Log("difficulty: "+ difficulty);
+        mPlayer.setTrapCount(RunStatistics.Instance.trapCount);
+        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);      
+        Debug.Log("Current difficulty: " + difficulty);
         //spawn boss bubble every 3 level for alpha playtest
         if (RunStatistics.Instance.currentStage % 3 == 0)
         {
@@ -298,6 +301,8 @@ public class GameManager : MonoBehaviour
     // nextSequence method, used to create a new stage for player
     private void nextSequence()
     {
+        //Reset player, can be used to keep the trap count from the previus stage.
+        RunStatistics.Instance.trapCount = 0;
         uiControl.hideResult();
         uiControl.hideUpgrade();
         clearEnemy(); // Not necessary if everything runs well.

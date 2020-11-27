@@ -17,6 +17,7 @@ public class GameUIControl : MonoBehaviour
     public Text stageUI;
     public Text playerLifeUI;
     public Text scoreUI;
+    public Text trapCountUI;
 
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
@@ -27,6 +28,7 @@ public class GameUIControl : MonoBehaviour
     private float rollCooldown;
     private float trapCooldown;
     private float captureCooldown;
+    private int trapCount;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +52,7 @@ public class GameUIControl : MonoBehaviour
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;
         captureCooldown = thePlayer.captureCoolDown;
+        trapCount = thePlayer.getTrapCount();
         if(GameManager.theManager.canMove == true)
         {
             buttonControl();
@@ -57,7 +60,8 @@ public class GameUIControl : MonoBehaviour
 
         updateLives();
         updateScore();
-
+        updateTrapCount();
+        
         if(trapUI.fillAmount < 1)
         {
             updateTrap();
@@ -88,7 +92,7 @@ public class GameUIControl : MonoBehaviour
 
     private void buttonControl()
     {
-        if (Input.GetMouseButton(0) && trapUI.fillAmount == 1)
+        if (Input.GetMouseButton(0) && trapUI.fillAmount == 1 && trapCount > 0)
             activateTrap();
         if (Input.GetMouseButtonDown(1) && captureUI.fillAmount == 1)
             activateCapture();
@@ -289,6 +293,10 @@ public class GameUIControl : MonoBehaviour
     public void updateScore()
     {
         scoreUI.text = "SCORE: " + RunStatistics.Instance.totalScore;
+    }
+    public void updateTrapCount()
+    {
+        trapCountUI.text = "TRAP: " + RunStatistics.Instance.trapCount;
     }
 
     public void updateStage()

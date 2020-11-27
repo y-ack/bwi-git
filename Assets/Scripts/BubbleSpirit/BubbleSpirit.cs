@@ -389,24 +389,24 @@ public class BubbleSpirit : MonoBehaviour
 
     public void ChainClear()
     {
+
         if (cleared)
         { 
             return;
-        }
-        
+        }        
         RunStatistics.Instance.bubblesChainCleared[color]++;
         cleared = true;
 
         List<BubbleSpirit> bn_list = parentUnit.getNeighbors(this).neighbors;
         foreach (BubbleSpirit bn in bn_list)
         {
-            if (bn != null &&
-                BubbleColor.match(color, bn.color))
+            if (bn != null && BubbleColor.match(color, bn.color))
             {
                 //Debug.Log(bn.color);
                 bn.ChainClear();
             }
         }
+        playerTarget.addBubbleChained();
         Clear();
     }
 }

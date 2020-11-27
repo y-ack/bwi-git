@@ -36,6 +36,10 @@ public class PlayerBehavior : MonoBehaviour
     public bool isCapturing = false;
     private BubbleSpirit capturedBubble;
 
+    private int trapCount = 0;
+    private int bubbleChained = 0;
+    private float trapUpgrade = 1;
+
     public enum CaptureState
     {
         IDLE,
@@ -61,7 +65,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         cam = Camera.main;
         movementState = PlayerState.NORMAL;
-
+        resetTrapCount();
         rbody.gravityScale = 0;
         //set to 10 for testing, should discuss this later on.
         setDefaultState();
@@ -70,6 +74,12 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (bubbleChained > 0 )
+        {
+            setTrapCount(bubbleChained);
+            Debug.Log("trapCount: " + trapCount);
+            bubbleChained = 0;
+        }
         countdownCooldown();
         if(GameManager.theManager.canMove == true)
         {
@@ -118,7 +128,8 @@ public class PlayerBehavior : MonoBehaviour
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
         }
-        if (Input.GetMouseButton(0) && shootAfterSec <= 0 || Input.GetKey(KeyCode.K) && shootAfterSec <= 0)
+        if (((Input.GetMouseButton(0) && shootAfterSec <= 0) && (trapCount > 0)) || 
+            ((Input.GetKey(KeyCode.K) && shootAfterSec <= 0) && (trapCount > 0)))
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
@@ -131,6 +142,7 @@ public class PlayerBehavior : MonoBehaviour
             l.transform.localPosition = transform.localPosition;
             l.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             shootAfterSec = shootCoolDown;
+            subtrapCount();
         }
         if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.L))
         {
@@ -305,5 +317,49 @@ public class PlayerBehavior : MonoBehaviour
                 GameManager.theManager.playerHit();
             }
         }
+    }
+    public void setTrapUpgrade(float amount)
+    {
+        trapUpgrade += amount;
+    }
+
+
+    public int getTrapCount()
+    {
+        return trapCount;
+    }
+    public void setTrapCount(int amount)
+    {
+        trapCount = Mathf.RoundToInt(amount * trapUpgrade);
+        RunStatistics.Instance.trapCount = trapCount;
+    }
+    public void resetTrapCount()
+    {
+        trapCount = 0;
+        RunStatistics.Instance.trapCount = trapCount;
+    }
+    public void addtrapCount()
+    {
+        trapCount++;
+        RunStatistics.Instance.trapCount = trapCount;
+    }
+    public void subtrapCount()
+    {
+        Debug.Log("Shot once!");
+        trapCount--;
+        RunStatistics.Instance.trapCount = trapCount;
+    }
+
+    public void addBubbleChained()
+    {
+        bubbleChained++;
+    }
+    public void setBubbleChained(int amount)
+    {
+        bubbleChained = amount;
+    }
+    public int getBubbleChained()
+    {
+        return bubbleChained;
     }
 }
