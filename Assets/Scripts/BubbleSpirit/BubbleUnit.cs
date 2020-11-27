@@ -129,12 +129,12 @@ public class BubbleUnit : MonoBehaviour
         //TODO[ALPHA] do pathExists to check need to cut the unit
         grid.Remove(b.gridPosition);
         --bubbleCount;
-        //if (--bubbleCount == 0) destroySelf();
+        if (bubbleCount == 0) destroySelf();
     }
 
     private void destroySelf()
     {
-        Destroy(gameObject);
+        Destroy(gameObject,0.5f);
     }
 
     float maxRange;
