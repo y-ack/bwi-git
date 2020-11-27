@@ -24,14 +24,15 @@ public class Spawner : MonoBehaviour
     private int maxBoss = 120;
     public GameObject[] boss;
     public BubbleSpirit[] bossChild;
-    public List<int> unitsSize = new List<int>();
+    public List<int> unitsSize;
     public GameObject[] bubbles;
     public BubbleSpirit[] bubbleChild;
-
+    public int unitCount = 0;
     private bool spawnPosFound = false;
     List<List<MapGenerator.Coord>> spawnPool;
     private void Start()
     {
+        unitsSize = new List<int>();
         minNormal = Random.Range(15,20);
         minBoss = Random.Range(25,30);
     }
@@ -39,23 +40,32 @@ public class Spawner : MonoBehaviour
 
     public void spawnNormal(float difficulty)
     {
+        Debug.Log("unitCount before reset: "+ unitCount);  
+        unitCount = 0;
+        
         currentLevel = mGrid.GetComponent<MapGenerator>();
         spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);  
         if (spawnPool == null)
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
         } 
+         
         normalCap = getNormalCap(difficulty);
         if (currentLevel.canSpawn() == true)
         {
             StartCoroutine(setPlayerNormal());
+            unitsSize.RemoveAll(unit => unit > 0);
             setTotalUnit(normalCap, difficulty);
             setTotalColor(difficulty);
             StartCoroutine(setNormal(difficulty));
+
         }
     }
     
-
+    void Clear(int i)
+    {
+        
+    }
     public IEnumerator setNormal(float difficulty)
     {   
         
@@ -63,6 +73,8 @@ public class Spawner : MonoBehaviour
         int ring = 1;
         foreach(int unit in unitsSize) 
         { 
+            unitCount++;
+            //Debug.Log("unitsSize["+ unit +"] = " + unitsSize[unit]);
             //Trying to get a spawnable location
             while (spawnPosFound == false)
             {
@@ -188,7 +200,7 @@ public class Spawner : MonoBehaviour
                 GameManager.theManager.addBubble();
             }  
         }
-    yield return new WaitForSeconds(3f);
+    yield return new WaitForSeconds(0);
     }
 
     public void spawnBoss(float difficulty)
@@ -202,9 +214,10 @@ public class Spawner : MonoBehaviour
         bossCap = getBossCap(difficulty);
         if (currentLevel.canSpawn() == true)
         {
+            
             StartCoroutine(setPlayerBoss());
             StartCoroutine(setBoss(bossCap, difficulty));
-            //StartCoroutine(setNormal(Mathf.RoundToInt(bossCap / 4f), difficulty));
+            unitsSize.RemoveAll(unit => unit > 0);
             setTotalUnit(Mathf.RoundToInt(bossCap / 4f), difficulty);
             setTotalColor(difficulty);
             StartCoroutine(setNormal(difficulty));
@@ -359,7 +372,7 @@ public class Spawner : MonoBehaviour
             }            
             GameManager.theManager.addBubble();         
         }
-    yield return new WaitForSeconds(2f);
+    yield return new WaitForSeconds(0);
     }
 
 
@@ -381,7 +394,7 @@ public class Spawner : MonoBehaviour
             }
         }
         spawnPosFound = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0);
     }
 
     public IEnumerator setPlayerBoss()
@@ -427,7 +440,7 @@ public class Spawner : MonoBehaviour
             }
         }
         spawnPosFound = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0);
     }
 
     public int getNormalCap(float difficulty)
@@ -482,6 +495,7 @@ public class Spawner : MonoBehaviour
             }
             if (bubbleLeft == 1)
             {
+                unitCount++;
                 unitsSize.Add(1);
                 break;
             }
@@ -494,7 +508,7 @@ public class Spawner : MonoBehaviour
             bubbleLeft -= ranUnitSize;
         }
     }
-    
+   
     public void setTotalColor(float difficulty)
     {
         
