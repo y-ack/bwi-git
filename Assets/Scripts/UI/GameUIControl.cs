@@ -61,7 +61,6 @@ public class GameUIControl : MonoBehaviour
         updateLives();
         updateScore();
         updateTrapCount();
-        
         if(trapUI.fillAmount < 1)
         {
             updateTrap();
@@ -287,16 +286,16 @@ public class GameUIControl : MonoBehaviour
 
     public void updateLives()
     {
-        playerLifeUI.text = "x " + RunStatistics.Instance.currentLife;
+        playerLifeUI.text = "x" + RunStatistics.Instance.currentLife;
     }
 
     public void updateScore()
     {
-        scoreUI.text = "SCORE: " + RunStatistics.Instance.totalScore;
+        scoreUI.text = "SCORE " + RunStatistics.Instance.totalScore;
     }
     public void updateTrapCount()
     {
-        trapCountUI.text = "TRAP: " + RunStatistics.Instance.trapCount;
+        trapCountUI.text = "x" + RunStatistics.Instance.trapCount;
     }
 
     public void updateStage()
