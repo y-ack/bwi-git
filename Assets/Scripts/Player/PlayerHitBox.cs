@@ -22,12 +22,20 @@ public class PlayerHitBox : MonoBehaviour
         //Debug.Log(sprite.sortingOrder);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        switch (collision.gameObject.tag)
+        Collider2D other = collision.GetContact(0).collider;
+        switch (other.gameObject.tag)
         {
+            case "BubbleSpirit":
+                if (other.gameObject.GetComponent<BubbleSpirit>().state ==
+                    BubbleSpirit.State.NORMAL)
+                    ParentPlayer.Hit();
+                break;
             case "EnemyBullet":
                 ParentPlayer.Hit();
+                break;
+            default:
                 break;
         }
     }

@@ -28,9 +28,10 @@ public class BubbleBullet : MonoBehaviour
             transform.position += velocity * Time.smoothDeltaTime;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        switch (collision.gameObject.tag)
+        Collider2D other = collision.collider;
+        switch (other.gameObject.tag)
         {
             case "PlayerHitbox":
                 destroyYoSelf();

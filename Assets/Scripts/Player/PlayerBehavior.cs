@@ -11,7 +11,7 @@ public class PlayerBehavior : MonoBehaviour
 
     Rigidbody2D rbody;
     public float moveSpeed;
-    private float normalSpeed = 15f;
+    public float normalSpeed = 8f;
     private float focusSpeed;
 
     Vector2 mousePos;
@@ -23,11 +23,11 @@ public class PlayerBehavior : MonoBehaviour
     public Camera cam;
 
     private bool isDashButtonDown;
-    private float DashAmount = 5f;
+    public float DashAmount = 2f;
     public float dashCoolDown = 5f;
     private float dashAfterSec;
 
-    public float captureCoolDown = 3f;
+    public float captureCoolDown = 1.4f;
     private float captureAfterSec;
 
     public float shootCoolDown = 0.4f;
@@ -69,6 +69,13 @@ public class PlayerBehavior : MonoBehaviour
     // Start is called before the first frame update
     private void Awake() {
         rbody = GetComponent<Rigidbody2D>();
+        // this body needs dynamic to get rigidbody collision with walls
+        // but we don't want physics simulation with other objects
+        // set physics simulation to ignore all other layers
+        Physics.IgnoreLayerCollision(11, 8); // bubble bullet
+        Physics.IgnoreLayerCollision(11, 9); // bubble spirit
+        Physics.IgnoreLayerCollision(11, 10); // player bullet
+        Physics.IgnoreLayerCollision(11, 12); // player hitbox
     }
 
     void Start()
@@ -153,7 +160,7 @@ public class PlayerBehavior : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.L))
         {
-            if (captureAfterSec <= 0 && isCapturing == false)
+            if (captureAfterSec <= 0 && !isCapturing)
             {
                 FindObjectOfType<AudioManager>().Play("Iris_CaptureA");
                 FindObjectOfType<AudioManager>().Play("Iris_CaptureB");
@@ -163,17 +170,18 @@ public class PlayerBehavior : MonoBehaviour
                 e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
                 captureAfterSec = captureCoolDown;
             }
-            //if (isCapturing == true)
-            //{
-                
-                isCapturing = capturedBubble.tryLaunch(
+            if (isCapturing == true)
+            {
+                bool launchSuccess = capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);
-                
-                if (isCapturing)
-                    captureAfterSec = captureCoolDown;                  
+
+                if (launchSuccess)
+                {
+                    captureAfterSec = captureCoolDown;
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
-            //}
+                }
+            }
         }
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
@@ -265,7 +273,7 @@ public class PlayerBehavior : MonoBehaviour
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
         dashCoolDown = 5f;
-        captureCoolDown = 1.8f;
+        captureCoolDown = 1.4f;
         shootCoolDown = 0.4f;
         isCapturing = false;
         capturedBubble = null;
@@ -302,9 +310,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         switch (collision.gameObject.tag)
         {
-            case "EnemyBullet":
-                Hit();
-                break;
+            // case "EnemyBullet":
+            // case "BubbleSpirit":
+            //     Hit();
+            //     break;
             default:
                 break;
         }
@@ -336,21 +345,20 @@ public class PlayerBehavior : MonoBehaviour
         if(spriteBlinkingTotalTimer >= spriteBlinkingTotalDuration)
         {
             startBlinking = false;
-             spriteBlinkingTotalTimer = 0.0f;
-             this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   // according to 
-                      //your sprite
-            //GameManager.theManager.isInvincible = false;
-             return;
-          }
-     
-     spriteBlinkingTimer += Time.deltaTime;
+            spriteBlinkingTotalTimer = 0.0f;
+            this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   // according to 
+            //your sprite
+            GameManager.theManager.isInvincible = false;
+            return;
+        }
+        spriteBlinkingTimer += Time.deltaTime;
         if(spriteBlinkingTimer >= spriteBlinkingMiniDuration)
         {
-         spriteBlinkingTimer = 0.0f;
-         if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
-             this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;  //make changes
-         } else {
-             this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   //make changes
+            spriteBlinkingTimer = 0.0f;
+            if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
+                this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;  //make changes
+            } else {
+                this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   //make changes
             }
         }
     }

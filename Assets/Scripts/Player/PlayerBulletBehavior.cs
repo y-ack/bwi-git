@@ -6,7 +6,7 @@ public class PlayerBulletBehavior : MonoBehaviour
 {
     static private PlayerBehavior ParentPlayer = null;
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
-    private const float bulletSpeed = 15f;
+    private const float bulletSpeed = 20f;
     Vector2 bulletDirection;
     private float lifeSpan;
 
@@ -28,7 +28,7 @@ public class PlayerBulletBehavior : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D c)
+    private void OnCollisionEnter2D(Collision2D c)
     {
         if (disabled) return;
         
@@ -40,7 +40,7 @@ public class PlayerBulletBehavior : MonoBehaviour
                 break;
             case "BubbleSpirit":
                 //disabled by bs collision
-                if (c.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
+                if (c.gameObject.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
                     destroySelf();
                 break;
             default:

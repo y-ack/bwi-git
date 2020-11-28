@@ -8,21 +8,22 @@ public class CaptureBulletBehavior : MonoBehaviour
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
 
     public bool disabled = false;
-    private const float bulletSpeed = 25f;
+    public int rebounds = 1;
+    public const float bulletSpeed = 25f;
     void Update()
     {
         transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (disabled) return;
         switch (collision.gameObject.tag)
         {
             case "BubbleSpirit":
-                if (collision.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
+                if (collision.gameObject.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
                 {
-                    BubbleSpirit capturedBubble = collision.GetComponent<BubbleSpirit>();
+                    BubbleSpirit capturedBubble = collision.gameObject.GetComponent<BubbleSpirit>();
                     ParentPlayer.SetCapture(capturedBubble);
                     destroySelf();
                 }

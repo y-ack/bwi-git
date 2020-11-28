@@ -49,7 +49,8 @@ public class BubbleSpirit : MonoBehaviour
 
     public State state; // could probably be private
     public int color;
-    private float bubbleSpeed = 20f;
+    public float bubbleSpeed = 20f;
+    private int rebounds = 1;
     private Vector3 launchDirection;
     public bool searched; // for parent path searching ... not impl yet.
     private PlayerBehavior playerTarget = null;
@@ -112,8 +113,9 @@ public class BubbleSpirit : MonoBehaviour
         // TODO[RETRO] add gleam animation for bubble spirits
     }
     
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D collision)
     {
+        Collider2D other = collision.collider;
         switch (state)
         {
             case State.NORMAL:
@@ -151,10 +153,16 @@ public class BubbleSpirit : MonoBehaviour
                     tryMatch();
                 } else if (other.gameObject.tag == "Wall Top")
                 {
-                    //Change this to something else like impact collision with wall
-                    //FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
-                    FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
-                    Clear();
+                    if (rebounds-- > 0)
+                    {
+                        launchDirection = Vector3.Reflect(launchDirection, collision.GetContact(0).normal);
+                    } else
+                    {
+                        //Change this to something else like impact collision with wall
+                        //FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+                        FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
+                        Clear();
+                    }
                 }
                 //TODO if hits a wall, reparent into new unit instead? discuss
                 break;
@@ -285,6 +293,7 @@ public class BubbleSpirit : MonoBehaviour
         state = State.CAPTURED;
         Unparent();
         transform.parent = playerTarget.transform;
+        rebounds = 1;
     }
         
     private void tryMatch()
@@ -389,11 +398,8 @@ public class BubbleSpirit : MonoBehaviour
 
     public void ChainClear()
     {
-
         if (cleared)
-        { 
-            return;
-        }        
+            return;        
         RunStatistics.Instance.bubblesChainCleared[color]++;
         cleared = true;
 
