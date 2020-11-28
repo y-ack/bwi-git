@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+//using PlayFab;
+//using PlayFab.ClientModels;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager theManager = null;
@@ -25,6 +28,10 @@ public class GameManager : MonoBehaviour
     public bool isInvincible = false;
     private Vector3 originalPos;
 
+    //leaderboard shit
+    public List<string> playFabIDList = new List<string>();
+    public List<string> playFabScoreList = new List<string>();
+
 
 
     private enum gameState
@@ -39,7 +46,10 @@ public class GameManager : MonoBehaviour
         UPGRADE,
         NEXT
     }
-
+    public void hello()
+    {
+        Debug.Log("hello");
+    }
     void Start()
     {
         
@@ -54,7 +64,7 @@ public class GameManager : MonoBehaviour
  
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
-        PlayerBehavior.SetGameManager(this);
+        //PlayerBehavior.SetGameManager(this);
 
         uiControl.hideMenu();
         uiControl.hideLost();
@@ -555,7 +565,7 @@ public class GameManager : MonoBehaviour
     public void playerHit()
     {
         RunStatistics.Instance.currentLife--;
-        mPlayer.transform.position = originalPos;
+        //mPlayer.transform.position = originalPos;
     }
 
     // Method to show the help screen
@@ -573,4 +583,61 @@ public class GameManager : MonoBehaviour
         uiControl.hideHelp();
         unpauseGame();
     }
+
+/*
+    //leaderboard shit
+    public void Login()
+    {
+        var request = new LoginWithCustomIDRequest 
+        {
+            CustomId = RunStatistics.Instance.playerName,
+            CreateAccount = true
+        };
+        PlayFabClientAPI.LoginWithCustomID( request, OnSuccess, OnError);
+    }
+    private void OnSuccess(LoginResult result)
+    {
+        Debug.Log("Successful login/account create!");
+    }
+    private void OnError(PlayFabError error)
+    {
+        Debug.Log("Error while logging in/creating account");
+        Debug.Log(error.GenerateErrorReport());
+    }
+    public void SendLeaderboard()
+    {
+        var request = new UpdatePlayerStatisticsRequest
+        {
+            Statistics = new List<StatisticUpdate>
+            {
+                new StatisticUpdate
+                {
+                    StatisticName = "GameScore",
+                    Value = RunStatistics.Instance.totalScore
+                }
+            }
+        };
+        PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
+    }
+    void OnLeaderboardUpdate(UpdatePlayerStatisticsResult result)
+    {
+        Debug.Log("Successful Leaderboard sent");
+    }
+    public void GetLeaderboard(){
+        var request = new GetLeaderboardRequest{
+            StatisticName = "GameScore",
+            StartPosition = 0,
+            MaxResultsCount = 10
+        };
+        PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
+    }
+
+    void OnLeaderboardGet(GetLeaderboardResult result){
+        foreach(var item in result.Leaderboard){
+            playFabIDList.Add(item.PlayFabId);
+            playFabScoreList.Add(item.StatValue.ToString());
+            Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue);
+        }
+    }
+    */
 }

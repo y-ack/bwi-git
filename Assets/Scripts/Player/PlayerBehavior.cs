@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
-    static private GameManager mGameManager;
-    static public void SetGameManager(GameManager g){ mGameManager = g; }
+    //static private GameManager mGameManager;
+    //static public void SetGameManager(GameManager g){ mGameManager = g; }
     public PlayerHitBox mPlayerHitbox = null;
     public Animator irisAnimator = null;
 
@@ -43,6 +43,11 @@ public class PlayerBehavior : MonoBehaviour
     //Increase by 0.25f or 0.5f when upgrading 
     private float trapUpgrade = 0;
 
+    public float spriteBlinkingTimer = 0.0f;
+    public float spriteBlinkingMiniDuration = 0.1f;
+    public float spriteBlinkingTotalTimer = 0.0f;
+    public float spriteBlinkingTotalDuration = 1.5f;
+    public bool startBlinking = false;
 
     public enum CaptureState
     {
@@ -79,31 +84,34 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (trapCount > trapCountCap)
-        {
-           setTrapCount(trapCountCap);
-        }
         countdownCooldown();
+
+        if (trapCount > trapCountCap)
+           setTrapCount(trapCountCap);
+
+        if(startBlinking == true)
+             SpriteBlinkingEffect();
+
+
         if(GameManager.theManager.canMove == true)
-        {
             buttonControl();
-        }
+
         switch(movementState)
         {
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
                 mPlayerHitbox.hide();
-                mGameManager.isInvincible = false;
+                GameManager.theManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.ROLLING:
                 HandleRolling();
-                mGameManager.isInvincible = true;
+                GameManager.theManager.isInvincible = true;
                 break;
             case PlayerState.FOCUS:
                 moveSpeed = focusSpeed;
                 mPlayerHitbox.show();
-                mGameManager.isInvincible = false;
+                GameManager.theManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.DEAD:
@@ -111,14 +119,12 @@ public class PlayerBehavior : MonoBehaviour
         }
     }
 
+    
     public float angle;
     void FixedUpdate()
     {
-        //rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
-        rbody.velocity = moveDir * moveSpeed;
         Vector2 lookDir = mousePos - rbody.position;
         angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        //rbody.rotation = angle;
     }
     private void buttonControl()
     {
@@ -126,8 +132,6 @@ public class PlayerBehavior : MonoBehaviour
         {
             FindObjectOfType<AudioManager>().Play("Iris_Rolling");
             dashAfterSec = dashCoolDown;
-            Debug.Log("cool down " + dashAfterSec);
-            Debug.Log(dashCoolDown);
             movementState = PlayerState.ROLLING;
             slideSpeed = 150f;
         }
@@ -159,8 +163,8 @@ public class PlayerBehavior : MonoBehaviour
                 e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
                 captureAfterSec = captureCoolDown;
             }
-            if (isCapturing == true)
-            {
+            //if (isCapturing == true)
+            //{
                 
                 isCapturing = capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);
@@ -169,7 +173,7 @@ public class PlayerBehavior : MonoBehaviour
                     captureAfterSec = captureCoolDown;                  
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
-            }
+            //}
         }
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
@@ -314,13 +318,43 @@ public class PlayerBehavior : MonoBehaviour
             if (RunStatistics.Instance.currentLife == 0)
             {
                 GameManager.theManager.setLose();
+                //GameManager.theManager.SendLeaderboard();
             }
             else
             {
                 GameManager.theManager.playerHit();
+                //dunno why this isnt making invincible
+                //GameManager.theManager.isInvincible = true;
+                startBlinking = true;
             }
         }
     }
+
+    private void SpriteBlinkingEffect()
+    {
+        spriteBlinkingTotalTimer += Time.deltaTime;
+        if(spriteBlinkingTotalTimer >= spriteBlinkingTotalDuration)
+        {
+            startBlinking = false;
+             spriteBlinkingTotalTimer = 0.0f;
+             this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   // according to 
+                      //your sprite
+            //GameManager.theManager.isInvincible = false;
+             return;
+          }
+     
+     spriteBlinkingTimer += Time.deltaTime;
+        if(spriteBlinkingTimer >= spriteBlinkingMiniDuration)
+        {
+         spriteBlinkingTimer = 0.0f;
+         if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
+             this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;  //make changes
+         } else {
+             this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   //make changes
+            }
+        }
+    }
+
     public void setTrapUpgrade(float amount)
     {
         trapUpgrade += amount;
