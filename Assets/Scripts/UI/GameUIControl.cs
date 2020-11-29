@@ -73,13 +73,14 @@ public class GameUIControl : MonoBehaviour
             colorTrap();
         }
 
-        if (captureUI.fillAmount < 1)
-        {
-            updateCapture();
-        }
-        else if (thePlayer.isCapturing == true)
+        if (captureUI.fillAmount < 1 && thePlayer.isCapturing == true)
         {
             captureUI.fillAmount = 1;
+            colorCapture();
+        }
+        else if (captureUI.fillAmount < 1 && thePlayer.isCapturing == false)
+        {
+            updateCapture();
         } 
         else
         {

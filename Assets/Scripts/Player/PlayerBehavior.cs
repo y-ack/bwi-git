@@ -96,6 +96,8 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (GameManager.theManager.canMove == true)
             buttonControl();
+
+        countdownCooldown();
     }
 
     void FixedUpdate()
@@ -103,16 +105,11 @@ public class PlayerBehavior : MonoBehaviour
         Vector2 lookDir = mousePos - rbody.position;
         angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
 
-        countdownCooldown();
-
         if (trapCount > trapCountCap)
            setTrapCount(trapCountCap);
 
         if(startBlinking == true)
              SpriteBlinkingEffect();
-
-
-        
 
         switch(movementState)
         {
@@ -186,6 +183,7 @@ public class PlayerBehavior : MonoBehaviour
                     captureAfterSec = captureCoolDown;
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
+                    capturedBubble = null;
                 }
             }
         }
