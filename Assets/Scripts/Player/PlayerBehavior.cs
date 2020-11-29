@@ -11,7 +11,7 @@ public class PlayerBehavior : MonoBehaviour
 
     Rigidbody2D rbody;
     public float moveSpeed;
-    public float normalSpeed = 8f;
+    public float normalSpeed = 4f;
     private float focusSpeed;
 
     Vector2 mousePos;
@@ -28,7 +28,7 @@ public class PlayerBehavior : MonoBehaviour
     private float dashAfterSec;
 
     public float captureCoolDown = 1.4f;
-    private float captureAfterSec;
+    public float captureAfterSec;
 
     public float shootCoolDown = 0.4f;
     public float shootAfterSec;
