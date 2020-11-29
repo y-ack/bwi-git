@@ -182,6 +182,7 @@ public class PlayerBehavior : MonoBehaviour
 
                 if (launchSuccess)
                 {
+                    Debug.Log("launch succes");
                     captureAfterSec = captureCoolDown;
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
@@ -308,9 +309,9 @@ public class PlayerBehavior : MonoBehaviour
 
     public void countdownCooldown()
     {
-        if (dashAfterSec > 0) { dashAfterSec -= Time.fixedDeltaTime; }
-        if (captureAfterSec > 0) { captureAfterSec -= Time.fixedDeltaTime; }
-        if (shootAfterSec > 0) { shootAfterSec -= Time.fixedDeltaTime; }
+        if (dashAfterSec >= 0) { dashAfterSec -= Time.fixedDeltaTime; }
+        if (captureAfterSec >= 0) { captureAfterSec -= Time.fixedDeltaTime; }
+        if (shootAfterSec >= 0) { shootAfterSec -= Time.fixedDeltaTime; }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

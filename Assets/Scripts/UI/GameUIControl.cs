@@ -51,7 +51,7 @@ public class GameUIControl : MonoBehaviour
     {
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;
-        captureCooldown = thePlayer.captureAfterSec;
+        captureCooldown = thePlayer.captureAfterSec + .825f;
         //captureCooldown = thePlayer.captureCoolDown;
         trapCount = thePlayer.getTrapCount();
         if (GameManager.theManager.canMove == true)
@@ -77,6 +77,10 @@ public class GameUIControl : MonoBehaviour
         {
             updateCapture();
         }
+        else if (thePlayer.isCapturing == true)
+        {
+            captureUI.fillAmount = 1;
+        } 
         else
         {
             colorCapture();
