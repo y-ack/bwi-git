@@ -25,7 +25,10 @@ public class GameManager : MonoBehaviour
     public int bubbleCounter = 0;
     public bool canMove;
     private bool isHelp;
-    public bool isInvincible = false;
+    public bool isInvincible;
+    public bool chainBonus;
+    private float chainTime;
+    private int chainCount;
     private Vector3 originalPos;
 
     //leaderboard shit
@@ -65,7 +68,7 @@ public class GameManager : MonoBehaviour
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
         //PlayerBehavior.SetGameManager(this);
-
+        isInvincible = false;
         uiControl.hideMenu();
         uiControl.hideLost();
         uiControl.hideResult();
@@ -337,6 +340,7 @@ public class GameManager : MonoBehaviour
     {
         runButtonControl();
         RunStatistics.Instance.time += Time.smoothDeltaTime;
+        updateChainTimer();
 
         if (bubbleCounter == 0)
         {
@@ -488,6 +492,51 @@ public class GameManager : MonoBehaviour
     public void bubbleCleared()
     {
         bubbleCounter--;
+    }
+
+    public void updateChainTimer()
+    {
+        if(chainTime <= 0)
+        {
+            defaultChainTimer();
+        }
+        else
+        {
+            chainTime -= Time.deltaTime;
+        }
+    }
+
+    private void defaultChainTimer()
+    {
+        chainBonus = false;
+        chainCount = 0;
+        chainTime = 0f;
+    }
+
+    public void addChain()
+    {
+        if(chainBonus == false)
+        {
+            RunStatistics.Instance.totalScore += 15;
+            chainBonus = true;
+            chainTime = 0.5f;
+            chainCount = 0;
+        }
+        else
+        {
+            if(chainCount <= 5)
+            {
+                RunStatistics.Instance.totalScore += (15 + (int)(15 * 0.25));
+                chainTime = 0.5f;
+                chainCount++;
+            }
+            else
+            {
+                RunStatistics.Instance.totalScore += (15 + (int)(15 * 0.5));
+                chainTime = 0.5f;
+                chainCount++;
+            }
+        }
     }
 
     #endregion;

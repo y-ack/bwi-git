@@ -57,6 +57,7 @@ public class BubbleSpirit : MonoBehaviour
 
     public BubbleBulletPattern pattern; //maybe an array
     bool cleared;
+    private bool isChain;
 
     public float maxRange = 1.5f;
     public float minRange = 0.5f;
@@ -329,6 +330,7 @@ public class BubbleSpirit : MonoBehaviour
             Destroy(pattern.gameObject);
         //trigger animation, yield and delete
     }
+
     // Method used to animate the bubble spirit after getting hit by a 
     private void clearAnimation()
     {
@@ -382,7 +384,14 @@ public class BubbleSpirit : MonoBehaviour
             else
             {
                 // call clear destroy once reach 0.5f distance from Iris
-                clearDestroy();
+                if(isChain == true)
+                {
+                    chainDestroy();
+                }
+                else
+                {
+                    clearDestroy();
+                }
             }
         }
     }
@@ -396,12 +405,22 @@ public class BubbleSpirit : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private void chainDestroy()
+    {
+        RunStatistics.Instance.bubblesCleared++;
+        RunStatistics.Instance.bubblesChainCleared[color]++;
+        GameManager.theManager.bubbleCleared();
+        playerTarget.addtrapCount();
+        GameManager.theManager.addChain();
+        Destroy(gameObject);
+    }
+
     public void ChainClear()
     {
         if (cleared)
-            return;        
-        RunStatistics.Instance.bubblesChainCleared[color]++;
-        cleared = true;
+            return;  // set 0
+        //RunStatistics.Instance.bubblesChainCleared[color]++;
+        cleared = true; // set intsum 1
 
         List<BubbleSpirit> bn_list = parentUnit.getNeighbors(this).neighbors;
         foreach (BubbleSpirit bn in bn_list)
@@ -409,11 +428,13 @@ public class BubbleSpirit : MonoBehaviour
             if (bn != null && BubbleColor.match(color, bn.color))
             {
                 //Debug.Log(bn.color);
-                bn.ChainClear();
+                bn.ChainClear(); // sum += bm.chaincleared()
+                // bubble counter
             }
         }
         Debug.Log("playerTarget.getTrapCount(): " + playerTarget.getTrapCount());
-        playerTarget.addtrapCount();
+        isChain = true;
         Clear();
+        //return sum
     }
 }
