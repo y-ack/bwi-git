@@ -7,7 +7,7 @@ public class FindClosest : MonoBehaviour
     private Vector3 closestEnemyPosition;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         FindClosestEnemy();
         CompassPointer.setClosestBubble(closestEnemyPosition);

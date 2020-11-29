@@ -10,9 +10,9 @@ public class CaptureBulletBehavior : MonoBehaviour
     public bool disabled = false;
     public int rebounds = 1;
     public const float bulletSpeed = 25f;
-    void Update()
+    void FixedUpdate()
     {
-        transform.localPosition += transform.up * (bulletSpeed * Time.smoothDeltaTime);
+        transform.localPosition += transform.up * (bulletSpeed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

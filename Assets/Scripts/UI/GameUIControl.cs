@@ -47,7 +47,7 @@ public class GameUIControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;

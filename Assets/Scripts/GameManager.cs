@@ -668,7 +668,7 @@ public class GameManager : MonoBehaviour
         };
         PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
     }
-    void OnLeaderboardUpdate(UpdatePlayerStatisticsResult result)
+    void OnLeaderboardFixedUpdate(UpdatePlayerStatisticsResult result)
     {
         Debug.Log("Successful Leaderboard sent");
     }

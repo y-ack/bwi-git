@@ -20,7 +20,7 @@ public class CompassPointer : MonoBehaviour
         idleTimerCountdown = idleTimer;
     }
 
-    private void  Update()
+    private void  FixedUpdate()
     {
         idleTimerCountdown -= 5f * Time.deltaTime;
 

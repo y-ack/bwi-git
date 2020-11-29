@@ -17,7 +17,7 @@ public class PlayerHitBox : MonoBehaviour
         transform.localPosition = (Vector3)offset;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //Debug.Log(sprite.sortingOrder);
     }

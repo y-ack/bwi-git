@@ -13,19 +13,19 @@ public class BubbleBullet : MonoBehaviour
         FindObjectOfType<AudioManager>().Play("Bubble_Shoot"); 
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
             if (accelerationTimeout > 0f)
             {
                 velocity += velocity.normalized * acceleration *
-                    Mathf.Min(Time.deltaTime, accelerationTimeout);
-                accelerationTimeout -= Time.deltaTime;
+                    Mathf.Min(Time.fixedDeltaTime, accelerationTimeout);
+                accelerationTimeout -= Time.fixedDeltaTime;
             }
             transform.rotation = Quaternion.RotateTowards(transform.rotation,
                                                           Quaternion.Euler(0, 0, 90),
                                                           angularVelocity *
-                                                          Time.smoothDeltaTime);
-            transform.position += velocity * Time.smoothDeltaTime;
+                                                          Time.fixedDeltaTime);
+            transform.position += velocity * Time.fixedDeltaTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

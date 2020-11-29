@@ -77,13 +77,13 @@ public class BubbleSpirit : MonoBehaviour
 
     [SerializeField] private float orbit_x = 0.9f;
     [SerializeField] private float orbit_y = 0.4f;
-    void Update()
+    void FixedUpdate()
     {
             
         //myLight.pointLightOuterRadius = Mathf.Lerp(minRange, maxRange, Mathf.PingPong(Time.time, flickerSpeed));
         // only states with frame behavior are capture and launch,
         // where they have projectile-like behavior
-        float delta = bubbleSpeed * Time.smoothDeltaTime;
+        float delta = bubbleSpeed * Time.fixedDeltaTime;
         switch (state)
         {
             case State.NORMAL: 
@@ -338,8 +338,8 @@ public class BubbleSpirit : MonoBehaviour
 
         if (bubbleSize.x > 1f)
         {
-                bubbleSize.x -= 16f * Time.deltaTime;
-                bubbleSize.y -= 16f * Time.deltaTime;
+                bubbleSize.x -= 16f * Time.fixedDeltaTime;
+                bubbleSize.y -= 16f * Time.fixedDeltaTime;
                 transform.localScale = bubbleSize;
         }
         else
@@ -372,11 +372,11 @@ public class BubbleSpirit : MonoBehaviour
                 // Two different lerp function to facilitate a specific look for the bubble spirit travel speed
                 if(distanceFrom > 10f)
                 {
-                    transform.position = Vector3.Lerp(transform.position, IrisPos, 8f * Time.deltaTime); 
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 8f * Time.fixedDeltaTime); 
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, IrisPos, 5f * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 5f * Time.fixedDeltaTime);
                 }
                 //Play this sound when bubble almost reaches the player
                 //FindObjectOfType<AudioManager>().Play("Bubble_Collect");

@@ -25,7 +25,7 @@ public class CameraBehavior : MonoBehaviour
         maxValue.y = max_y;
         maxValue.z = -10;  
     }
-	void Update()
+	void FixedUpdate()
     {        
         FollowPlayer();
     }

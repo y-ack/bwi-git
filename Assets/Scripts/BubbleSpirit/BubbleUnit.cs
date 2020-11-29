@@ -153,14 +153,14 @@ public class BubbleUnit : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         myLight.intensity = Mathf.Lerp(minRange,maxRange, Mathf.PingPong(Time.time, flickerSpeed));   
 
 
         
-        if (moveTimer > 0){ moveTimer -=  Time.deltaTime; }
-        transform.position = Vector2.MoveTowards(transform.position, movePosition, 1f * Time.deltaTime);
+        if (moveTimer > 0){ moveTimer -=  Time.fixedDeltaTime; }
+        transform.position = Vector2.MoveTowards(transform.position, movePosition, 1f * Time.fixedDeltaTime);
         if(Vector2.Distance(transform.position, movePosition) < 0.2f)
         {
             if (moveTimer <= 0)

@@ -20,7 +20,7 @@ public class TitleButton : MonoBehaviour
         originalPos = transform.localPosition;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         checkTime();
         if (isShake == true)

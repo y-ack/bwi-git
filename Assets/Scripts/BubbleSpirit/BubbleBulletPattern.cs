@@ -70,17 +70,17 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     }
 
     const float activationRadius = 15f;
-    public void Update()
+    public void FixedUpdate()
     {
         if(GameManager.theManager.canMove &&
            parentBubble.state == BubbleSpirit.State.NORMAL)
         {
-            patternLifetime -= Time.deltaTime;
+            patternLifetime -= Time.fixedDeltaTime;
             var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
             if (((lifetime <= 0 && delayTime != 0) || playerDist < activationRadius)
                 && patternLifetime <= 0)
             {
-                lifetime -= Time.deltaTime;
+                lifetime -= Time.fixedDeltaTime;
                 // while there are more bullets in the cycle and it's time
                 while (step < bulletCount && lifetime <= 0f)
                 {

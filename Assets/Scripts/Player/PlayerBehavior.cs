@@ -89,9 +89,13 @@ public class PlayerBehavior : MonoBehaviour
         setDefaultState();
     }
 
+    public float angle;
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        Vector2 lookDir = mousePos - rbody.position;
+        angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+
         countdownCooldown();
 
         if (trapCount > trapCountCap)
@@ -128,12 +132,6 @@ public class PlayerBehavior : MonoBehaviour
     }
 
     
-    public float angle;
-    void FixedUpdate()
-    {
-        Vector2 lookDir = mousePos - rbody.position;
-        angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-    }
     private void buttonControl()
     {
         if (Input.GetKeyDown(KeyCode.Space) && dashAfterSec <= 0)
@@ -168,7 +166,7 @@ public class PlayerBehavior : MonoBehaviour
                 GameObject e = Instantiate(Resources.Load("Prefabs/Capture") as
                                    GameObject);
                 e.transform.localPosition = transform.localPosition;
-                e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
+                e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 captureAfterSec = captureCoolDown;
             }
             if (isCapturing == true)
@@ -204,7 +202,7 @@ public class PlayerBehavior : MonoBehaviour
 
         irisAnimator.SetFloat("Speed", horizontalSpeed + verticalSpeed);
 
-        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.smoothDeltaTime);
+        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
         rbody.angularVelocity = 0f;
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -285,12 +283,12 @@ public class PlayerBehavior : MonoBehaviour
     private void HandleRolling()
     {
         GameManager.theManager.isInvincible = true;
-        rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.smoothDeltaTime);
-        slideSpeed -= slideSpeed * 8f * Time.smoothDeltaTime;
+        rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.fixedDeltaTime);
+        slideSpeed -= slideSpeed * 8f * Time.fixedDeltaTime;
         if(slideSpeed <= 20f)
         {
-            movementState = PlayerState.NORMAL;
             GameManager.theManager.isInvincible = false;
+            movementState = PlayerState.NORMAL;
         }
     }
 
@@ -304,9 +302,9 @@ public class PlayerBehavior : MonoBehaviour
 
     public void countdownCooldown()
     {
-        if (dashAfterSec > 0) { dashAfterSec -= Time.deltaTime; }
-        if (captureAfterSec > 0) { captureAfterSec -= Time.deltaTime; }
-        if (shootAfterSec > 0) { shootAfterSec -= Time.deltaTime; }
+        if (dashAfterSec > 0) { dashAfterSec -= Time.fixedDeltaTime; }
+        if (captureAfterSec > 0) { captureAfterSec -= Time.fixedDeltaTime; }
+        if (shootAfterSec > 0) { shootAfterSec -= Time.fixedDeltaTime; }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -336,6 +334,7 @@ public class PlayerBehavior : MonoBehaviour
             {
                 GameManager.theManager.playerHit();
                 //dunno why this isnt making invincible
+                GameManager.theManager.isInvincible = true;
                 startBlinking = true;
             }
         }
@@ -343,10 +342,10 @@ public class PlayerBehavior : MonoBehaviour
 
     private void SpriteBlinkingEffect()
     {
+        GameManager.theManager.isInvincible = false;
         spriteBlinkingTotalTimer += Time.deltaTime;
         if(spriteBlinkingTotalTimer >= spriteBlinkingTotalDuration)
         {
-            GameManager.theManager.isInvincible = false;
             startBlinking = false;
             spriteBlinkingTotalTimer = 0.0f;
             this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   // according to 
@@ -354,10 +353,10 @@ public class PlayerBehavior : MonoBehaviour
             //GameManager.theManager.isInvincible = false;
             return;
         }
+        GameManager.theManager.isInvincible = true;
         spriteBlinkingTimer += Time.deltaTime;
         if(spriteBlinkingTimer >= spriteBlinkingMiniDuration)
         {
-            GameManager.theManager.isInvincible = true;
             spriteBlinkingTimer = 0.0f;
             if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
                 this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;  //make changes
