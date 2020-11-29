@@ -84,6 +84,7 @@ public class PlayerBehavior : MonoBehaviour
         movementState = PlayerState.NORMAL;
         resetTrapCount();
         rbody.gravityScale = 0;
+        GameManager.theManager.isInvincible = false;
         //set to 10 for testing, should discuss this later on.
         setDefaultState();
     }
@@ -108,17 +109,17 @@ public class PlayerBehavior : MonoBehaviour
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
                 mPlayerHitbox.hide();
-                GameManager.theManager.isInvincible = false;
+                //GameManager.theManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.ROLLING:
                 HandleRolling();
-                GameManager.theManager.isInvincible = true;
+                //GameManager.theManager.isInvincible = true;
                 break;
             case PlayerState.FOCUS:
                 moveSpeed = focusSpeed;
                 mPlayerHitbox.show();
-                GameManager.theManager.isInvincible = false;
+                //GameManager.theManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.DEAD:
@@ -283,11 +284,13 @@ public class PlayerBehavior : MonoBehaviour
 
     private void HandleRolling()
     {
+        GameManager.theManager.isInvincible = true;
         rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.smoothDeltaTime);
         slideSpeed -= slideSpeed * 8f * Time.smoothDeltaTime;
         if(slideSpeed <= 20f)
         {
             movementState = PlayerState.NORMAL;
+            GameManager.theManager.isInvincible = false;
         }
     }
 
@@ -333,7 +336,6 @@ public class PlayerBehavior : MonoBehaviour
             {
                 GameManager.theManager.playerHit();
                 //dunno why this isnt making invincible
-                //GameManager.theManager.isInvincible = true;
                 startBlinking = true;
             }
         }
@@ -344,16 +346,18 @@ public class PlayerBehavior : MonoBehaviour
         spriteBlinkingTotalTimer += Time.deltaTime;
         if(spriteBlinkingTotalTimer >= spriteBlinkingTotalDuration)
         {
+            GameManager.theManager.isInvincible = false;
             startBlinking = false;
             spriteBlinkingTotalTimer = 0.0f;
             this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   // according to 
             //your sprite
-            GameManager.theManager.isInvincible = false;
+            //GameManager.theManager.isInvincible = false;
             return;
         }
         spriteBlinkingTimer += Time.deltaTime;
         if(spriteBlinkingTimer >= spriteBlinkingMiniDuration)
         {
+            GameManager.theManager.isInvincible = true;
             spriteBlinkingTimer = 0.0f;
             if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
                 this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;  //make changes
