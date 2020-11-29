@@ -91,6 +91,13 @@ public class PlayerBehavior : MonoBehaviour
 
     public float angle;
     // Update is called once per frame
+
+    void Update()
+    {
+        if (GameManager.theManager.canMove == true)
+            buttonControl();
+    }
+
     void FixedUpdate()
     {
         Vector2 lookDir = mousePos - rbody.position;
@@ -105,8 +112,7 @@ public class PlayerBehavior : MonoBehaviour
              SpriteBlinkingEffect();
 
 
-        if(GameManager.theManager.canMove == true)
-            buttonControl();
+        
 
         switch(movementState)
         {
@@ -157,7 +163,7 @@ public class PlayerBehavior : MonoBehaviour
             shootAfterSec = shootCoolDown;
             subtrapCount();
         }
-        if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.L))
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.L))
         {
             if (captureAfterSec <= 0 && !isCapturing)
             {
@@ -403,6 +409,12 @@ public class PlayerBehavior : MonoBehaviour
         Debug.Log("Shot once!");
         trapCount--;
         RunStatistics.Instance.trapCount = trapCount;
+    }
+
+
+    public BubbleSpirit getbubbleSprite()
+    {
+        return capturedBubble;
     }
 
 }

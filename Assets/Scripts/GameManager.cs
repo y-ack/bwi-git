@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
                 //saveGame();
             }
 
-            if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K))
                 //playerHit();
 
             if (Input.GetKeyDown(KeyCode.P))
@@ -546,6 +546,7 @@ public class GameManager : MonoBehaviour
     {
         uiControl.hideLost();
         clearEnemy();
+        RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         currentState = gameState.LOAD;
     }
 

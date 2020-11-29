@@ -39,14 +39,16 @@ public class ButtonControl : MonoBehaviour
     {
         GameManager.theManager.saveGame();
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
-        FindObjectOfType<AudioManager>().Play("Title_Theme"); 
+        FindObjectOfType<AudioManager>().Play("Title_Theme");
+        RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
     }
 
     public void menuToTitle()
     {      
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
-        FindObjectOfType<AudioManager>().Play("Title_Theme"); 
+        FindObjectOfType<AudioManager>().Play("Title_Theme");
+        RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
     }
 

@@ -46,14 +46,14 @@ public class GameUIControl : MonoBehaviour
         */
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+
+     void Update()
     {
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;
         captureCooldown = thePlayer.captureCoolDown;
         trapCount = thePlayer.getTrapCount();
-        if(GameManager.theManager.canMove == true)
+        if (GameManager.theManager.canMove == true)
         {
             buttonControl();
         }
@@ -61,7 +61,9 @@ public class GameUIControl : MonoBehaviour
         updateLives();
         updateScore();
         updateTrapCount();
-        if(trapUI.fillAmount < 1)
+        updateCaptureIcon();
+
+        if (trapUI.fillAmount < 1)
         {
             updateTrap();
         }
@@ -70,7 +72,7 @@ public class GameUIControl : MonoBehaviour
             colorTrap();
         }
 
-        if(captureUI.fillAmount < 1)
+        if (captureUI.fillAmount < 1)
         {
             updateCapture();
         }
@@ -79,10 +81,10 @@ public class GameUIControl : MonoBehaviour
             colorCapture();
         }
 
-        if(rollUI.fillAmount < 1)
+        if (rollUI.fillAmount < 1)
         {
             updateRoll();
-        } 
+        }
         else
         {
             colorRoll();
@@ -91,9 +93,9 @@ public class GameUIControl : MonoBehaviour
 
     private void buttonControl()
     {
-        if (Input.GetMouseButton(0) && trapUI.fillAmount == 1 && trapCount > 0)
+        if ((Input.GetMouseButton(0) || Input.GetKey(KeyCode.K)) && trapUI.fillAmount == 1 && trapCount > 0)
             activateTrap();
-        if (Input.GetMouseButtonDown(1) && captureUI.fillAmount == 1)
+        if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.L)) && captureUI.fillAmount == 1)
             activateCapture();
         if (Input.GetKeyDown(KeyCode.Space) && rollUI.fillAmount == 1)
             activateRoll();
@@ -187,7 +189,13 @@ public class GameUIControl : MonoBehaviour
         stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
         timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
-        chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
+        int chainCleard = 0;
+        for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)
+        {
+            chainCleard += RunStatistics.Instance.bubblesChainCleared[i];
+        }
+
+        chainText.GetComponent<Text>().text = "Bubble Chained: " + chainCleard;
     }
 
     // Method used to update the lost screen.
@@ -204,7 +212,13 @@ public class GameUIControl : MonoBehaviour
         stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
         timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
-        chainText.GetComponent<Text>().text = "Bubble Chained: " + RunStatistics.Instance.bubblesChainCleared.Length;
+        int chainCleard = 0;
+        for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)
+        {
+            chainCleard += RunStatistics.Instance.bubblesChainCleared[i];
+        }
+
+        chainText.GetComponent<Text>().text = "Bubble Chained: " + chainCleard;
     }
 
     // Method used to update the upgrade screen.
@@ -241,7 +255,7 @@ public class GameUIControl : MonoBehaviour
 
     public void updateRoll()
     {
-        rollUI.fillAmount += 1 / rollCooldown * Time.deltaTime;
+        rollUI.fillAmount += 1 / rollCooldown * Time.smoothDeltaTime;
     }
 
     public void activateTrap()
@@ -261,7 +275,7 @@ public class GameUIControl : MonoBehaviour
 
     public void updateTrap() 
     {
-        trapUI.fillAmount += 1 / trapCooldown * Time.deltaTime;
+        trapUI.fillAmount += 1 / trapCooldown * Time.smoothDeltaTime;
     }
 
     public void activateCapture()
@@ -279,9 +293,42 @@ public class GameUIControl : MonoBehaviour
         iconImage.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
+    public void updateCaptureIcon()
+    {
+        GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
+
+        if (thePlayer.getbubbleSprite() != null)
+        {
+            switch (thePlayer.getbubbleSprite().color)
+            {
+                case 0:
+                    iconHUD.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/bubble_red_bright");
+                    break;
+                case 1:
+                    iconHUD.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/bubble_blue_bright");
+                    break;
+                case 2:
+                    iconHUD.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/bubble_yellow_bright");
+                    break;
+                case 3:
+                    iconHUD.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/bubble_purple_bright");
+                    break;
+                case 4:
+                    iconHUD.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/bubble_purple_bright");
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            iconHUD.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/capture");
+        }
+    }
+
     public void updateCapture()
     {
-        captureUI.fillAmount += 1 / captureCooldown * Time.deltaTime;
+        captureUI.fillAmount += 1 / captureCooldown * Time.smoothDeltaTime;
     }
 
     public void updateLives()
