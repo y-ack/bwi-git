@@ -151,10 +151,6 @@ public class PlayerBehavior : MonoBehaviour
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
             e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
-            GameObject l = Instantiate(Resources.Load("Prefabs/LightSources/PlayerTrapPointLight") as
-                                   GameObject);
-            l.transform.localPosition = transform.localPosition;
-            l.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             shootAfterSec = shootCoolDown;
             subtrapCount();
         }

@@ -59,9 +59,6 @@ public class BubbleSpirit : MonoBehaviour
     bool cleared;
     private bool isChain;
 
-    public float maxRange = 1.5f;
-    public float minRange = 0.5f;
-    public float flickerSpeed = 0.5f;
     void Start()
     {
         myLight = GetComponent<Light2D>();
@@ -186,14 +183,14 @@ public class BubbleSpirit : MonoBehaviour
         if (color == BubbleColor.red)
         {
             myLight = GetComponent<Light2D>();
-            myLight.color = Color.red / 2 + (Color.yellow / 10);
+            myLight.color = Color.red / 4.5f;
             mySprite = Sprite.Create(redTexture, new Rect(0.0f, 0.0f, redTexture.width, redTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             //sr.material.mainTexture = redTexture;
         }
         if (color == BubbleColor.blue)
         {
             myLight = GetComponent<Light2D>();
-            myLight.color = Color.blue + (Color.yellow / 10); 
+            myLight.color = Color.blue; 
             mySprite = Sprite.Create(blueTexture, new Rect(0.0f, 0.0f, blueTexture.width, blueTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             //sr.material.mainTexture = blueTexture;
         }
@@ -211,7 +208,6 @@ public class BubbleSpirit : MonoBehaviour
             mySprite = Sprite.Create(purpleTexture, new Rect(0.0f, 0.0f, purpleTexture.width, purpleTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
            //sr.material.mainTexture = purpleTexture;
         }
-        //myLight.intensity = 1f;
         sr.sprite = mySprite;
     }
 
@@ -437,4 +433,6 @@ public class BubbleSpirit : MonoBehaviour
         Clear();
         //return sum
     }
+
+    
 }
