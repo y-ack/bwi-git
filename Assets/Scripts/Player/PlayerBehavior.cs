@@ -96,8 +96,6 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (GameManager.theManager.canMove == true)
             buttonControl();
-
-        countdownCooldown();
     }
 
     void FixedUpdate()
@@ -110,8 +108,8 @@ public class PlayerBehavior : MonoBehaviour
 
         if(startBlinking == true)
              SpriteBlinkingEffect();
-
-        switch(movementState)
+        countdownCooldown();
+        switch (movementState)
         {
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
@@ -172,7 +170,7 @@ public class PlayerBehavior : MonoBehaviour
                 e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 captureAfterSec = captureCoolDown;
             }
-            if (isCapturing == true)
+            else if (isCapturing == true)
             {
                 bool launchSuccess = capturedBubble.tryLaunch(
                     ((Vector3)mousePos - transform.position).normalized);

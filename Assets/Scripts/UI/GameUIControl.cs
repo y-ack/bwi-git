@@ -49,6 +49,10 @@ public class GameUIControl : MonoBehaviour
 
      void Update()
     {
+        if (thePlayer.isCapturing == true)
+        {
+            captureUI.fillAmount = 1;
+        }
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;
         captureCooldown = thePlayer.captureAfterSec + .825f;
@@ -73,12 +77,7 @@ public class GameUIControl : MonoBehaviour
             colorTrap();
         }
 
-        if (captureUI.fillAmount < 1 && thePlayer.isCapturing == true)
-        {
-            captureUI.fillAmount = 1;
-            colorCapture();
-        }
-        else if (captureUI.fillAmount < 1 && thePlayer.isCapturing == false)
+        if (captureUI.fillAmount < 1)
         {
             updateCapture();
         } 
@@ -286,7 +285,15 @@ public class GameUIControl : MonoBehaviour
 
     public void activateCapture()
     {
-        captureUI.fillAmount = 0;
+        if(thePlayer.isCapturing == true)
+        {
+            captureUI.fillAmount = thePlayer.captureAfterSec / thePlayer.captureCoolDown;
+        }
+        else
+        {
+            captureUI.fillAmount = 0;
+        }
+        
         GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
         Image iconImage = iconHUD.GetComponent<Image>();
         iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
