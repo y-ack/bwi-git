@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class PlayerBehavior : MonoBehaviour
 {
@@ -348,6 +349,7 @@ public class PlayerBehavior : MonoBehaviour
             }
             else
             {
+                CameraShaker.Instance.ShakeOnce(4f,2f,0.1f,1f);
                 GameManager.theManager.playerHit();
                 //dunno why this isnt making invincible
                 GameManager.theManager.isInvincible = true;
