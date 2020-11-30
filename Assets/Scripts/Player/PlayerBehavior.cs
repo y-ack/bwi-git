@@ -11,7 +11,7 @@ public class PlayerBehavior : MonoBehaviour
 
     Rigidbody2D rbody;
     public float moveSpeed;
-    public float normalSpeed = 4f;
+    public float normalSpeed;
     private float focusSpeed;
 
     Vector2 mousePos;
@@ -27,7 +27,7 @@ public class PlayerBehavior : MonoBehaviour
     public float dashCoolDown = 5f;
     private float dashAfterSec;
 
-    public float captureCoolDown = 1.4f;
+    public float captureCoolDown = 1.2f;
     public float captureAfterSec;
 
     public float shootCoolDown = 0.4f;
@@ -86,6 +86,7 @@ public class PlayerBehavior : MonoBehaviour
         rbody.gravityScale = 0;
         GameManager.theManager.isInvincible = false;
         //set to 10 for testing, should discuss this later on.
+        normalSpeed = 5f;
         setDefaultState();
     }
 
@@ -94,6 +95,7 @@ public class PlayerBehavior : MonoBehaviour
 
     void Update()
     {
+        //normalSpeed = 400f;
         if (GameManager.theManager.canMove == true)
             buttonControl();
     }
@@ -114,17 +116,14 @@ public class PlayerBehavior : MonoBehaviour
             case PlayerState.NORMAL:
                 moveSpeed = normalSpeed;
                 mPlayerHitbox.hide();
-                //GameManager.theManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.ROLLING:
                 HandleRolling();
-                //GameManager.theManager.isInvincible = true;
                 break;
             case PlayerState.FOCUS:
                 moveSpeed = focusSpeed;
                 mPlayerHitbox.show();
-                //GameManager.theManager.isInvincible = false;
                 playerMovementControls();
                 break;
             case PlayerState.DEAD:
@@ -268,10 +267,11 @@ public class PlayerBehavior : MonoBehaviour
 
     public void setDefaultState()
     {
+        Debug.Log("this is speed" + normalSpeed);
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
         dashCoolDown = 5f;
-        captureCoolDown = 1.4f;
+        captureCoolDown = 1.2f;
         shootCoolDown = 0.4f;
         isCapturing = false;
         capturedBubble = null;
@@ -283,7 +283,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         GameManager.theManager.isInvincible = true;
         rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.fixedDeltaTime);
-        slideSpeed -= slideSpeed * 8f * Time.fixedDeltaTime;
+        slideSpeed -= slideSpeed * normalSpeed * Time.fixedDeltaTime;
         if(slideSpeed <= 20f)
         {
             GameManager.theManager.isInvincible = false;

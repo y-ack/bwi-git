@@ -285,14 +285,7 @@ public class GameUIControl : MonoBehaviour
 
     public void activateCapture()
     {
-        if(thePlayer.isCapturing == true)
-        {
-            captureUI.fillAmount = thePlayer.captureAfterSec / thePlayer.captureCoolDown;
-        }
-        else
-        {
-            captureUI.fillAmount = 0;
-        }
+        captureUI.fillAmount = 0;
         
         GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
         Image iconImage = iconHUD.GetComponent<Image>();
