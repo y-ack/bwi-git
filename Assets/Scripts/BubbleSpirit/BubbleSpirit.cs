@@ -186,7 +186,7 @@ public class BubbleSpirit : MonoBehaviour
         if (color == BubbleColor.red)
         {
             myLight = GetComponent<Light2D>();
-            myLight.color = Color.red / 4.5f;
+            myLight.color = Color.red /3f;
             mySprite = Sprite.Create(redTexture, new Rect(0.0f, 0.0f, redTexture.width, redTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
             //sr.material.mainTexture = redTexture;
         }
@@ -200,7 +200,7 @@ public class BubbleSpirit : MonoBehaviour
         if (color == BubbleColor.yellow)
         {
             myLight = GetComponent<Light2D>();
-            myLight.color = Color.yellow / 3;
+            myLight.color = Color.yellow;
             mySprite = Sprite.Create(yellowTexture, new Rect(0.0f, 0.0f, yellowTexture.width, yellowTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
            //sr.material.mainTexture = yellowTexture;
         }
