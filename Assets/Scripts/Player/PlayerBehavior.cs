@@ -142,7 +142,15 @@ public class PlayerBehavior : MonoBehaviour
             dashAfterSec = dashCoolDown;
             movementState = PlayerState.ROLLING;
             slideSpeed = 8000f;
+        } else if((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+           && movementState != PlayerState.ROLLING)
+        {
+            movementState = PlayerState.FOCUS;
+        } else if(movementState != PlayerState.ROLLING)
+        {
+            movementState = PlayerState.NORMAL;
         }
+
         if (((Input.GetMouseButton(0) && shootAfterSec <= 0) && (trapCount > 0)) || 
             ((Input.GetKey(KeyCode.K) && shootAfterSec <= 0) && (trapCount > 0)))
         {
@@ -181,14 +189,6 @@ public class PlayerBehavior : MonoBehaviour
                     capturedBubble = null;
                 }
             }
-        }
-        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
-            movementState = PlayerState.FOCUS;
-        }
-        else if(movementState != PlayerState.ROLLING)
-        {
-            movementState = PlayerState.NORMAL;
         }
     }
 
