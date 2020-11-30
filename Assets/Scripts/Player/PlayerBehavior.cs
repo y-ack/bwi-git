@@ -284,7 +284,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private void HandleRolling()
     {
-        float rollSpeed = moveSpeed + 4f;
+        float rollSpeed = moveSpeed + 6f;
         float step = rollSpeed * Time.deltaTime;
         GameManager.theManager.isInvincible = true;
         //rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.fixedDeltaTime);
