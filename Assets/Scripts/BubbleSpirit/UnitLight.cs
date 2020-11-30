@@ -14,8 +14,9 @@ public class UnitLight : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         eachFadeTime = Random.Range(2f,4f);
-         fadeWaitTime = Random.Range(3f,5f);
+        eachFadeTime = Random.Range(2f,4f);
+        fadeWaitTime = Random.Range(3f,5f);
+        myLight = GetComponent<Light2D>();
         StartCoroutine(fadeInAndOutRepeat(myLight, eachFadeTime, fadeWaitTime));
     }
         //Fade in and out forever
@@ -38,8 +39,8 @@ public class UnitLight : MonoBehaviour
 
     IEnumerator fadeInAndOut(Light2D lightToFade, bool fadeIn, float duration)
     {
-        float minLuminosity = Random.Range(0.5f,0.8f); // min intensity
-        float maxLuminosity = Random.Range(1f,1.5f); // max intensity
+        float minLuminosity = Random.Range(0.9f,1.1f); // min intensity
+        float maxLuminosity = Random.Range(1.2f,1.3f); // max intensity
 
         float counter = 0f;
 
