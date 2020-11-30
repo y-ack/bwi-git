@@ -27,9 +27,14 @@ public class CameraBehavior : MonoBehaviour
     }
 	void FixedUpdate()
     {        
+        
+    }
+
+     void LateUpdate()
+    {
         FollowPlayer();
     }
-    
+
     public void FollowPlayer()
     {
         Vector3 targetPosition = follow.position;

@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public Spawner gameSpawner;
     public MapGenerator mapGenerator;
     public GameUIControl uiControl;
+    public GameObject playerRoll;
     private PlayerData playerData;
     private gameState currentState;
 
@@ -342,6 +343,15 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.time += Time.smoothDeltaTime;
         updateChainTimer();
 
+        if(isInvincible == true)
+        {
+            showRoll();
+        }
+        else
+        {
+            hideRoll();
+        }
+
         if (bubbleCounter == 0)
         {
                 setCleared();
@@ -632,6 +642,16 @@ public class GameManager : MonoBehaviour
         isHelp = false;
         uiControl.hideHelp();
         unpauseGame();
+    }
+
+    private void showRoll()
+    {
+        playerRoll.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/bubble_overlay");
+    }
+
+    private void hideRoll()
+    {
+        playerRoll.GetComponent<SpriteRenderer>().sprite = null;
     }
 
 /*
