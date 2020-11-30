@@ -8,7 +8,7 @@ public class Spawner : MonoBehaviour
     public Grid mGrid;
     public Camera cam = null;
     private MapGenerator currentLevel;
-    private float spawnRadius = 12f;
+    private float spawnRadius = 1f;
     private int ranX = 0;
     private int ranY = 0;
     private int normalCap;
@@ -90,7 +90,7 @@ public class Spawner : MonoBehaviour
                     currentLevel.cavePoints[ranX + ring,ranY - ring] == 0 &&
                     currentLevel.cavePoints[ranX - ring,ranY + ring] == 0)
                 {
-                    if((Mathf.Pow(ranX - p.x, 2f) + Mathf.Pow(ranY - p.y, 2f)) > Mathf.Pow(spawnRadius, 2f))
+                    if((Mathf.Pow(ranX - p.x, 2f)/(15*15) + Mathf.Pow(ranY - p.y, 2f)/(10*10)) > Mathf.Pow(spawnRadius, 2f))
                     { 
                         spawnPosFound = true;
                     }
