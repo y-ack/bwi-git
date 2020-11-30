@@ -102,6 +102,9 @@ public class BubbleSpirit : MonoBehaviour
             case State.LAUNCHED:
                 // travel in launchDirection until a collision happens
                 transform.position += launchDirection * delta; //delta bugged
+                if (transform.position.x < 0f || transform.position.y < 0f
+                || transform.position.x > 45f || transform.position.y > 30f)
+                    Clear();
                 break;
             case State.CLEARED:
                 myLight.enabled = false;
