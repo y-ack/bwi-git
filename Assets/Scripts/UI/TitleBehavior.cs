@@ -18,7 +18,7 @@ public class TitleBehavior : MonoBehaviour
     public Text userInput;
     public Text exampleUI;
 
-    private TitleState currentState;
+    public TitleState currentState;
     private CanvasGroup savedGamesCanvas;
     private CanvasGroup mainMenuCanvas;
     private CanvasGroup emptySavedCanvas;
@@ -45,8 +45,9 @@ public class TitleBehavior : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1;
         FindObjectOfType<AudioManager>().Play("Title_Theme");
-        currentState = TitleState.INTRO;
+        currentState = TitleState.MAIN;
         savedGamesCanvas = savedGamesUI.GetComponent<CanvasGroup>();
         mainMenuCanvas = mainMenuUI.GetComponent<CanvasGroup>();
         newGameCanvas = newGameUI.GetComponent<CanvasGroup>();
@@ -64,7 +65,7 @@ public class TitleBehavior : MonoBehaviour
         switch (currentState)
         {
             case TitleState.INTRO:
-                introSequence();
+                //introSequence();
                 break;
             case TitleState.MAIN:
                 mainSequence();
@@ -113,8 +114,7 @@ public class TitleBehavior : MonoBehaviour
         hideSaves();
         hideMenu();
         showNew();
-
-        if(userInput.text.Trim() == "")
+        if (userInput.text.Trim() == "")
         {
             showExample();
         }
@@ -220,7 +220,7 @@ public class TitleBehavior : MonoBehaviour
         mainMenuCanvas.blocksRaycasts = false;
     }
 
-    private void showNew()
+    public void showNew()
     {
         newGameCanvas.alpha = 1f;
         newGameCanvas.interactable = true;
