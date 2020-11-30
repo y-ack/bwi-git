@@ -17,7 +17,7 @@ public class UnitLight : MonoBehaviour
         eachFadeTime = Random.Range(2f,4f);
         fadeWaitTime = Random.Range(4f,6f);
         myLight = GetComponent<Light2D>();
-        myLight.pointLightOuterRadius = Random.Range(1f,3f);
+        myLight.pointLightOuterRadius = Random.Range(2f,3f);
         StartCoroutine(fadeInAndOutRepeat(myLight, eachFadeTime, fadeWaitTime));
     }
         //Fade in and out forever
@@ -40,8 +40,8 @@ public class UnitLight : MonoBehaviour
 
     IEnumerator fadeInAndOut(Light2D lightToFade, bool fadeIn, float duration)
     {
-        float minLuminosity = Random.Range(1f,1.1f); // min intensity
-        float maxLuminosity = Random.Range(1.2f,1.3f); // max intensity
+        float minLuminosity = Random.Range(1.1f,1.2f); // min intensity
+        float maxLuminosity = Random.Range(1.3f,1.4f); // max intensity
 
         float counter = 0f;
 
