@@ -139,7 +139,7 @@ public class PlayerBehavior : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("Iris_Rolling");
             dashAfterSec = dashCoolDown;
             movementState = PlayerState.ROLLING;
-            slideSpeed = 150f;
+            slideSpeed = 8000f;
         }
         if (((Input.GetMouseButton(0) && shootAfterSec <= 0) && (trapCount > 0)) || 
             ((Input.GetKey(KeyCode.K) && shootAfterSec <= 0) && (trapCount > 0)))
@@ -281,14 +281,25 @@ public class PlayerBehavior : MonoBehaviour
 
     private void HandleRolling()
     {
+        float rollSpeed = moveSpeed + 4f;
+        float step = rollSpeed * Time.deltaTime;
         GameManager.theManager.isInvincible = true;
-        rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.fixedDeltaTime);
-        slideSpeed -= slideSpeed * normalSpeed * Time.fixedDeltaTime;
+        //rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.fixedDeltaTime);
+        if(slideSpeed > 20f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, transform.position + moveDir, step);
+        }
+        //transform.position = Vector3.MoveTowards(transform.position, transform.position + moveDir, step);
+        //moveSpeed = focusSpeed;
+        slideSpeed -= slideSpeed * moveSpeed * Time.fixedDeltaTime;
+        
         if(slideSpeed <= 20f)
         {
             GameManager.theManager.isInvincible = false;
             movementState = PlayerState.NORMAL;
+            moveSpeed = normalSpeed;
         }
+        
     }
 
     public void SetCapture(BubbleSpirit bubbleSpirit)
