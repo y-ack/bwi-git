@@ -33,6 +33,10 @@ public class BubbleBullet : MonoBehaviour
         Collider2D other = collision.collider;
         switch (other.gameObject.tag)
         {
+            case "PlayerShield":
+                if (GameManager.theManager.isInvincible)
+                    destroyYoSelf();
+                break;
             case "PlayerHitbox":
                 destroyYoSelf();
                 break;
