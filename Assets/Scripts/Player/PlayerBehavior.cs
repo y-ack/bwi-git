@@ -321,7 +321,13 @@ public class PlayerBehavior : MonoBehaviour
     {
         switch (collision.gameObject.tag)
         {
-            // case "EnemyBullet":
+             case "Wall Top":
+             case "Wall":
+                if(movementState == PlayerState.ROLLING)
+                {
+                    slideSpeed = 15f;
+                }
+                break;
             // case "BubbleSpirit":
             //     Hit();
             //     break;
