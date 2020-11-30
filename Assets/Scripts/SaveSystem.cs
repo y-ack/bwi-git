@@ -41,7 +41,14 @@ public static class SaveSystem
         data.setStageCleared(RunStatistics.Instance.stagesCleared);
         data.setScore(RunStatistics.Instance.totalScore);
         data.setBubbleCleared(RunStatistics.Instance.bubblesCleared);
-        data.setbubbleMatched(RunStatistics.Instance.bubblesChainCleared.Length);
+
+        int chainCleard = 0;
+        for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)
+        {
+            chainCleard += RunStatistics.Instance.bubblesChainCleared[i];
+        }
+
+        data.setbubbleMatched(chainCleard);
         data.setBossCleared(RunStatistics.Instance.bossCleared);
         data.calculateStageAverage();
 

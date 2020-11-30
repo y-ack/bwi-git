@@ -25,7 +25,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private bool isDashButtonDown;
     public float DashAmount = 2f;
-    public float dashCoolDown = 5f;
+    public float dashCoolDown = 4.5f;
     private float dashAfterSec;
 
     public float captureCoolDown = 1.2f;
@@ -39,7 +39,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private int trapCount = 0;
     private float extraTrap = 0;
-    private int trapCountCap = 10;
+    public int trapCountCap = 4;
 
     //Increase by 0.25f or 0.5f when upgrading 
     private float trapUpgrade = 0;
@@ -87,7 +87,8 @@ public class PlayerBehavior : MonoBehaviour
         rbody.gravityScale = 0;
         GameManager.theManager.isInvincible = false;
         //set to 10 for testing, should discuss this later on.
-        normalSpeed = 5f;
+        normalSpeed = 4.7f;
+        DashAmount = 2f;
         setDefaultState();
     }
 
@@ -271,9 +272,10 @@ public class PlayerBehavior : MonoBehaviour
         Debug.Log("this is speed" + normalSpeed);
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
-        dashCoolDown = 5f;
+        dashCoolDown = 4.5f;
         captureCoolDown = 1.2f;
         shootCoolDown = 0.4f;
+        trapCountCap = 4;
         isCapturing = false;
         capturedBubble = null;
         captureState = CaptureState.IDLE;

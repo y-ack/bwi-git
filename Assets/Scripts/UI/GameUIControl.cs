@@ -14,6 +14,10 @@ public class GameUIControl : MonoBehaviour
     public Image captureUI;
     public Image trapUI;
     public Image rollUI;
+    public Image trapButtonUI;
+    public Image captureButtonUI;
+    public Image rollButtonUI;
+    public Image lifeButtonUI;
     public Text stageUI;
     public Text playerLifeUI;
     public Text scoreUI;
@@ -29,6 +33,11 @@ public class GameUIControl : MonoBehaviour
     private float trapCooldown;
     private float captureCooldown;
     private int trapCount;
+
+    public bool trapMax = false;
+    public bool captureMax = false;
+    public bool rollMax = false;
+    public bool lifeMax = false;
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +76,7 @@ public class GameUIControl : MonoBehaviour
         updateScore();
         updateTrapCount();
         updateCaptureIcon();
+        updateUpgradeButton();
 
         if (trapUI.fillAmount < 1)
         {
@@ -230,17 +240,166 @@ public class GameUIControl : MonoBehaviour
     public void updateUpgrade()
     {
         GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
-        GameObject speedText = upgradeBG.transform.Find("speedText").gameObject;
         GameObject trapText = upgradeBG.transform.Find("trapText").gameObject;
         GameObject captureText = upgradeBG.transform.Find("captureText").gameObject;
         GameObject rollText = upgradeBG.transform.Find("rollText").gameObject;
         GameObject lifeText = upgradeBG.transform.Find("lifeText").gameObject;
 
-        speedText.GetComponent<Text>().text = "Iris Movement Speed: " + thePlayer.moveSpeed + " (Max 18)";
-        trapText.GetComponent<Text>().text = "Bubble Trap Cooldown: " + thePlayer.shootCoolDown + " (Max 0.3)";
-        captureText.GetComponent<Text>().text = "Bubble Capture Cooldown: " + thePlayer.captureCoolDown + " (Max 2)";
+        trapText.GetComponent<Text>().text = "Bubble Trap Cap: " + thePlayer.trapCountCap + " (Max 10)";
+        captureText.GetComponent<Text>().text = "Bubble Capture Cooldown: " + thePlayer.captureCoolDown + " (Max 1)";
         rollText.GetComponent<Text>().text = "Roll Cooldown: " + thePlayer.dashCoolDown + " (Max 4)";
         lifeText.GetComponent<Text>().text = "Player Life: " + RunStatistics.Instance.currentLife + " (Max 3)";
+    }
+
+    public void updateUpgradeButton()
+    {
+       if(RunStatistics.Instance.totalScore < 500)
+        {
+            hideTrapButton();
+            hideCaptureButton();
+            hideRollButton();
+            hideLifeButton();
+        } else if (RunStatistics.Instance.totalScore > 500 && RunStatistics.Instance.totalScore < 1000)
+        {
+            hideTrapButton();
+            hideCaptureButton();
+            if(rollMax != true)
+            {
+                showRollButton();
+            }
+            else
+            {
+                hideRollButton();
+            }
+            hideLifeButton();
+        } else if (RunStatistics.Instance.totalScore > 1000)
+        {
+            if(trapMax != true)
+            {
+                showTrapButton();
+            }
+            else
+            {
+                hideTrapButton();
+            }
+
+            if (captureMax != true)
+            {
+                showCaptureButton();
+            }
+            else
+            {
+                hideCaptureButton();
+            }
+
+            if (rollMax != true)
+            {
+                showRollButton();
+            }
+            else
+            {
+                hideRollButton();
+            }
+
+            if(RunStatistics.Instance.currentLife < 3)
+            {
+                lifeMax = false;
+            }
+            else
+            {
+                lifeMax = true;
+            }
+
+            if (lifeMax != true)
+            {
+                showLifeButton();
+            }
+            else
+            {
+                hideLifeButton();
+            }
+        }
+        
+    }
+
+    public void showTrapButton()
+    {
+        CanvasGroup trapButtonCanvas = trapButtonUI.GetComponent<CanvasGroup>();
+
+        trapButtonCanvas.alpha = 1f;
+        trapButtonCanvas.interactable = true;
+        trapButtonCanvas.blocksRaycasts = true;
+
+    }
+
+    public void hideTrapButton()
+    {
+        CanvasGroup trapButtonCanvas = trapButtonUI.GetComponent<CanvasGroup>();
+
+        trapButtonCanvas.alpha = 0.25f;
+        trapButtonCanvas.interactable = false;
+        trapButtonCanvas.blocksRaycasts = false;
+    }
+
+    public void showCaptureButton()
+    {
+        CanvasGroup captureButtonCanvas = captureButtonUI.GetComponent<CanvasGroup>();
+
+        captureButtonCanvas.alpha = 1f;
+        captureButtonCanvas.interactable = true;
+        captureButtonCanvas.blocksRaycasts = true;
+    }
+
+    public void hideCaptureButton()
+    {
+        CanvasGroup captureButtonCanvas = captureButtonUI.GetComponent<CanvasGroup>();
+
+        captureButtonCanvas.alpha = 0.25f;
+        captureButtonCanvas.interactable = false;
+        captureButtonCanvas.blocksRaycasts = false;
+    }
+
+    public void showRollButton()
+    {
+        CanvasGroup rollButtonCanvas = rollButtonUI.GetComponent<CanvasGroup>();
+
+        rollButtonCanvas.alpha = 1f;
+        rollButtonCanvas.interactable = true;
+        rollButtonCanvas.blocksRaycasts = true;
+    }
+
+    public void hideRollButton()
+    {
+        CanvasGroup rollButtonCanvas = rollButtonUI.GetComponent<CanvasGroup>();
+
+        rollButtonCanvas.alpha = 0.25f;
+        rollButtonCanvas.interactable = false;
+        rollButtonCanvas.blocksRaycasts = false;
+    }
+
+    public void showLifeButton()
+    {
+        CanvasGroup lifeButtonCanvas = lifeButtonUI.GetComponent<CanvasGroup>();
+
+        lifeButtonCanvas.alpha = 1f;
+        lifeButtonCanvas.interactable = true;
+        lifeButtonCanvas.blocksRaycasts = true;
+    }
+
+    public void hideLifeButton()
+    {
+        CanvasGroup lifeButtonCanvas = lifeButtonUI.GetComponent<CanvasGroup>();
+
+        lifeButtonCanvas.alpha = 0.25f;
+        lifeButtonCanvas.interactable = false;
+        lifeButtonCanvas.blocksRaycasts = false;
+    }
+
+    public void setCost(int upgradeCost)
+    {
+        GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
+        GameObject costText = upgradeBG.transform.Find("costText").gameObject;
+        costText.GetComponent<Text>().text = "Cost: " + upgradeCost + " Points";
     }
 
     public void activateRoll()

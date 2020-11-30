@@ -7,6 +7,7 @@ public class ButtonControl : MonoBehaviour
 {
 
     public PlayerBehavior thePlayer;
+    public GameUIControl theUI;
 
     // Function used to set the game back to run
     public void resumeGame()
@@ -65,43 +66,17 @@ public class ButtonControl : MonoBehaviour
         //SceneManager.LoadScene("TitleScreen");
     }
 
-    public void upgradeSpeed()
-    {
-        if(RunStatistics.Instance.totalScore >= 1000)
-        {
-            if(thePlayer.moveSpeed < 18f)
-            {
-                if((thePlayer.moveSpeed += 0.2f) >= 18f)
-                {
-                    thePlayer.moveSpeed = 18f;
-                    RunStatistics.Instance.totalScore -= 1000;
-                }
-                else
-                {
-                    RunStatistics.Instance.totalScore -= 1000;
-                }
-            }
-            else
-            {
-
-            }
-        }
-        else
-        {
-
-        }
-    }
-
     public void upgradeTrap()
     {
         if (RunStatistics.Instance.totalScore >= 1000)
         {
-            if (thePlayer.shootCoolDown > 0.3f)
+            if (thePlayer.trapCountCap < 10f)
             {
-                if ((thePlayer.shootCoolDown -= 0.01f) <= 0.3f)
+                if ((thePlayer.trapCountCap += 3) >= 10f)
                 {
-                    thePlayer.shootCoolDown = 0.3f;
+                    thePlayer.shootCoolDown = 10f;
                     RunStatistics.Instance.totalScore -= 1000;
+                    theUI.trapMax = true;
                 }
                 else
                 {
@@ -112,10 +87,6 @@ public class ButtonControl : MonoBehaviour
             {
 
             }
-        }
-        else
-        {
-
         }
     }
 
@@ -123,12 +94,13 @@ public class ButtonControl : MonoBehaviour
     {
         if (RunStatistics.Instance.totalScore >= 1000)
         {
-            if (thePlayer.captureCoolDown > 2f)
+            if (thePlayer.captureCoolDown > 1f)
             {
-                if((thePlayer.captureCoolDown -= 0.1f) <= 2f)
+                if((thePlayer.captureCoolDown -= 0.2f) <= 1f)
                 {
-                    thePlayer.captureCoolDown = 2f;
+                    thePlayer.captureCoolDown = 1f;
                     RunStatistics.Instance.totalScore -= 1000;
+                    theUI.captureMax = true;
                 }
                 else
                 {
@@ -139,37 +111,30 @@ public class ButtonControl : MonoBehaviour
             {
 
             }
-        }
-        else
-        {
-
         }
     }
 
     public void upgradeRoll()
     {
-        if (RunStatistics.Instance.totalScore >= 1000)
+        if (RunStatistics.Instance.totalScore >= 500)
         {
             if (thePlayer.dashCoolDown > 4f)
             {
-                if((thePlayer.dashCoolDown -= 0.1f) <= 4f)
+                if((thePlayer.dashCoolDown -= 0.5f) <= 4f)
                 {
                     thePlayer.dashCoolDown = 4f;
-                    RunStatistics.Instance.totalScore -= 1000;
+                    RunStatistics.Instance.totalScore -= 500;
+                    theUI.rollMax = true;
                 }
                 else
                 {
-                    RunStatistics.Instance.totalScore -= 1000;
+                    RunStatistics.Instance.totalScore -= 500;
                 }
             }
             else
             {
-
+                // hide button
             }
-        }
-        else
-        {
-
         }
     }
 
@@ -187,9 +152,15 @@ public class ButtonControl : MonoBehaviour
 
             }
         }
-        else
-        {
+    }
 
-        }
+    public void hoverOne()
+    {
+        theUI.setCost(500);
+    }
+
+    public void hoverTwo()
+    {
+        theUI.setCost(1000);
     }
 }
