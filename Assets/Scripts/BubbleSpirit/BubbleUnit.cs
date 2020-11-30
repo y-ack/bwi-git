@@ -17,7 +17,6 @@ public struct BubbleNeighbors
     public const int SE = 3;
     public const int SW = 4;
     public const int W  = 5;
-
     
     public Dictionary<Vector2Int,BubbleSpirit> Dictionary()
     {
@@ -54,19 +53,19 @@ public class BubbleUnit : MonoBehaviour
         }
     };
 
-    private Dictionary<Vector2Int, BubbleSpirit> grid = new
+    private Dictionary<Vector2Int, BubbleSpirit> bubbleGrid = new
         Dictionary<Vector2Int, BubbleSpirit>();
     private int bubbleCount;
 
     public BubbleSpirit cellOrNull(Vector2Int cellPos)
     {
-        return grid.ContainsKey(cellPos) ? grid[cellPos] : null;
+        return bubbleGrid.ContainsKey(cellPos) ? bubbleGrid[cellPos] : null;
     }
 
     public BubbleNeighbors getNeighbors(BubbleSpirit b)
     {
-        // Debug.Log("BubbleUnit's grid:");
-        // foreach (KeyValuePair<Vector2Int, BubbleSpirit> kvp in grid)
+        // Debug.Log("BubbleUnit's bubbleGrid:");
+        // foreach (KeyValuePair<Vector2Int, BubbleSpirit> kvp in bubbleGrid)
         // {
         //     Debug.Log(string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value.color));
         // }
@@ -87,13 +86,13 @@ public class BubbleUnit : MonoBehaviour
 
     public Vector2Int nearestEmpty(BubbleSpirit b)
     {
-        if (!grid.ContainsKey(b.gridPosition))
+        if (!bubbleGrid.ContainsKey(b.gridPosition))
         {
             return b.gridPosition;
         }
-        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        // aaaaa
         BubbleNeighbors n = getNeighbors(b);
-        b.gridPosition = n.offsets[n.neighbors.FindIndex(x => x == null)];
+        b.gridPosition = n.offsets[n.neighbors.FindIndex(x => x == null)] + n.origin;
         return b.gridPosition;
     }
 
@@ -105,9 +104,9 @@ public class BubbleUnit : MonoBehaviour
         // (IT IS)
         // add a safeguard just in case. possible that player could
         // release a bubble ON TOP OF existing ones, for example, and then
-        // the grid would resolve to the same position...
+        // the bubbleGrid would resolve to the same position...
         nearestEmpty(b);
-        grid.Add(b.gridPosition, b);
+        bubbleGrid.Add(b.gridPosition, b);
         ++bubbleCount;
     }
 
@@ -117,7 +116,7 @@ public class BubbleUnit : MonoBehaviour
         //depth first search, wow this sucks
         start.searched = true;
         var s_neighbors = getNeighbors(start);
-        if (grid.TryGetValue(s_neighbors.NW))
+        if (bubbleGrid.TryGetValue(s_neighbors.NW))
         {
             
         }
@@ -127,7 +126,7 @@ public class BubbleUnit : MonoBehaviour
     {
         //just leave disjoint for now ...
         //TODO[ALPHA] do pathExists to check need to cut the unit
-        grid.Remove(b.gridPosition);
+        bubbleGrid.Remove(b.gridPosition);
         --bubbleCount;
         if (bubbleCount == 0) destroySelf();
     }
