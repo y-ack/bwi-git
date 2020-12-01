@@ -18,6 +18,8 @@ public class GameUIControl : MonoBehaviour
     public Image captureButtonUI;
     public Image rollButtonUI;
     public Image lifeButtonUI;
+    public Image tutorialOne;
+    public Image tutorialTwo;
     public Text stageUI;
     public Text playerLifeUI;
     public Text scoreUI;
@@ -180,14 +182,76 @@ public class GameUIControl : MonoBehaviour
         upgradeScreenGroup.interactable = false;
     }
 
+    public void helpController()
+    {
+        showHelp();
+        helpPageOne();
+    }
+
     public void showHelp()
     {
         helpScreenGroup.alpha = 1f;
+        helpScreenGroup.interactable = true;
+        helpScreenGroup.blocksRaycasts = true;
     }
 
     public void hideHelp()
     {
         helpScreenGroup.alpha = 0f;
+        helpScreenGroup.interactable = false;
+        helpScreenGroup.blocksRaycasts = false;
+    }
+
+    public void helpPageOne()
+    {
+        showFirstHelp();
+        hideSecondHelp();
+    }
+
+    public void helpPageTwo()
+    {
+        showSecondHelp();
+        hideFirstHelp();
+    }
+
+    public void showFirstHelp()
+    {
+        GameObject pageHelp = helpScreenUI.transform.Find("Page Help").gameObject;
+        CanvasGroup firstTutorialGroup = tutorialOne.GetComponent<CanvasGroup>();
+        pageHelp.GetComponent<Text>().text = "1/2";
+
+        firstTutorialGroup.alpha = 1;
+        firstTutorialGroup.interactable = true;
+        firstTutorialGroup.blocksRaycasts = true;
+    }
+
+    public void hideFirstHelp()
+    {
+        CanvasGroup firstTutorialGroup = tutorialOne.GetComponent<CanvasGroup>();
+
+        firstTutorialGroup.alpha = 0;
+        firstTutorialGroup.interactable = false;
+        firstTutorialGroup.blocksRaycasts = false;
+    }
+
+    public void showSecondHelp()
+    {
+        GameObject pageHelp = helpScreenUI.transform.Find("Page Help").gameObject;
+        CanvasGroup secondTutorialGroup = tutorialTwo.GetComponent<CanvasGroup>();
+        pageHelp.GetComponent<Text>().text = "2/2";
+
+        secondTutorialGroup.alpha = 1;
+        secondTutorialGroup.interactable = true;
+        secondTutorialGroup.blocksRaycasts = true;
+    }
+
+    public void hideSecondHelp()
+    {
+        CanvasGroup secondTutorialGroup = tutorialTwo.GetComponent<CanvasGroup>();
+
+        secondTutorialGroup.alpha = 0;
+        secondTutorialGroup.interactable = false;
+        secondTutorialGroup.blocksRaycasts = false;
     }
 
     // Method used to update the result screen. 
@@ -514,4 +578,5 @@ public class GameUIControl : MonoBehaviour
     {
         stageUI.text = "STAGE " + RunStatistics.Instance.currentStage;
     }
+
 }

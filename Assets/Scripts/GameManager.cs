@@ -632,7 +632,7 @@ public class GameManager : MonoBehaviour
     private void toShowHelp()
     {
         isHelp = true;
-        uiControl.showHelp();
+        uiControl.helpController();
         pauseGame();
     }
 

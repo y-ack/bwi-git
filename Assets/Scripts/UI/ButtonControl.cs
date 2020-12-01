@@ -163,4 +163,14 @@ public class ButtonControl : MonoBehaviour
     {
         theUI.setCost(1000);
     }
+
+    public void nextHelp()
+    {
+        theUI.helpPageTwo();
+    }
+
+    public void previousHelp()
+    {
+        theUI.helpPageOne();
+    }
 }
