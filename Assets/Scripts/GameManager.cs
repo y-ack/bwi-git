@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
-//using PlayFab;
-//using PlayFab.ClientModels;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager theManager = null;
+
+    public PlayFabManager thePlayFabManager = null;
     public PlayerBehavior mPlayer = null;
     public Spawner gameSpawner;
     public MapGenerator mapGenerator;
@@ -32,6 +33,8 @@ public class GameManager : MonoBehaviour
     private int chainCount;
     private Vector3 originalPos;
 
+    private int counter = 0;
+
     //leaderboard shit
     public List<string> playFabIDList = new List<string>();
     public List<string> playFabScoreList = new List<string>();
@@ -49,10 +52,6 @@ public class GameManager : MonoBehaviour
         CLEARED,
         UPGRADE,
         NEXT
-    }
-    public void hello()
-    {
-        Debug.Log("hello");
     }
     void Start()
     {
@@ -89,6 +88,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         sequenceControl();
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            PlayFabManager.thePlayFabManager.GetLeaderboard();
+        }
     }
 
     // Method used to contain all the game's control.
@@ -101,6 +105,7 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.L))
             {
+                PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
                 //saveGame();
             }
 
@@ -219,6 +224,7 @@ public class GameManager : MonoBehaviour
      * */
     private void loadSequence()
     {
+        PlayFabManager.thePlayFabManager.Login(RunStatistics.Instance.playerName);
         RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
         RunStatistics.Instance.currentStage = 1;
@@ -367,6 +373,13 @@ public class GameManager : MonoBehaviour
     {
         uiControl.updateLost();
         uiControl.showLost();
+        
+        if(counter == 0)
+        {
+            PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
+            counter++;
+        }
+        
     }
 
     /*
@@ -653,61 +666,4 @@ public class GameManager : MonoBehaviour
     {
         playerRoll.GetComponent<SpriteRenderer>().sprite = null;
     }
-
-/*
-    //leaderboard shit
-    public void Login()
-    {
-        var request = new LoginWithCustomIDRequest 
-        {
-            CustomId = RunStatistics.Instance.playerName,
-            CreateAccount = true
-        };
-        PlayFabClientAPI.LoginWithCustomID( request, OnSuccess, OnError);
-    }
-    private void OnSuccess(LoginResult result)
-    {
-        Debug.Log("Successful login/account create!");
-    }
-    private void OnError(PlayFabError error)
-    {
-        Debug.Log("Error while logging in/creating account");
-        Debug.Log(error.GenerateErrorReport());
-    }
-    public void SendLeaderboard()
-    {
-        var request = new UpdatePlayerStatisticsRequest
-        {
-            Statistics = new List<StatisticUpdate>
-            {
-                new StatisticUpdate
-                {
-                    StatisticName = "GameScore",
-                    Value = RunStatistics.Instance.totalScore
-                }
-            }
-        };
-        PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
-    }
-    void OnLeaderboardFixedUpdate(UpdatePlayerStatisticsResult result)
-    {
-        Debug.Log("Successful Leaderboard sent");
-    }
-    public void GetLeaderboard(){
-        var request = new GetLeaderboardRequest{
-            StatisticName = "GameScore",
-            StartPosition = 0,
-            MaxResultsCount = 10
-        };
-        PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
-    }
-
-    void OnLeaderboardGet(GetLeaderboardResult result){
-        foreach(var item in result.Leaderboard){
-            playFabIDList.Add(item.PlayFabId);
-            playFabScoreList.Add(item.StatValue.ToString());
-            Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue);
-        }
-    }
-    */
 }
