@@ -22,7 +22,7 @@ public class StatisticUI : MonoBehaviour
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
         updateLocal();
 
-        StartCoroutine(updateGlobalWithSleeps());
+        //StartCoroutine(updateGlobalWithSleeps());
     }
 
     IEnumerator updateGlobalWithSleeps()

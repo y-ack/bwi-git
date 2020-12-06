@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.L))
             {
-                PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
+                //PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
                 //saveGame();
             }
 
@@ -376,7 +376,7 @@ public class GameManager : MonoBehaviour
         
         if(counter == 0)
         {
-            PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
+            //PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
             counter++;
         }
         
