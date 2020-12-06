@@ -8,6 +8,7 @@ public class ButtonControl : MonoBehaviour
 
     public PlayerBehavior thePlayer;
     public GameUIControl theUI;
+    public StatisticUI theStatistic;
 
     // Function used to set the game back to run
     public void resumeGame()
@@ -152,6 +153,18 @@ public class ButtonControl : MonoBehaviour
 
             }
         }
+    }
+
+    public void toShowlocalStatistic()
+    {
+        theStatistic.showLocal();
+        theStatistic.hideGlobal();
+    }
+
+    public void toShowGlobalStatistic()
+    {
+        theStatistic.showGlobal();
+        theStatistic.hideLocal();
     }
 
     public void hoverOne()

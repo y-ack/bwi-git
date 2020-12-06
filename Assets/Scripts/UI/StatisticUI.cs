@@ -20,29 +20,70 @@ public class StatisticUI : MonoBehaviour
         FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
         localCanvas = localStatistic.GetComponent<CanvasGroup>();
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
+        showLocal();
+        hideGlobal();
         updateLocal();
 
-        //StartCoroutine(updateGlobalWithSleeps());
+        StartCoroutine(updateGlobalWithSleeps());
     }
 
     IEnumerator updateGlobalWithSleeps()
     {
         PlayFabManager.thePlayFabManager.Login("ccb");
         yield return new WaitForSecondsRealtime(3);
+        int currentPosition = 1;
         GameObject statisticBG = globalStatistic.transform.Find("Global Statistic View").gameObject;
-        GameObject playerBG = statisticBG.transform.Find("PlayerRanking").gameObject;
-        GameObject pPlayerPositionText = playerBG.transform.Find("PlayerPosition").gameObject;
-        GameObject pPlayerNameText = playerBG.transform.Find("PlayerName").gameObject;
-        GameObject pPlayerScoreText = playerBG.transform.Find("PlayerScore").gameObject;
+
         PlayFabManager.thePlayFabManager.GetLeaderboard();
         yield return new WaitForSecondsRealtime(3);
         board = PlayFabManager.thePlayFabManager.returnLeaderboard();
         Debug.Log("Makes it this far");
+
         foreach(var item in board.Leaderboard){
             Debug.Log("Makes it into here");
+            GameObject e = Instantiate(Resources.Load("Prefabs/PlayerRanking") as
+                                   GameObject);
+            GameObject pPlayerPositionText = e.transform.Find("PlayerPosition").gameObject;
+            GameObject pPlayerNameText = e.transform.Find("PlayerName").gameObject;
+            GameObject pPlayerScoreText = e.transform.Find("PlayerScore").gameObject;
+
+            RectTransform eScaler = e.transform.GetComponent<RectTransform>();
+
+            pPlayerPositionText.GetComponent<Text>().text = currentPosition.ToString();
             pPlayerNameText.GetComponent<Text>().text = item.DisplayName;
             pPlayerScoreText.GetComponent<Text>().text =  item.StatValue.ToString();
+            currentPosition++;
+            e.transform.SetParent(statisticBG.transform);
         }
+    }
+
+
+    public void showLocal()
+    {
+        localCanvas.alpha = 1f;
+        localCanvas.interactable = true;
+        localCanvas.blocksRaycasts = true;
+    }
+    
+    public void hideLocal()
+    {
+        localCanvas.alpha = 0f;
+        localCanvas.interactable = false;
+        localCanvas.blocksRaycasts = false;
+    }
+
+    public void showGlobal()
+    {
+        globalCanvas.alpha = 1f;
+        globalCanvas.interactable = true;
+        globalCanvas.blocksRaycasts = true;
+    }
+
+    public void hideGlobal()
+    {
+        globalCanvas.alpha = 0f;
+        globalCanvas.interactable = false;
+        globalCanvas.blocksRaycasts = false;
     }
 
 

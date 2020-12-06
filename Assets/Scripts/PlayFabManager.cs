@@ -89,7 +89,7 @@ public class PlayFabManager : MonoBehaviour
         var request = new GetLeaderboardRequest{
             StatisticName = "GameScore",
             StartPosition = 0,
-            MaxResultsCount = 1
+            MaxResultsCount = 10
         };
         PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
     }
