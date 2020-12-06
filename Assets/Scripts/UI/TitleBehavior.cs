@@ -30,6 +30,8 @@ public class TitleBehavior : MonoBehaviour
     private string[] saveFile;
     private float introTime = 2f;
 
+    string myGUID = System.Guid.NewGuid().ToString();
+
     public enum TitleState
     {
         INTRO,
@@ -45,6 +47,7 @@ public class TitleBehavior : MonoBehaviour
 
     void Start()
     {
+        //PlayFabManager.thePlayFabManager.Login("bab");
         Time.timeScale = 1;
         FindObjectOfType<AudioManager>().Play("Title_Theme");
         currentState = TitleState.MAIN;
@@ -62,6 +65,10 @@ public class TitleBehavior : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(Input.GetKey(KeyCode.G))
+        {
+            PlayFabManager.thePlayFabManager.GetLeaderboard();
+        }
         switch (currentState)
         {
             case TitleState.INTRO:

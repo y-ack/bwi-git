@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PlayFab;
+using PlayFab.ClientModels;
+using UnityEngine.UI;
 
 public class StatisticUI : MonoBehaviour
 {
@@ -10,6 +13,7 @@ public class StatisticUI : MonoBehaviour
 
     private CanvasGroup localCanvas;
     private CanvasGroup globalCanvas;
+    private GetLeaderboardResult board;
 
     void Start()
     {
@@ -17,11 +21,28 @@ public class StatisticUI : MonoBehaviour
         localCanvas = localStatistic.GetComponent<CanvasGroup>();
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
         updateLocal();
+
+        StartCoroutine(updateGlobalWithSleeps());
     }
 
-    private void updateGlobal()
+    IEnumerator updateGlobalWithSleeps()
     {
-
+        PlayFabManager.thePlayFabManager.Login("ccb");
+        yield return new WaitForSecondsRealtime(3);
+        GameObject statisticBG = globalStatistic.transform.Find("Global Statistic View").gameObject;
+        GameObject playerBG = statisticBG.transform.Find("PlayerRanking").gameObject;
+        GameObject pPlayerPositionText = playerBG.transform.Find("PlayerPosition").gameObject;
+        GameObject pPlayerNameText = playerBG.transform.Find("PlayerName").gameObject;
+        GameObject pPlayerScoreText = playerBG.transform.Find("PlayerScore").gameObject;
+        PlayFabManager.thePlayFabManager.GetLeaderboard();
+        yield return new WaitForSecondsRealtime(3);
+        board = PlayFabManager.thePlayFabManager.returnLeaderboard();
+        Debug.Log("Makes it this far");
+        foreach(var item in board.Leaderboard){
+            Debug.Log("Makes it into here");
+            pPlayerNameText.GetComponent<Text>().text = item.DisplayName;
+            pPlayerScoreText.GetComponent<Text>().text =  item.StatValue.ToString();
+        }
     }
 
 
@@ -74,4 +95,58 @@ public class StatisticUI : MonoBehaviour
             pBossText.GetComponent<Text>().text = "Previous Boss Cleared: " + saveData.lastBossCleared;
         }
     }
+
+    /*
+    public GetLeaderboardResult getBoard()
+    {
+        PlayFabManager.thePlayFabManager.getLeaderBoard();
+    }
+    */
+
+    /*
+    public void SendLeaderboard(int score)
+    {
+        var request = new UpdatePlayerStatisticsRequest
+        {
+            Statistics = new List<StatisticUpdate>
+            {
+                new StatisticUpdate
+                {
+                    StatisticName = "GameScore",
+                    Value = score
+                }
+            }
+        };
+        PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
+    }
+
+    void OnLeaderboardUpdate(UpdatePlayerStatisticsResult result)
+    {
+        Debug.Log("Successful Leaderboard sent");
+    }
+    public void GetLeaderboard(){
+        var request = new GetLeaderboardRequest{
+            StatisticName = "GameScore",
+            StartPosition = 0,
+            MaxResultsCount = 1
+        };
+        PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
+    }
+
+    void OnLeaderboardGet(GetLeaderboardResult result){
+
+        foreach(var item in result.Leaderboard){
+            playFabIDList.Add(item.PlayFabId);
+            playFabScoreList.Add(item.StatValue.ToString());
+            Debug.Log(item.DisplayName + " " + item.Position + " " + item.PlayFabId + " " + item.StatValue);
+        }
+
+    }
+
+    void OnGetError(PlayFabError error)
+    {
+        Debug.Log("Error Getting Data");
+        Debug.Log(error.GenerateErrorReport());
+    }
+    */
 }

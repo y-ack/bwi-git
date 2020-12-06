@@ -14,7 +14,12 @@ public class PlayFabManager : MonoBehaviour
     public List<string> playFabIDList = new List<string>();
     public List<string> playFabScoreList = new List<string>();
 
-    // Start is called before the first frame update
+    public GetLeaderboardResult publicLeaderboard;
+
+    void Awake () 
+    {
+        DontDestroyOnLoad (transform.gameObject);
+    }
     void Start()
     {
         if (!thePlayFabManager)
@@ -84,18 +89,25 @@ public class PlayFabManager : MonoBehaviour
         var request = new GetLeaderboardRequest{
             StatisticName = "GameScore",
             StartPosition = 0,
-            MaxResultsCount = 5
+            MaxResultsCount = 1
         };
         PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
     }
 
     void OnLeaderboardGet(GetLeaderboardResult result){
 
+        publicLeaderboard = result;
+        /*
         foreach(var item in result.Leaderboard){
             playFabIDList.Add(item.PlayFabId);
             playFabScoreList.Add(item.StatValue.ToString());
             Debug.Log(item.DisplayName + " " + item.Position + " " + item.PlayFabId + " " + item.StatValue);
         }
+        */
 
+    }
+    public GetLeaderboardResult returnLeaderboard()
+    {
+        return publicLeaderboard;
     }
 }
