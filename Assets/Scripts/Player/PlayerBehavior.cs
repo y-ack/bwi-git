@@ -190,6 +190,16 @@ public class PlayerBehavior : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F) && trapCount >= 4)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            captureAfterSec = captureCoolDown;
+            SubTrapForSplash();
+        }
     }
 
     private void playerMovementControls()
@@ -422,6 +432,12 @@ public class PlayerBehavior : MonoBehaviour
     {
         Debug.Log("Shot once!");
         trapCount--;
+        RunStatistics.Instance.trapCount = trapCount;
+    }
+
+    public void SubTrapForSplash()
+    {
+        trapCount -=4;
         RunStatistics.Instance.trapCount = trapCount;
     }
 

@@ -103,12 +103,6 @@ public class GameManager : MonoBehaviour
                 setPause();
             }
 
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                //PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
-                //saveGame();
-            }
-
         if (Input.GetKeyDown(KeyCode.K))
                 //playerHit();
 
@@ -224,7 +218,7 @@ public class GameManager : MonoBehaviour
      * */
     private void loadSequence()
     {
-        //PlayFabManager.thePlayFabManager.Login(RunStatistics.Instance.playerName);
+        PlayFabManager.thePlayFabManager.Login(RunStatistics.Instance.playerName);
         RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
         RunStatistics.Instance.currentStage = 1;

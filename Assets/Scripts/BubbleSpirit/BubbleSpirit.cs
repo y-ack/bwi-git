@@ -128,6 +128,12 @@ public class BubbleSpirit : MonoBehaviour
                     other.GetComponent<PlayerBulletBehavior>().disabled = true;
                     Clear();
                 }
+                if(other.gameObject.tag == "SplashDamage")
+                {
+                    FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+                    FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
+                    Clear();
+                }
                 if(other.gameObject.tag == "Capture"
                    && !other.GetComponent<CaptureBulletBehavior>().disabled)
                 {
