@@ -7,8 +7,8 @@ public class PlayerBulletBehavior : MonoBehaviour
     static private PlayerBehavior ParentPlayer = null;
     static public void setParent(PlayerBehavior g) { ParentPlayer = g; }
     private const float bulletSpeed = 20f;
-    Vector2 bulletDirection;
-    private float lifeSpan;
+    public Vector2 bulletDirection;
+    public float lifeSpan;
 
     public bool disabled = false;
     // Start is called before the first frame update

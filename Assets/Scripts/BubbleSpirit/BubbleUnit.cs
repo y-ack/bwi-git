@@ -32,11 +32,11 @@ public struct BubbleNeighbors
 public class BubbleUnit : MonoBehaviour
 {
     //TODO change to List<> :(
-    private Vector3 initialPosition;
-    private Vector3 movePosition;
+    public Vector3 initialPosition;
+    public Vector3 movePosition;
     public float timeToMove = 4f;
-    private float moveTimer;
-    private float radius = 3f;
+    public float moveTimer;
+    public float radius = 3f;
 
 
     private Light2D myLight;
@@ -55,7 +55,7 @@ public class BubbleUnit : MonoBehaviour
 
     private Dictionary<Vector2Int, BubbleSpirit> bubbleGrid = new
         Dictionary<Vector2Int, BubbleSpirit>();
-    private int bubbleCount;
+    public int bubbleCount;
 
     public BubbleSpirit cellOrNull(Vector2Int cellPos)
     {

@@ -63,8 +63,9 @@ public class ButtonControl : MonoBehaviour
 
     public void quickSaveAndQuit()
     {
-        //GameManager.theManager.quickSave();
-        //SceneManager.LoadScene("TitleScreen");
+        GameManager.theManager.quickSave();
+        SceneManager.LoadScene("TitleScreen");
+        Debug.Log(SaveSystem.quickLoad().playerCurrentPos.x);
     }
 
     public void upgradeTrap()

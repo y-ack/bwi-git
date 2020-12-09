@@ -79,7 +79,15 @@ public static class SaveSystem
 
     public static void quickSave(QuickSaveData newSave)
     {
-        BinaryFormatter formatter = new BinaryFormatter();
+
+        string jsonSave = JsonUtility.ToJson(newSave);
+        File.WriteAllText(Application.persistentDataPath + "/QuickData.quick", jsonSave);
+        Debug.Log(jsonSave);
+
+
+        /*
+         * 
+         *  BinaryFormatter formatter = new BinaryFormatter();
 
         string playerName = RunStatistics.Instance.playerName;
 
@@ -95,6 +103,9 @@ public static class SaveSystem
         data.bubblesCleared = (RunStatistics.Instance.bubblesCleared);
         data.bubblesChainCleared = (RunStatistics.Instance.bubblesChainCleared);
         data.bossCleared = (RunStatistics.Instance.bossCleared);
+        data.trapCount = (RunStatistics.Instance.trapCount);
+
+        data.totalBubbles = GameManager.theManager.bubbleCounter;
 
         data.currentBubbleUnit = newSave.currentBubbleUnit;
         data.currentBubbleSpirit = newSave.currentBubbleSpirit;
@@ -104,6 +115,8 @@ public static class SaveSystem
 
         formatter.Serialize(stream, data);
         stream.Close();
+         * */
+
     }
 
     public static QuickSaveData quickLoad()
@@ -112,13 +125,9 @@ public static class SaveSystem
 
         if (File.Exists(path))
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path, FileMode.Open);
-
-            QuickSaveData data = formatter.Deserialize(stream) as QuickSaveData;
-            stream.Close();
-
-            return data;
+            string savePath = File.ReadAllText(path);
+            QuickSaveData loadQuicksave = JsonUtility.FromJson<QuickSaveData>(savePath);
+            return loadQuicksave;
         }
         else
         {

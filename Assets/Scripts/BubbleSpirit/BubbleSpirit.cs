@@ -50,14 +50,14 @@ public class BubbleSpirit : MonoBehaviour
     public State state; // could probably be private
     public int color;
     public float bubbleSpeed = 20f;
-    private int rebounds = 1;
-    private Vector3 launchDirection;
+    public int rebounds = 1;
+    public Vector3 launchDirection;
     public bool searched; // for parent path searching ... not impl yet.
     private PlayerBehavior playerTarget = null;
 
     public BubbleBulletPattern pattern; //maybe an array
-    bool cleared;
-    private bool isChain;
+    public bool cleared;
+    public bool isChain;
 
     void Start()
     {

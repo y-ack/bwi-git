@@ -44,6 +44,12 @@ public class BulletPatternGenerator : MonoBehaviour
         instance = this;
     }
 
+    public void addSavedPattern(BubbleSpirit b, double[] parameter )
+    {
+        b.pattern = Instantiate(patterns[4][0], b.transform);
+        b.pattern.parentBubble = b;
+        b.pattern.setPatternParameters(parameter);
+    }
 
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)
     {

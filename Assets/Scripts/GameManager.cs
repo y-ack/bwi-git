@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
      * */
     private void loadSequence()
     {
-        PlayFabManager.thePlayFabManager.Login(RunStatistics.Instance.playerName);
+        //PlayFabManager.thePlayFabManager.Login(RunStatistics.Instance.playerName);
         RunStatistics.Instance.totalScore = 0;
         RunStatistics.Instance.stagesCleared = 0;
         RunStatistics.Instance.currentStage = 1;
@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.trapCount = 0;
         mPlayer.setDefaultState();
         //Debug.Log("Diff: " + difficulty);
-        generateStage();
+        generateStage(false);
         originalPos = mPlayer.transform.position;
         FindObjectOfType<AudioManager>().Play("Stage_BG"); 
         uiControl.updateStage();
@@ -246,76 +246,123 @@ public class GameManager : MonoBehaviour
     }
 
     //set
-    private void generateStage()
+    private void generateStage(bool isQuick)
     {
         mPlayer.setTrapCount(RunStatistics.Instance.trapCount);
         float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);      
         Debug.Log("Current difficulty: " + difficulty);
         //spawn boss bubble every 3 level for alpha playtest
-        if (RunStatistics.Instance.currentStage % 3 == 0)
+
+        if(isQuick == false)
         {
-            mapGenerator.bossGeneration(difficulty);
-            mapGenerator.generateNewGrid();           
-            gameSpawner.spawnBoss(difficulty);
+            if (RunStatistics.Instance.currentStage % 3 == 0)
+            {
+                mapGenerator.bossGeneration(difficulty);
+                mapGenerator.generateNewGrid();
+                gameSpawner.spawnBoss(difficulty);
+            }
+            // spawn normal bubbles
+            else
+            {
+                mapGenerator.normalGeneration(difficulty);
+                mapGenerator.generateNewGrid();
+                gameSpawner.spawnNormal(difficulty);
+            }
         }
-        // spawn normal bubbles
         else
         {
-            mapGenerator.normalGeneration(difficulty);
-            mapGenerator.generateNewGrid();           
-            gameSpawner.spawnNormal(difficulty);
+            QuickSaveData quickSave = SaveSystem.quickLoad();
+
+            if (RunStatistics.Instance.currentStage % 3 == 0)
+            {
+                mapGenerator.bossGeneration(difficulty);
+            }
+            // spawn normal bubbles
+            else
+            {
+                mapGenerator.normalGeneration(difficulty);
+            }
+
+            mapGenerator.Generate(quickSave.seedValue, quickSave.thresholdValue);
+            mapGenerator.generateNewGrid();
         }
+        
     }
 
+    /* Method runs when the player load a quick save data. 
+     * 
+     * 
+     * */
     private void quickSequence()
     {
         quickLoad();
+        generateStage(true);
         quickSpawnWorld();
         FindObjectOfType<AudioManager>().Play("Stage_BG");
         uiControl.updateStage();
-        unpauseGame();
-        setRun();
+        setPause();
     }
 
     private void quickLoad()
     {
-        QuickSaveData quickSave = SaveSystem.quickLoad();
+        QuickSaveData theSaveData = SaveSystem.quickLoad();
 
-        RunStatistics.Instance.playerName = quickSave.playerName;
-        RunStatistics.Instance.currentLife = quickSave.currentLife;
-        RunStatistics.Instance.time = quickSave.time;
-        RunStatistics.Instance.stagesCleared = quickSave.stagesCleared;
-        RunStatistics.Instance.totalScore = quickSave.totalScore;
-        RunStatistics.Instance.bubblesCleared = quickSave.bubblesCleared;
-        RunStatistics.Instance.bubblesChainCleared = quickSave.bubblesChainCleared;
-        RunStatistics.Instance.bossCleared = quickSave.bossCleared;
+        RunStatistics.Instance.playerName = theSaveData.playerName;
+        RunStatistics.Instance.currentLife = theSaveData.currentLife;
+        RunStatistics.Instance.time = theSaveData.time;
+        RunStatistics.Instance.stagesCleared = theSaveData.stagesCleared;
+        RunStatistics.Instance.totalScore = theSaveData.totalScore;
+        RunStatistics.Instance.bubblesCleared = theSaveData.bubblesCleared;
+        RunStatistics.Instance.bubblesChainCleared = theSaveData.bubblesChainCleared;
+        RunStatistics.Instance.bossCleared = theSaveData.bossCleared;
+        RunStatistics.Instance.trapCount = theSaveData.trapCount;
 
-        // Procedural Saves go here
-        mPlayer = quickSave.thePlayer;
-        currentBubbleUnit = quickSave.currentBubbleUnit;
-        currentBubbleSpirit = quickSave.currentBubbleSpirit;
-        currentBubbleProjectile = quickSave.currentBubbleProjectile;
-        currentProjectile = quickSave.currentPlayerProjectile;
+        bubbleCounter = theSaveData.totalBubbles;
+
+        mPlayer.moveSpeed = theSaveData.moveSpeed;
+        mPlayer.normalSpeed = theSaveData.normalSpeed;
+        mPlayer.focusSpeed = theSaveData.focusSpeed;
+
+        mPlayer.transform.position = theSaveData.playerCurrentPos.getVectorThree();
+        mPlayer.mousePos = theSaveData.mousePos.getVectorTwo();
+        mPlayer.movementVector = theSaveData.movementVector.getVectorTwo();
+        mPlayer.moveDir = theSaveData.moveDir.getVectorThree();
+        mPlayer.slideDir = theSaveData.slideDir.getVectorThree();
+
+        mPlayer.slideSpeed = theSaveData.slideSpeed;
+
+        mPlayer.isDashButtonDown = theSaveData.isDashButtonDown;
+        mPlayer.DashAmount = theSaveData.DashAmount;
+        mPlayer.dashCoolDown = theSaveData.dashCoolDown;
+        mPlayer.dashAfterSec = theSaveData.dashAfterSec;
+
+        mPlayer.captureCoolDown = theSaveData.captureCoolDown;
+        mPlayer.captureAfterSec = theSaveData.captureAfterSec;
+
+        mPlayer.shootCoolDown = theSaveData.shootCoolDown;
+        mPlayer.shootAfterSec = theSaveData.shootAfterSec;
+
+        mPlayer.isCapturing = theSaveData.isCapturing;
+        mPlayer.capturedBubble = theSaveData.capturedBubble;
+
+        mPlayer.extraTrap = theSaveData.extraTrap;
+        mPlayer.trapCountCap = theSaveData.trapCountCap;
+        mPlayer.trapUpgrade = theSaveData.trapUpgrade;
+
+        mPlayer.spriteBlinkingTimer =theSaveData.spriteBlinkingTimer;
+        mPlayer.spriteBlinkingMiniDuration = theSaveData.spriteBlinkingMiniDuration;
+        mPlayer.spriteBlinkingTotalTimer = theSaveData.spriteBlinkingTotalTimer;
+        mPlayer.spriteBlinkingTotalDuration = theSaveData.spriteBlinkingTotalDuration;
     }
 
     private void quickSpawnWorld()
     {
         // Procedural World Spawn Goes Here
+        QuickSaveData theSaveData = SaveSystem.quickLoad();
 
-        for(int i = 0; i < currentBubbleUnit.Length; i++)
-        {
-            GameObject e = Instantiate(currentBubbleUnit[i]);
-        }
-
-        for( int i = 0; i < currentBubbleUnit.Length; i++)
-        {
-            GameObject e = Instantiate(currentBubbleUnit[i]);
-        }
-
-        for(int i = 0; i < currentProjectile.Length; i++)
-        {
-            GameObject e = Instantiate(currentProjectile[i]);
-        }
+        gameSpawner.quickSpawnUnit();
+        gameSpawner.quickSpawnEnemyProjectile();
+        gameSpawner.quickSpawnPlayerProjectile();
     }
 
     /*
@@ -354,7 +401,7 @@ public class GameManager : MonoBehaviour
 
         if (bubbleCounter == 0)
         {
-                setCleared();
+            setCleared();
         }
     }
 
@@ -401,7 +448,7 @@ public class GameManager : MonoBehaviour
         uiControl.hideUpgrade();
         clearEnemy(); // Not necessary if everything runs well.
         RunStatistics.Instance.currentStage++;
-        generateStage();
+        generateStage(false);
         uiControl.updateStage();
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
@@ -478,10 +525,15 @@ public class GameManager : MonoBehaviour
         SaveSystem.savePlayer();
     }
 
+    /* Method used to save all the save data of a run
+     * 
+     * 
+     * */
     public void quickSave()
     {
         QuickSaveData quickSave = new QuickSaveData();
 
+        // Runstatistic Data
         quickSave.playerName = RunStatistics.Instance.playerName;
         quickSave.currentLife = RunStatistics.Instance.currentLife;
         quickSave.time = RunStatistics.Instance.time;
@@ -490,12 +542,136 @@ public class GameManager : MonoBehaviour
         quickSave.bubblesCleared = (RunStatistics.Instance.bubblesCleared);
         quickSave.bubblesChainCleared = (RunStatistics.Instance.bubblesChainCleared);
         quickSave.bossCleared = (RunStatistics.Instance.bossCleared);
+        quickSave.trapCount = (RunStatistics.Instance.trapCount);
 
-        quickSave.thePlayer = mPlayer;
-        quickSave.currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
-        quickSave.currentBubbleSpirit = GameObject.FindGameObjectsWithTag("BubbleSpirit");
-        quickSave.currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
-        quickSave.currentPlayerProjectile = GameObject.FindGameObjectsWithTag("Bullet");
+        quickSave.totalBubbles = bubbleCounter;
+
+        // Mapp generator Value
+        quickSave.seedValue = mapGenerator.seed;
+        quickSave.thresholdValue = mapGenerator.threshold;
+
+        // Game Actor Data
+        quickSave.moveSpeed = mPlayer.moveSpeed;
+        quickSave.normalSpeed = mPlayer.normalSpeed;
+        quickSave.focusSpeed = mPlayer.focusSpeed;
+
+        quickSave.playerCurrentPos = new SerializableVector(mPlayer.transform.localPosition);
+        quickSave.mousePos = new SerializableVector(mPlayer.mousePos);
+        quickSave.movementVector = new SerializableVector(mPlayer.movementVector);
+        quickSave.moveDir = new SerializableVector(mPlayer.moveDir);
+        quickSave.slideDir = new SerializableVector(mPlayer.slideDir);
+
+        quickSave.slideSpeed = mPlayer.slideSpeed;
+
+        quickSave.isDashButtonDown = mPlayer.isDashButtonDown;
+        quickSave.DashAmount = mPlayer.DashAmount;
+        quickSave.dashCoolDown = mPlayer.dashCoolDown;
+        quickSave.dashAfterSec = mPlayer.dashAfterSec;
+
+        quickSave.captureCoolDown = mPlayer.captureCoolDown;
+        quickSave.captureAfterSec = mPlayer.captureAfterSec;
+
+        quickSave.shootCoolDown = mPlayer.shootCoolDown;
+        quickSave.shootAfterSec = mPlayer.shootAfterSec;
+
+        quickSave.isCapturing = mPlayer.isCapturing;
+        quickSave.capturedBubble = mPlayer.capturedBubble;
+
+        quickSave.extraTrap = mPlayer.extraTrap;
+        quickSave.trapCountCap = mPlayer.trapCountCap;
+        quickSave.trapUpgrade = mPlayer.trapUpgrade;
+
+        quickSave.spriteBlinkingTimer = mPlayer.spriteBlinkingTimer;
+        quickSave.spriteBlinkingMiniDuration = mPlayer.spriteBlinkingMiniDuration;
+        quickSave.spriteBlinkingTotalTimer = mPlayer.spriteBlinkingTotalTimer;
+        quickSave.spriteBlinkingTotalDuration = mPlayer.spriteBlinkingTotalDuration;
+
+        //quickSave.currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
+        currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
+        quickSave.currentBubbleUnit = new SerializableBubbleUnit[currentBubbleUnit.Length];
+
+        for(int i = 0; i < currentBubbleUnit.Length; i++)
+        {
+            Debug.Log("The Length of the currentBubbleUnit Array is " + currentBubbleUnit.Length);
+            SerializableBubbleUnit saveUnit = new SerializableBubbleUnit();
+            saveUnit.unitPosition = new SerializableVector(currentBubbleUnit[i].transform.localPosition);
+            saveUnit.initialPosition = new SerializableVector(currentBubbleUnit[i].GetComponent<BubbleUnit>().initialPosition);
+            saveUnit.movePosition = new SerializableVector(currentBubbleUnit[i].GetComponent<BubbleUnit>().movePosition);
+            saveUnit.timeToMove = currentBubbleUnit[i].GetComponent<BubbleUnit>().timeToMove;
+            saveUnit.moveTimer = currentBubbleUnit[i].GetComponent<BubbleUnit>().moveTimer;
+            saveUnit.radius = currentBubbleUnit[i].GetComponent<BubbleUnit>().radius;
+            saveUnit.bubbleCount = currentBubbleUnit[i].GetComponent<BubbleUnit>().bubbleCount;
+
+            quickSave.currentBubbleUnit[i] = saveUnit;
+
+            List<GameObject> theChildrenBubble = new List<GameObject>();
+
+            foreach (Transform child in currentBubbleUnit[i].transform)
+            {
+                theChildrenBubble.Add(child.gameObject);
+                
+            }
+            Debug.Log("Children Bubble Counter: " + theChildrenBubble.Count);
+            saveUnit.childrenBubble = new SerializableBubbleSpirit[theChildrenBubble.Count];
+
+            for(int j = 0; j < saveUnit.childrenBubble.Length; j++)
+            {
+                SerializableBubbleSpirit theChildrenSpirit = new SerializableBubbleSpirit();
+                theChildrenSpirit.bubblePosition = new SerializableVector(theChildrenBubble[j].transform.position);
+                theChildrenSpirit.gridPosition = new SerializableVector(theChildrenBubble[j].GetComponent<BubbleSpirit>().gridPosition);
+                theChildrenSpirit.color = theChildrenBubble[j].GetComponent<BubbleSpirit>().color;
+                theChildrenSpirit.rebounds = theChildrenBubble[j].GetComponent<BubbleSpirit>().rebounds;
+                theChildrenSpirit.launchDirection = new SerializableVector(theChildrenBubble[j].GetComponent<BubbleSpirit>().launchDirection);
+                if(theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern != null)
+                {
+                    theChildrenSpirit.patternParameter = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.velocityParameters;
+                }
+                theChildrenSpirit.cleared = theChildrenBubble[j].GetComponent<BubbleSpirit>().cleared;
+                theChildrenSpirit.isChain = theChildrenBubble[j].GetComponent<BubbleSpirit>().isChain;
+                saveUnit.childrenBubble[j] = theChildrenSpirit;
+            }
+             
+        }
+
+        
+        currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        quickSave.currentBubbleProjectile = new SerializableBubbleProjectile[currentBubbleProjectile.Length];
+        for (int i = 0; i < currentBubbleProjectile.Length; i++)
+        {
+            SerializableBubbleProjectile bubbleProjectile = new SerializableBubbleProjectile();
+            bubbleProjectile.projectilePosition = new SerializableVector(currentBubbleProjectile[i].transform.position);
+            bubbleProjectile.projectileRotation = new SerializableVector(currentBubbleProjectile[i].transform.localRotation);
+            bubbleProjectile.velocity = new SerializableVector(currentBubbleProjectile[i].GetComponent<BubbleBullet>().velocity);
+            bubbleProjectile.angularVelocity = currentBubbleProjectile[i].GetComponent<BubbleBullet>().angularVelocity;
+            bubbleProjectile.acceleration = currentBubbleProjectile[i].GetComponent<BubbleBullet>().acceleration;
+            bubbleProjectile.accelerationTimeout = currentBubbleProjectile[i].GetComponent<BubbleBullet>().accelerationTimeout;
+            quickSave.currentBubbleProjectile[i] = bubbleProjectile;
+        }
+
+
+        GameObject[] captureProjectile = GameObject.FindGameObjectsWithTag("Capture");
+        quickSave.capturePlayerProjectile = new SerializablePlayerProjectile[captureProjectile.Length];
+        for (int i = 0; i < captureProjectile.Length; i++)
+        {
+            SerializablePlayerProjectile capturePlayerProjectile = new SerializablePlayerProjectile();
+            capturePlayerProjectile.bulletDirection = new SerializableVector(captureProjectile[i].transform.position);
+            capturePlayerProjectile.bulletRotation = new SerializableVector(captureProjectile[i].transform.localRotation);
+            capturePlayerProjectile.rebounds = captureProjectile[i].GetComponent<CaptureBulletBehavior>().rebounds;
+            capturePlayerProjectile.disabled = captureProjectile[i].GetComponent<CaptureBulletBehavior>().disabled;
+            quickSave.capturePlayerProjectile[i] = capturePlayerProjectile;
+        }
+
+        currentProjectile = GameObject.FindGameObjectsWithTag("Bullet");
+        quickSave.currentPlayerProjectile = new SerializablePlayerProjectile[currentProjectile.Length];
+
+        for(int i = 0; i < currentProjectile.Length; i++) {
+            SerializablePlayerProjectile thePlayerProjectile = new SerializablePlayerProjectile();
+            thePlayerProjectile.bulletDirection = new SerializableVector(currentProjectile[i].transform.position);
+            thePlayerProjectile.bulletRotation = new SerializableVector(currentProjectile[i].transform.localRotation);
+            thePlayerProjectile.lifeSpan = currentProjectile[i].GetComponent<PlayerBulletBehavior>().lifeSpan;
+            thePlayerProjectile.disabled = currentProjectile[i].GetComponent<PlayerBulletBehavior>().disabled;
+            quickSave.currentPlayerProjectile[i] = thePlayerProjectile;
+        }
 
 
         SaveSystem.quickSave(quickSave);

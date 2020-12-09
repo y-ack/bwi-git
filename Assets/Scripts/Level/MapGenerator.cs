@@ -18,6 +18,7 @@ public class MapGenerator : MonoBehaviour
     public TileBase obstacle;
     public float seed;
     public float threshold;
+    public bool isSaved;
 
     //xscale and yscale response to how big the obstacles would be
     [Range(0,10)]
@@ -173,7 +174,16 @@ public class MapGenerator : MonoBehaviour
         ClearAllTiles();
         cavePoints = new int[width, height];
         smoothCycles = 2;
-        seed = Random.Range(0,200f);
+
+        if(isSaved == false)
+        {
+            seed = Random.Range(0, 200f);
+        }
+        else
+        {
+            isSaved = false;
+        }
+        
         //normalGeneration(1); 
 
         Debug.Log("xscale: "+ xscale+", yscale: "+ yscale+ ", threshold: " + threshold);
@@ -224,6 +234,13 @@ public class MapGenerator : MonoBehaviour
         ProcessMap();
         generateTile(); 
         generationDone = true;  
+    }
+
+    public void Generate(float seedValue, float thresholdValue)
+    {
+        seed = seedValue;
+        threshold = thresholdValue;
+        isSaved = true;
     }
 
     public List<List<Coord>> GetRegions(int tileType) {

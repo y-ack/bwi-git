@@ -47,13 +47,12 @@ public class StatisticUI : MonoBehaviour
             GameObject pPlayerNameText = e.transform.Find("PlayerName").gameObject;
             GameObject pPlayerScoreText = e.transform.Find("PlayerScore").gameObject;
 
-            RectTransform eScaler = e.transform.GetComponent<RectTransform>();
-
             pPlayerPositionText.GetComponent<Text>().text = currentPosition.ToString();
             pPlayerNameText.GetComponent<Text>().text = item.DisplayName;
             pPlayerScoreText.GetComponent<Text>().text =  item.StatValue.ToString();
             currentPosition++;
             e.transform.SetParent(statisticBG.transform);
+            e.transform.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
     }
 

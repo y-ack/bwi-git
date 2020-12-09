@@ -59,7 +59,7 @@ public class TitleBehavior : MonoBehaviour
         hideSaves();
         findSaves();
         createSaves();
-        //findQuick();
+        findQuick();
     }
 
     // Update is called once per frame
@@ -208,7 +208,7 @@ public class TitleBehavior : MonoBehaviour
         if(SaveSystem.quickLoad() != null)
         {
             GameObject e = Instantiate(Resources.Load("Prefabs/continueGameButton") as GameObject);
-            GameObject buttonGroupBG = mainMenuUI.transform.Find("buttonGroupBackGround").gameObject;
+            GameObject buttonGroupBG = mainMenuUI.transform.Find("buttonGroupBackground").gameObject;
             e.transform.SetParent(buttonGroupBG.transform);
         }
     }

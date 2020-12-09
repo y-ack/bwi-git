@@ -9,7 +9,21 @@ public class TitleMenuBehavior : MonoBehaviour
 
     public void newButton()
     {
-        titleController.newClicked();
+        //titleController.newClicked();
+
+        FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
+
+        if(SaveSystem.loadPlayer() == null)
+        {
+            RunStatistics.Instance.isNew = true;
+        }
+        else
+        {
+            RunStatistics.Instance.isNew = false;
+        }
+
+        FindObjectOfType<AudioManager>().Stop("Title_Theme");
+        SceneManager.LoadScene("Main");
     }
 
     public void loadButton()

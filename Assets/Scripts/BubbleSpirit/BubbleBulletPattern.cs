@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //using Unity.Mathematics;
 
+    [System.Serializable]
 public abstract class BubbleBulletPattern : MonoBehaviour
 {
     public BubbleBullet bulletPrefab;

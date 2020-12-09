@@ -527,6 +527,104 @@ public class Spawner : MonoBehaviour
             totalColor = 4;
         }
     }
+
+    public void quickSpawnUnit()
+    {
+        QuickSaveData theSaveData = SaveSystem.quickLoad();
+
+
+        for (int i = 0; i < theSaveData.currentBubbleUnit.Length; i++)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
+            e.transform.localPosition = theSaveData.currentBubbleUnit[i].unitPosition.getVectorThree();
+            e.GetComponent<BubbleUnit>().initialPosition = theSaveData.currentBubbleUnit[i].initialPosition.getVectorThree();
+            e.GetComponent<BubbleUnit>().movePosition = theSaveData.currentBubbleUnit[i].movePosition.getVectorThree();
+            e.GetComponent<BubbleUnit>().timeToMove = theSaveData.currentBubbleUnit[i].timeToMove;
+            e.GetComponent<BubbleUnit>().moveTimer = theSaveData.currentBubbleUnit[i].moveTimer;
+
+            SerializableBubbleSpirit[] unitChildren = theSaveData.currentBubbleUnit[i].childrenBubble;
+
+            for (int j = 0; j < unitChildren.Length; j++)
+            {
+                GameObject f = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
+                f.transform.position = unitChildren[j].bubblePosition.getVectorThree();
+
+                switch (unitChildren[j].state)
+                {
+                    case SerializableBubbleSpirit.State.CAPTURED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.CAPTURED;
+                        break;
+
+                    case SerializableBubbleSpirit.State.LAUNCHED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.LAUNCHED;
+                        break;
+
+                    case SerializableBubbleSpirit.State.CLEARED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.CLEARED;
+                        break;
+
+                    default:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.NORMAL;
+                        break;
+                }
+
+                f.GetComponent<BubbleSpirit>().rebounds = unitChildren[j].rebounds;
+                f.GetComponent<BubbleSpirit>().launchDirection = unitChildren[j].launchDirection.getVectorThree();
+                f.GetComponent<BubbleSpirit>().cleared = unitChildren[j].cleared;
+                f.GetComponent<BubbleSpirit>().isChain = unitChildren[j].isChain;
+                f.GetComponent<BubbleSpirit>().SetColor(unitChildren[j].color);
+                f.GetComponent<BubbleSpirit>().setParent(e.GetComponent<BubbleUnit>(), unitChildren[j].gridPosition.getVectorTwoInt());
+                BulletPatternGenerator.instance.addToBubble(f.GetComponent<BubbleSpirit>(), 0, RunStatistics.Instance.currentStage);
+            }
+
+            e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;
+            e.GetComponent<BubbleUnit>().bubbleCount = theSaveData.currentBubbleUnit[i].bubbleCount;
+        }
+    }
+
+    public void quickSpawnEnemyProjectile()
+    {
+        QuickSaveData theSaveData = SaveSystem.quickLoad();
+
+        for (int i = 0; i < theSaveData.currentBubbleProjectile.Length; i++)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/BubbleBulletPrefab")) as GameObject;
+            e.transform.localPosition = theSaveData.currentBubbleProjectile[i].projectilePosition.getVectorThree();
+            e.transform.localRotation = theSaveData.currentBubbleProjectile[i].projectilePosition.getQuaternion();
+            e.GetComponent<BubbleBullet>().velocity = theSaveData.currentBubbleProjectile[i].velocity.getVectorThree();
+            e.GetComponent<BubbleBullet>().angularVelocity = theSaveData.currentBubbleProjectile[i].angularVelocity;
+            e.GetComponent<BubbleBullet>().acceleration = theSaveData.currentBubbleProjectile[i].acceleration;
+            e.GetComponent<BubbleBullet>().accelerationTimeout = theSaveData.currentBubbleProjectile[i].accelerationTimeout;
+
+        }
+    }
+
+    public void quickSpawnPlayerProjectile()
+    {
+        QuickSaveData theSaveData = SaveSystem.quickLoad();
+
+        for (int i = 0; i < theSaveData.capturePlayerProjectile.Length; i++)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Capture") as
+                                   GameObject);
+
+            e.transform.localPosition = theSaveData.capturePlayerProjectile[i].bulletDirection.getVectorThree();
+            e.transform.localRotation = theSaveData.capturePlayerProjectile[i].bulletRotation.getQuaternion();
+            e.GetComponent<CaptureBulletBehavior>().rebounds = theSaveData.capturePlayerProjectile[i].rebounds;
+            e.GetComponent<CaptureBulletBehavior>().disabled = theSaveData.capturePlayerProjectile[i].disabled;
+        }
+
+        for (int i = 0; i < theSaveData.currentPlayerProjectile.Length; i++)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
+                                   GameObject);
+
+            e.transform.localPosition = theSaveData.currentPlayerProjectile[i].bulletDirection.getVectorThree();
+            e.transform.localRotation = theSaveData.currentPlayerProjectile[i].bulletRotation.getQuaternion();
+            e.GetComponent<PlayerBulletBehavior>().lifeSpan = theSaveData.currentPlayerProjectile[i].lifeSpan;
+            e.GetComponent<PlayerBulletBehavior>().disabled = theSaveData.currentPlayerProjectile[i].disabled;
+        }
+    }
 }
 
 

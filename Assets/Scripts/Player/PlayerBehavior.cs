@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
+[System.Serializable]
 public class PlayerBehavior : MonoBehaviour
 {
     //static private GameManager mGameManager;
@@ -11,22 +12,22 @@ public class PlayerBehavior : MonoBehaviour
     public Animator irisAnimator = null;
 
     Rigidbody2D rbody;
-    public float moveSpeed;
-    public float normalSpeed;
-    private float focusSpeed;
+    public float moveSpeed { get; set; }
+    public float normalSpeed { get; set; }
+    public float focusSpeed { get; set; }
 
-    Vector2 mousePos;
-    Vector2 movementVector;
-    private Vector3 moveDir;
-    private Vector3 slideDir;
-    private float slideSpeed;
+    public Vector2 mousePos { get; set; }
+    public Vector2 movementVector { get; set; }
+    public Vector3 moveDir { get; set; }
+    public Vector3 slideDir { get; set; }
+    public float slideSpeed { get; set; }
 
     public Camera cam;
 
-    private bool isDashButtonDown;
+    public bool isDashButtonDown { get; set;}
     public float DashAmount = 2f;
     public float dashCoolDown = 4.5f;
-    private float dashAfterSec;
+    public float dashAfterSec { get; set; }
 
     public float captureCoolDown = 1.2f;
     public float captureAfterSec;
@@ -34,15 +35,15 @@ public class PlayerBehavior : MonoBehaviour
     public float shootCoolDown = 0.4f;
     public float shootAfterSec;
 
-    public bool isCapturing = false;
-    private BubbleSpirit capturedBubble;
+    public bool isCapturing { get; set; } = false;
+    public BubbleSpirit capturedBubble { get; set; }
 
-    private int trapCount = 0;
-    private float extraTrap = 0;
+    public int trapCount { get; set; }  = 0;
+    public float extraTrap { get; set; } = 0;
     public int trapCountCap = 4;
 
     //Increase by 0.25f or 0.5f when upgrading 
-    private float trapUpgrade = 0;
+    public float trapUpgrade { get; set; } = 0;
 
     public float spriteBlinkingTimer = 0.0f;
     public float spriteBlinkingMiniDuration = 0.1f;
@@ -65,7 +66,7 @@ public class PlayerBehavior : MonoBehaviour
         FOCUS,
         DEAD
     };
-    private PlayerState movementState;
+    private PlayerState movementState { get; set; }
 
     // Start is called before the first frame update
     private void Awake() {
@@ -182,7 +183,7 @@ public class PlayerBehavior : MonoBehaviour
 
                 if (launchSuccess)
                 {
-                    Debug.Log("launch succes");
+                    Debug.Log("launch success");
                     captureAfterSec = captureCoolDown;
                     captureState = CaptureState.IDLE;
                     isCapturing = false;
