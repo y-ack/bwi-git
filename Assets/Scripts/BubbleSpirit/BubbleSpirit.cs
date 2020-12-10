@@ -86,6 +86,10 @@ public class BubbleSpirit : MonoBehaviour
             case State.NORMAL: 
                 break;
             case State.CAPTURED:
+                if(GameManager.theManager.GetBubbleCounter() == 1)
+                {
+                    GameManager.theManager.setCleared();
+                }
                 float a = transform.parent.GetComponent<PlayerBehavior>().angle;
                 var lookDir = Vector3.RotateTowards(transform.parent.up, -transform.parent.right,
                                                     a * Mathf.Deg2Rad, 1.0f);

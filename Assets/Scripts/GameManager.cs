@@ -837,4 +837,8 @@ public class GameManager : MonoBehaviour
     {
         playerRoll.GetComponent<SpriteRenderer>().sprite = null;
     }
+    public int GetBubbleCounter()
+    {
+        return bubbleCounter;
+    }
 }
