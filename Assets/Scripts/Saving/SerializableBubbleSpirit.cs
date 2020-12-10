@@ -24,7 +24,8 @@ public class SerializableBubbleSpirit
     public SerializableVector launchDirection; // vector3
     public bool searched; // for parent path searching ... not impl yet.
 
-    public double[] patternParameter; //maybe an array
+    public double[] patternParameter; 
+    public float patternLifeTime;
     public bool cleared;
     public bool isChain;
 }

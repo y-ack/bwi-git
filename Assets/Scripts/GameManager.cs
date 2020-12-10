@@ -626,6 +626,7 @@ public class GameManager : MonoBehaviour
                 {
                     theChildrenSpirit.patternParameter = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.velocityParameters;
                 }
+                theChildrenSpirit.patternLifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.lifetime;
                 theChildrenSpirit.cleared = theChildrenBubble[j].GetComponent<BubbleSpirit>().cleared;
                 theChildrenSpirit.isChain = theChildrenBubble[j].GetComponent<BubbleSpirit>().isChain;
                 saveUnit.childrenBubble[j] = theChildrenSpirit;

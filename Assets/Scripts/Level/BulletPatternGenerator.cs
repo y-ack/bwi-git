@@ -44,11 +44,13 @@ public class BulletPatternGenerator : MonoBehaviour
         instance = this;
     }
 
-    public void addSavedPattern(BubbleSpirit b, double[] parameter )
+    // Method used to add a savedPatern. Doesn't work cause Idk how this works. :(
+    public void addSavedPattern(BubbleSpirit b, double[] parameter, float patternLifeTime )
     {
         b.pattern = Instantiate(patterns[4][0], b.transform);
         b.pattern.parentBubble = b;
         b.pattern.setPatternParameters(parameter);
+        b.pattern.lifetime = patternLifeTime;
     }
 
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)

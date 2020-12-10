@@ -58,7 +58,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
         return this;
     }
 
-    private float lifetime;
+    public float lifetime;
     private float patternLifetime = 0.0001f;
 
     private PlayerBehavior playerTarget;
