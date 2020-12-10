@@ -575,13 +575,10 @@ public class Spawner : MonoBehaviour
                 f.GetComponent<BubbleSpirit>().SetColor(unitChildren[j].color);
                 f.GetComponent<BubbleSpirit>().setParent(e.GetComponent<BubbleUnit>(), unitChildren[j].gridPosition.getVectorTwoInt());
 
-                BulletPatternGenerator.instance.addToBubble(f.GetComponent<BubbleSpirit>(), 0, RunStatistics.Instance.currentStage);
-
-                if(f.GetComponent<BubbleSpirit>().pattern != null)
-                {
-                    f.GetComponent<BubbleSpirit>().pattern.lifetime = unitChildren[j].patternLifeTime;
-                }
-                
+                 BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), unitChildren[j].patternType,
+                                                                unitChildren[j].patternParameter, unitChildren[j].lifeTime,
+                                                                unitChildren[j].patternLifeTime);
+                 
             }
 
             e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;

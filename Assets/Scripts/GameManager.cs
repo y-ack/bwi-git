@@ -358,8 +358,6 @@ public class GameManager : MonoBehaviour
     private void quickSpawnWorld()
     {
         // Procedural World Spawn Goes Here
-        QuickSaveData theSaveData = SaveSystem.quickLoad();
-
         gameSpawner.quickSpawnUnit();
         gameSpawner.quickSpawnEnemyProjectile();
         gameSpawner.quickSpawnPlayerProjectile();
@@ -626,7 +624,10 @@ public class GameManager : MonoBehaviour
                 {
                     theChildrenSpirit.patternParameter = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.velocityParameters;
                 }
-                theChildrenSpirit.patternLifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.lifetime;
+                theChildrenSpirit.patternType = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.GetType().ToString();
+                Debug.Log("This Bubble Spirit has the bullet pattern " + theChildrenSpirit.patternType);
+                theChildrenSpirit.patternLifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.patternLifetime;
+                theChildrenSpirit.lifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.lifetime;
                 theChildrenSpirit.cleared = theChildrenBubble[j].GetComponent<BubbleSpirit>().cleared;
                 theChildrenSpirit.isChain = theChildrenBubble[j].GetComponent<BubbleSpirit>().isChain;
                 saveUnit.childrenBubble[j] = theChildrenSpirit;
@@ -837,6 +838,7 @@ public class GameManager : MonoBehaviour
     {
         playerRoll.GetComponent<SpriteRenderer>().sprite = null;
     }
+
     public int GetBubbleCounter()
     {
         return bubbleCounter;

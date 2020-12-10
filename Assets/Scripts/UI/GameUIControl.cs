@@ -110,9 +110,9 @@ public class GameUIControl : MonoBehaviour
 
     private void buttonControl()
     {
-        if ((Input.GetMouseButton(0) || Input.GetKey(KeyCode.K)) && trapUI.fillAmount == 1 && trapCount > 0)
+        if ((Input.GetMouseButton(1) || Input.GetKey(KeyCode.L)) && trapUI.fillAmount == 1 && trapCount > 0)
             activateTrap();
-        if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.L)) && captureUI.fillAmount == 1)
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K)) && captureUI.fillAmount == 1)
             activateCapture();
         if (Input.GetKeyDown(KeyCode.Space) && rollUI.fillAmount == 1)
             activateRoll();

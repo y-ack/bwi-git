@@ -50,6 +50,7 @@ public class ButtonControl : MonoBehaviour
     {      
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         FindObjectOfType<AudioManager>().Play("Title_Theme");
+        SaveSystem.deleteQuick();
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
     }

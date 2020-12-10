@@ -136,6 +136,19 @@ public static class SaveSystem
         }
     }
 
+    public static void deleteSaveData()
+    {
+        string path = Application.persistentDataPath + "/SaveData.score";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        else
+        {
+            Debug.Log("No Files To Delete");
+        }
+    }
+
     public static void deleteQuick()
     {
         string path = Application.persistentDataPath + "/QuickData.quick";
