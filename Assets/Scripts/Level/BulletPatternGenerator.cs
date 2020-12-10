@@ -12,23 +12,16 @@ public class BulletPatternGenerator : MonoBehaviour
         new BubbleBulletPattern[3],
         new BubbleBulletPattern[3]
     };
-    // public List<List<BubbleBulletPattern>> patterns = new List<List<BubbleBulletPattern>> {
-    //     new List<BubbleBulletPattern>(),
-    //     new List<BubbleBulletPattern>(),
-    //     new List<BubbleBulletPattern>(),
-    //     new List<BubbleBulletPattern>(),
-    //     new List<BubbleBulletPattern>()
-    // };
 
     private BubbleBulletPattern Linear()
     {
-        return (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
-                                                         typeof(BubbleBulletPatternLinear));
+        return Instantiate((BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
+                                                                     typeof(BubbleBulletPatternLinear)));
     }
     private BubbleBulletPattern Petal()
     {
-        return (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
-                                                             typeof(BubbleBulletPatternLemniscate));
+        return Instantiate((BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
+                                                                         typeof(BubbleBulletPatternLemniscate)));
     }
     public void Awake()
     {
@@ -36,21 +29,44 @@ public class BulletPatternGenerator : MonoBehaviour
         {
             for (int j = 0; j < 3; ++j)
             {
-                patterns[i][j] = Linear().Init(new double[] { 2.0 }, 1, 0f, 0, 0, 0, 0, 0, 0, 5f, 0);
+                patterns[i][j] = Linear().Init(new double[] { 2.0 }, 1, 0f, 0,
+                                               0, 0, 0, 0, 0, 5f, 0);
             }
         }
+        //15deg = 0.2617994
+        patterns[0][1] = Linear().Init(new double[] { 2.5 }, 3, -0.2617994f, 0f,
+                                       0.2617994f, 0, 0, 0, 0, 6f, 0);
         patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
         
         instance = this;
     }
 
     // Method used to add a savedPatern. Doesn't work cause Idk how this works. :(
-    public void addSavedPattern(BubbleSpirit b, double[] parameter, float patternLifeTime )
+    public void addSavedPattern(BubbleSpirit b, string patternType,
+                                double[] parameter, float lifetime,
+                                float patternLifetime)
     {
-        b.pattern = Instantiate(patterns[4][0], b.transform);
+        BubbleBulletPattern pattern;
+        switch (patternType)
+        {
+            case "BubbleBulletPatternLinear":
+                pattern = Linear(); break;
+            //            case BubbleBulletPattern:
+            //                pattern = Linear();break;
+            case "BubbleBulletPatternLemniscate":
+                pattern = Petal(); break;
+            default:
+                Debug.Log("unrecognized pattern type (got " +
+                          patternType + ", need BubbleBulletPattern*");
+                pattern = Linear();
+                break;
+        }
+
+        b.pattern = Instantiate(pattern, b.transform);
         b.pattern.parentBubble = b;
         b.pattern.setPatternParameters(parameter);
-        b.pattern.lifetime = patternLifeTime;
+        b.pattern.lifetime = lifetime;
+        b.pattern.patternLifetime = patternLifetime;
     }
 
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)
@@ -75,6 +91,7 @@ public class BulletPatternGenerator : MonoBehaviour
                 Debug.Log("Yo! we've got a miniboss! It's only 1% chance!");
                 b.pattern = Instantiate(patterns[4][0], b.transform);
                 b.pattern.parentBubble = b;
+                b.pattern.enabled = true;
                 return;
             }
         }
@@ -96,6 +113,7 @@ public class BulletPatternGenerator : MonoBehaviour
                     var bucket = patterns[Mathf.RoundToInt((difficulty) / (100 / 5))];                  
                     var choice = bucket[Random.Range(0, bucket.Length - 1)];
                     b.pattern = Instantiate(choice, b.transform);
+                    b.pattern.enabled = true;
                     b.pattern.parentBubble = b;
                 }
                 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //using Unity.Mathematics;
 
-    [System.Serializable]
+[System.Serializable]
 public abstract class BubbleBulletPattern : MonoBehaviour
 {
     public BubbleBullet bulletPrefab;
@@ -55,11 +55,12 @@ public abstract class BubbleBulletPattern : MonoBehaviour
         this.delayTime = delayTime;
         this.patternCooldown = patternCooldown;
         this.patternAngleDeltaAfter = patternAngleDeltaAfter;
+        this.enabled = false;
         return this;
     }
 
     public float lifetime;
-    private float patternLifetime = 0.0001f;
+    public float patternLifetime = 0.0001f;
 
     private PlayerBehavior playerTarget;
     public BubbleSpirit parentBubble;
