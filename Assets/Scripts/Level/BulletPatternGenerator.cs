@@ -50,18 +50,23 @@ public class BulletPatternGenerator : MonoBehaviour
         switch (patternType)
         {
             case "BubbleBulletPatternLinear":
-                pattern = Linear(); break;
+                pattern = (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
+                                                                     typeof(BubbleBulletPatternLinear));
+                break;
             //            case BubbleBulletPattern:
             //                pattern = Linear();break;
             case "BubbleBulletPatternLemniscate":
-                pattern = Petal(); break;
+                pattern = (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
+                                                                        typeof(BubbleBulletPatternLemniscate));
+                break;
             default:
                 Debug.Log("unrecognized pattern type (got " +
                           patternType + ", need BubbleBulletPattern*");
-                pattern = Linear();
+                pattern = (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
+                                                                    typeof(BubbleBulletPatternLinear));
                 break;
         }
-
+        
         b.pattern = Instantiate(pattern, b.transform);
         b.pattern.parentBubble = b;
         b.pattern.setPatternParameters(parameter);
