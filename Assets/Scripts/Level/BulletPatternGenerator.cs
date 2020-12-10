@@ -4,74 +4,89 @@ using UnityEngine;
 
 public class BulletPatternGenerator : MonoBehaviour
 {
+    public static BubbleBullet bulletPrefab1;
+    
     public static BulletPatternGenerator instance;
-    public BubbleBulletPattern[][] patterns  = new BubbleBulletPattern[][] {
-        new BubbleBulletPattern[3],
-        new BubbleBulletPattern[3],
-        new BubbleBulletPattern[3],
-        new BubbleBulletPattern[3],
-        new BubbleBulletPattern[3]
+    public PatternInfo[][] patterns  = new PatternInfo[][] {
+        new PatternInfo[3],
+        new PatternInfo[3],
+        new PatternInfo[3],
+        new PatternInfo[3],
+        new PatternInfo[3]
     };
 
     private BubbleBulletPattern Linear()
     {
-        return Instantiate((BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
-                                                                     typeof(BubbleBulletPatternLinear)));
+        return (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
+                                                         typeof(BubbleBulletPatternLinear));
     }
     private BubbleBulletPattern Petal()
     {
-        return Instantiate((BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
-                                                                         typeof(BubbleBulletPatternLemniscate)));
+        return (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
+                                                             typeof(BubbleBulletPatternLemniscate));
     }
     public void Awake()
     {
+        bulletPrefab1 = (BubbleBullet)Resources.Load("Prefabs/BubbleBulletPrefab",
+                                                     typeof(BubbleBullet));
         for (int i = 0; i < 5; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
-                patterns[i][j] = Linear().Init(new double[] { 2.0 }, 1, 0f, 0,
-                                               0, 0, 0, 0, 0, 5f, 0);
+                var a = new PatternInfo
+                {
+                    bcnt = 1,
+                    θ = 0,
+                    σ = 0,
+                    Δθ = 0,
+                    ω = 0,
+                    a = 0,
+                    at = 0,
+                    d = 0,
+                    cd = 5f,
+                    ΔΣΘ = 0,
+                    bulletPrefab = bulletPrefab1,
+                    v = new double[] { 2.0 },
+                    patternType = PatternType.Linear,
+                };
+                patterns[i][j] = a;//Linear().Init(new double[] { 2.0 }, 1, 0f, 0,
+                                   //              0, 0, 0, 0, 0, 5f, 0);
             }
         }
         //15deg = 0.2617994
-        patterns[0][1] = Linear().Init(new double[] { 2.5 }, 3, -0.2617994f, 0f,
-                                       0.2617994f, 0, 0, 0, 0, 6f, 0);
-        patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
+        //        patterns[0][1] = Linear().Init(new double[] { 2.5 }, 3, -0.2617994f, 0f,
+        //                               0.2617994f, 0, 0, 0, 0, 6f, 0);
+        //patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
         
         instance = this;
     }
 
-    // Method used to add a savedPatern. Doesn't work cause Idk how this works. :(
-    public void addSavedPattern(BubbleSpirit b, string patternType,
-                                double[] parameter, float lifetime,
-                                float patternLifetime)
+    public BubbleBulletPattern instantiatePatternInfo(PatternInfo pattern,
+                                                      BubbleSpirit parent)
     {
-        BubbleBulletPattern pattern;
-        switch (patternType)
+        BubbleBulletPattern newPattern;
+        switch (pattern.patternType)
         {
-            case "BubbleBulletPatternLinear":
-                pattern = (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
-                                                                     typeof(BubbleBulletPatternLinear));
-                break;
-            //            case BubbleBulletPattern:
-            //                pattern = Linear();break;
-            case "BubbleBulletPatternLemniscate":
-                pattern = (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
-                                                                        typeof(BubbleBulletPatternLemniscate));
-                break;
+            case PatternType.Linear:
+                newPattern = Instantiate(Linear(), parent.transform); break;
+            case PatternType.Petal:
+                newPattern = Instantiate(Petal(), parent.transform); break;
             default:
-                Debug.Log("unrecognized pattern type (got " +
-                          patternType + ", need BubbleBulletPattern*");
-                pattern = (BubbleBulletPatternLinear)Resources.Load("Prefabs/BubbleBulletPatternLinear",
-                                                                    typeof(BubbleBulletPatternLinear));
-                break;
+                Debug.Log("maybe bad pattern type ...");
+                newPattern = Instantiate(Linear(), parent.transform); break;
         }
-        
-        b.pattern = Instantiate(pattern, b.transform);
-        b.pattern.parentBubble = b;
-        b.pattern.setPatternParameters(parameter);
-        b.pattern.lifetime = lifetime;
-        b.pattern.patternLifetime = patternLifetime;
+        newPattern.Init(pattern);
+        newPattern.arg.bulletPrefab = bulletPrefab1;
+        newPattern.parentBubble = parent;
+        return newPattern;
+    }
+    // Method used to add a savedPatern. Doesn't work cause Idk how this works. :(
+    public void addSavedPattern(BubbleSpirit b,
+                                PatternInfo info)
+    {
+        var pattern = instantiatePatternInfo(info, b);
+        pattern.setPatternInfo(info);
+        b.pattern = pattern;
     }
 
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)
@@ -85,8 +100,7 @@ public class BulletPatternGenerator : MonoBehaviour
         {
             if (b.gridPosition == Vector2Int.zero)
             {
-                b.pattern = Instantiate(patterns[4][0], b.transform);
-                b.pattern.parentBubble = b;
+                b.pattern = instantiatePatternInfo(patterns[4][0], b);
             }
         }
         if (unit_type == 0 && b.gridPosition == Vector2Int.zero)
@@ -94,9 +108,7 @@ public class BulletPatternGenerator : MonoBehaviour
             if (noneShooter > miniBoss) //chance to be a mini boss
             {
                 Debug.Log("Yo! we've got a miniboss! It's only 1% chance!");
-                b.pattern = Instantiate(patterns[4][0], b.transform);
-                b.pattern.parentBubble = b;
-                b.pattern.enabled = true;
+                b.pattern = instantiatePatternInfo(patterns[4][0], b);
                 return;
             }
         }
@@ -110,20 +122,15 @@ public class BulletPatternGenerator : MonoBehaviour
                 {
                     var bucket = patterns[3];
                     var choice = bucket[Random.Range(0, bucket.Length - 1)];
-                    b.pattern = Instantiate(choice, b.transform);
-                    b.pattern.parentBubble = b;
+                    b.pattern = instantiatePatternInfo(choice, b);
                 }
                 else
                 {
                     var bucket = patterns[Mathf.RoundToInt((difficulty) / (100 / 5))];                  
                     var choice = bucket[Random.Range(0, bucket.Length - 1)];
-                    b.pattern = Instantiate(choice, b.transform);
-                    b.pattern.enabled = true;
-                    b.pattern.parentBubble = b;
+                    b.pattern = instantiatePatternInfo(choice, b);
                 }
-                
             }
         }
     }
-
 }

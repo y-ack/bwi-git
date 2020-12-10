@@ -8,10 +8,10 @@ public class BubbleBulletPatternLemniscate : BubbleBulletPattern
     public override void FireAt(float angle)
     {
 
-        var bullet = (BubbleBullet)Instantiate(bulletPrefab);
+        var bullet = (BubbleBullet)Instantiate(arg.bulletPrefab);
         bullet.transform.position = transform.position;
 
-        var v = velocityParameters;
+        var v = arg.velocityParameters;
         var l = math.sin(v[3] + v[4] * angle);
         //        var speed = math.pow((v[0] + v[1] * angle + v[2]
         //                                      * l), v[5]);
@@ -20,9 +20,9 @@ public class BubbleBulletPatternLemniscate : BubbleBulletPattern
         bullet.velocity = new Vector3(Mathf.Cos(angle),
                                       Mathf.Sin(angle),
 									  0) * (float)speed;
-        bullet.angularVelocity = angularVelocity;
+        bullet.angularVelocity = arg.angularVelocity;
         //could use vector for acceleration too ...
-        bullet.acceleration = acceleration;
-        bullet.accelerationTimeout = accelerationTime;
+        bullet.acceleration = arg.acceleration;
+        bullet.accelerationTimeout = arg.accelerationTime;
     }
 }

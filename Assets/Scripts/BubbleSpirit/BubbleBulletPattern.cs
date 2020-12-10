@@ -1,66 +1,64 @@
-﻿using System.Collections;
+﻿using System.Runtime.InteropServices;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //using Unity.Mathematics;
 
 [System.Serializable]
+public enum PatternType : int
+{
+    Linear,
+    Petal
+}
+
+[System.Serializable]
+[StructLayout(LayoutKind.Explicit,Size=72)]
+public struct PatternInfo
+{
+    [FieldOffset(0)]public int bulletCount;[FieldOffset(0)]public int bcnt;
+    [FieldOffset(4)]public float baseAngle;[FieldOffset(4)]public float θ;
+    [FieldOffset(8)]public float angleVariation;[FieldOffset(8)] public float σ;
+    [FieldOffset(12)]public float angleDelta;[FieldOffset(12)] public float Δθ;
+    [FieldOffset(16)]public float angularVelocity;[FieldOffset(16)]public float ω;
+    [FieldOffset(20)]public float acceleration;[FieldOffset(20)]public float a;
+    [FieldOffset(24)]public float accelerationTime;[FieldOffset(24)]public float at;
+    [FieldOffset(28)]public float delayTime;[FieldOffset(28)]public float d;
+    [FieldOffset(32)]public float patternCooldown;[FieldOffset(32)]public float cd;
+    [FieldOffset(36)]public float patternAngleDeltaAfter;[FieldOffset(36)]public float ΔΣΘ;
+
+    [FieldOffset(40)]public float lifetime;
+    [FieldOffset(40)]public float l;
+    [FieldOffset(44)]public float patternLifetime;
+    [FieldOffset(44)]public float pl;
+    [FieldOffset(48)]public int step;
+
+    [FieldOffset(52)]public PatternType patternType; //0 = linear, 2 = petal
+    [FieldOffset(56)]public BubbleBullet bulletPrefab;
+    [FieldOffset(64)]public double[] velocityParameters;
+    [FieldOffset(64)]public double[] v;
+}
+
+[System.Serializable]
 public abstract class BubbleBulletPattern : MonoBehaviour
 {
-    public BubbleBullet bulletPrefab;
-    public double[] velocityParameters;
+    public PatternInfo arg;
 
-    public int step = 0;
-    public int bulletCount = 0;
-    public float baseAngle = 0f;
-    public float angleVariation = 0f;
-    public float angleDelta;
-    public float angularVelocity = 0f;
-    public float acceleration = 0f;
-    public float accelerationTime = 0f;
-    public float delayTime = 0f;
-    public float patternCooldown = 2f;
-    public float patternAngleDeltaAfter = 0f;
-
-    public BubbleBulletPattern Init(double[] velocityParameters,
-                     int bulletCount = 0,
-                     float baseAngle = 0f,
-                     float angleVariation = 0f,
-                     float angleDelta = float.NaN,
-                     float angularVelocity = 0f,
-                     float acceleration = 0f,
-                     float accelerationTime = 0f,
-                     float delayTime = 0f,
-                     float patternCooldown = 2f,
-                     float patternAngleDeltaAfter = 0f)
+    public BubbleBulletPattern Init(PatternInfo patternInfo)
     {
-        this.velocityParameters = velocityParameters;
-        if (bulletCount > 0 && float.IsNaN(angleDelta))
+        this.arg = patternInfo;
+        if (arg.bulletCount > 0 && float.IsNaN(arg.angleDelta))
         {
-            this.bulletCount = bulletCount;
-            this.angleDelta = (2.0f * Mathf.PI) / bulletCount;
-        } else if (bulletCount == 0 && !float.IsNaN(angleDelta))
+            arg.angleDelta = (2.0f * Mathf.PI) / arg.bulletCount;
+        } else if (arg.bulletCount == 0 && !float.IsNaN(arg.angleDelta))
         {
-            this.bulletCount = Mathf.RoundToInt((2.0f * Mathf.PI) / angleDelta);
-            this.angleDelta = angleDelta;
-        } else
-        {
-            this.bulletCount = bulletCount;
-            this.angleDelta = angleDelta;
-        }
-        this.angleVariation = angleVariation;
-        this.baseAngle = baseAngle;
-        this.angularVelocity = angularVelocity;
-        this.acceleration = acceleration;
-        this.accelerationTime = accelerationTime;
-        this.delayTime = delayTime;
-        this.patternCooldown = patternCooldown;
-        this.patternAngleDeltaAfter = patternAngleDeltaAfter;
-        this.enabled = false;
+            arg.bulletCount = Mathf.RoundToInt((2.0f * Mathf.PI) / arg.angleDelta);
+        } else {}
+
+        arg.step = 0;
+        arg.lifetime = 0;
+        arg.patternLifetime = 0.0001f;
         return this;
     }
-
-    public float lifetime;
-    public float patternLifetime = 0.0001f;
 
     private PlayerBehavior playerTarget;
     public BubbleSpirit parentBubble;
@@ -77,44 +75,43 @@ public abstract class BubbleBulletPattern : MonoBehaviour
         if(GameManager.theManager.canMove &&
            parentBubble.state == BubbleSpirit.State.NORMAL)
         {
-            patternLifetime -= Time.fixedDeltaTime;
+            arg.patternLifetime -= Time.fixedDeltaTime;
             var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
-            if (((lifetime <= 0 && delayTime != 0) || playerDist < activationRadius)
-                && patternLifetime <= 0)
+            if (((arg.lifetime <= 0 && arg.delayTime != 0) || playerDist < activationRadius)
+                && arg.patternLifetime <= 0)
             {
-                lifetime -= Time.fixedDeltaTime;
+                arg.lifetime -= Time.fixedDeltaTime;
                 // while there are more bullets in the cycle and it's time
-                while (step < bulletCount && lifetime <= 0f)
+                while (arg.step < arg.bulletCount && arg.lifetime <= 0f)
                 {
                     float angle = Mathf.Atan2(
                         playerTarget.transform.position.y - transform.position.y,
                         playerTarget.transform.position.x - transform.position.x
-                    ) + baseAngle + angleDelta * step +
-                        Random.Range(-angleVariation,angleVariation);
+                    ) + arg.baseAngle + arg.angleDelta * arg.step +
+                        Random.Range(-arg.angleVariation,arg.angleVariation);
                     FireAt(angle);
                     
-                    ++step;
-                    lifetime += delayTime;
+                    ++arg.step;
+                    arg.lifetime += arg.delayTime;
                 }
                 // no more bullets or delay is 0; prime next pattern use
-                if (lifetime <= 0f)
+                if (arg.lifetime <= 0f)
                 {
-                    step = 0;
-                    patternLifetime = patternCooldown;
-                    baseAngle += patternAngleDeltaAfter;
+                    arg.step = 0;
+                    arg.patternLifetime = arg.patternCooldown;
+                    arg.baseAngle += arg.patternAngleDeltaAfter;
                 } //else {
             }
         }
     }
     public void setPatternParameters(double[] v)
     {
-        velocityParameters = v;
+        arg.velocityParameters = v;
+    }
+    public void setPatternInfo(PatternInfo state)
+    {
+        arg = state;
     }
 
     abstract public void FireAt(float angle);
-    
-    // public void FireTowards(Transform target)
-    // {
-    //     FireAt(Vector3.Angle(transform.position, target.position));
-    // }
 }

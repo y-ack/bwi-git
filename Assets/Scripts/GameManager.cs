@@ -622,12 +622,13 @@ public class GameManager : MonoBehaviour
                 theChildrenSpirit.launchDirection = new SerializableVector(theChildrenBubble[j].GetComponent<BubbleSpirit>().launchDirection);
                 if(theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern != null)
                 {
-                    theChildrenSpirit.patternParameter = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.velocityParameters;
+                    theChildrenSpirit.pattern = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.arg;
+                    //theChildrenSpirit.patternParameter = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.velocityParameters;
                 }
-                theChildrenSpirit.patternType = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.GetType().ToString();
-                Debug.Log("This Bubble Spirit has the bullet pattern " + theChildrenSpirit.patternType);
-                theChildrenSpirit.patternLifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.patternLifetime;
-                theChildrenSpirit.lifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.lifetime;
+                //theChildrenSpirit.patternType = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.GetType().ToString();
+                //Debug.Log("This Bubble Spirit has the bullet pattern " + theChildrenSpirit.patternType);
+                //theChildrenSpirit.patternLifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.patternLifetime;
+                //theChildrenSpirit.lifeTime = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.lifetime;
                 theChildrenSpirit.cleared = theChildrenBubble[j].GetComponent<BubbleSpirit>().cleared;
                 theChildrenSpirit.isChain = theChildrenBubble[j].GetComponent<BubbleSpirit>().isChain;
                 saveUnit.childrenBubble[j] = theChildrenSpirit;
