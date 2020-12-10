@@ -88,8 +88,8 @@ public class PlayerBehavior : MonoBehaviour
         rbody.gravityScale = 0;
         GameManager.theManager.isInvincible = false;
         //set to 10 for testing, should discuss this later on.
-        normalSpeed = 4.7f;
-        DashAmount = 2f;
+        normalSpeed = 4.9f;
+        DashAmount = 1f;
         setDefaultState();
     }
 
@@ -98,7 +98,6 @@ public class PlayerBehavior : MonoBehaviour
 
     void Update()
     {
-        //normalSpeed = 400f;
         if (GameManager.theManager.canMove == true)
             buttonControl();
     }
@@ -142,7 +141,7 @@ public class PlayerBehavior : MonoBehaviour
             FindObjectOfType<AudioManager>().Play("Iris_Rolling");
             dashAfterSec = dashCoolDown;
             movementState = PlayerState.ROLLING;
-            slideSpeed = 8000f;
+            slideSpeed = 2000f;
         } else if((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
            && movementState != PlayerState.ROLLING)
         {
@@ -152,8 +151,8 @@ public class PlayerBehavior : MonoBehaviour
             movementState = PlayerState.NORMAL;
         }
 
-        if (((Input.GetMouseButton(0) && shootAfterSec <= 0) && (trapCount > 0)) || 
-            ((Input.GetKey(KeyCode.K) && shootAfterSec <= 0) && (trapCount > 0)))
+        if (((Input.GetMouseButton(1) && shootAfterSec <= 0) && (trapCount > 0)) || 
+            ((Input.GetKey(KeyCode.L) && shootAfterSec <= 0) && (trapCount > 0)))
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
@@ -164,7 +163,7 @@ public class PlayerBehavior : MonoBehaviour
             shootAfterSec = shootCoolDown;
             subtrapCount();
         }
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.L))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K))
         {
             if (captureAfterSec <= 0 && !isCapturing)
             {
@@ -295,10 +294,9 @@ public class PlayerBehavior : MonoBehaviour
 
     private void HandleRolling()
     {
-        float rollSpeed = moveSpeed + 6f;
+        float rollSpeed = moveSpeed + 10f;
         float step = rollSpeed * Time.deltaTime;
         GameManager.theManager.isInvincible = true;
-        //rbody.MovePosition(transform.position + moveDir * slideSpeed * Time.fixedDeltaTime);
         if(slideSpeed > 20f)
         {
             transform.position = Vector3.MoveTowards(transform.position, transform.position + moveDir, step);
@@ -307,7 +305,7 @@ public class PlayerBehavior : MonoBehaviour
         //moveSpeed = focusSpeed;
         slideSpeed -= slideSpeed * moveSpeed * Time.fixedDeltaTime;
         
-        if(slideSpeed <= 20f)
+        if(slideSpeed <= 100f)
         {
             GameManager.theManager.isInvincible = false;
             movementState = PlayerState.NORMAL;
