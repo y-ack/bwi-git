@@ -208,8 +208,7 @@ public class TitleBehavior : MonoBehaviour
         if(SaveSystem.quickLoad() != null)
         {
             GameObject e = Instantiate(Resources.Load("Prefabs/continueGameButton") as GameObject);
-            GameObject buttonGroupBG = mainMenuUI.transform.Find("buttonGroupBackground").gameObject;
-            e.transform.SetParent(buttonGroupBG.transform);
+            e.transform.SetParent(mainMenuUI.transform,false);
         }
     }
 
