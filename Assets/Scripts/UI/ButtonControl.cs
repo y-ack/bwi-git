@@ -93,6 +93,7 @@ public class ButtonControl : MonoBehaviour
 
         if (pName != "" && pName.Length >= 3 && pName.Length <= 6)
         {
+            StartCoroutine(SendHighScore(pName));
             //FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
             RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
 
@@ -104,6 +105,13 @@ public class ButtonControl : MonoBehaviour
             
         }
         
+    }
+
+    IEnumerator SendHighScore(string firstName)
+    {
+        PlayFabManager.thePlayFabManager.Login(firstName);
+        yield return new WaitForSecondsRealtime(3);
+        PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
     }
 
     public void upgradeTrap()

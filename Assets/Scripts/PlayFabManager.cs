@@ -11,8 +11,6 @@ public class PlayFabManager : MonoBehaviour
 
     private string playerLeaderboardName;
     string myGUID = System.Guid.NewGuid().ToString();
-    public List<string> playFabIDList = new List<string>();
-    public List<string> playFabScoreList = new List<string>();
 
     public GetLeaderboardResult publicLeaderboard;
 
@@ -30,11 +28,22 @@ public class PlayFabManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        //Login();
+        TempLogin();
     }
     public void Login(string loginName)
     {
         playerLeaderboardName = loginName;
+        var request = new LoginWithCustomIDRequest 
+        {
+            CustomId = myGUID,
+            CreateAccount = true
+        };
+        PlayFabClientAPI.LoginWithCustomID( request, OnSuccess, OnError);
+    }
+
+    public void TempLogin()
+    {
+        //playerLeaderboardName = loginName;
         var request = new LoginWithCustomIDRequest 
         {
             CustomId = myGUID,
@@ -97,13 +106,6 @@ public class PlayFabManager : MonoBehaviour
     void OnLeaderboardGet(GetLeaderboardResult result){
 
         publicLeaderboard = result;
-        /*
-        foreach(var item in result.Leaderboard){
-            playFabIDList.Add(item.PlayFabId);
-            playFabScoreList.Add(item.StatValue.ToString());
-            Debug.Log(item.DisplayName + " " + item.Position + " " + item.PlayFabId + " " + item.StatValue);
-        }
-        */
 
     }
     public GetLeaderboardResult returnLeaderboard()
