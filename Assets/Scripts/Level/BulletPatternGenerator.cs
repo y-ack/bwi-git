@@ -71,17 +71,37 @@ public class BulletPatternGenerator : MonoBehaviour
                 };
             }
         } 
-        //15deg = 0.2617994 = PI/12
+        // 15deg = 0.2617994 = PI/12
         const float PI = Mathf.PI;
+        // shoot 1 bullet every 5 seconds
+        patterns[0][0] = new PatternInfo
+        { bcnt = 1, θ = 0, σ = 0, Δθ = 0, ω = 0, a = 0, at = 0,
+          d = 0, cd = 5f, ΔΣΘ = 0, v = new double[] { 2.0 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        // 3 shots in quick succession with some noise in player-aim
         patterns[0][1] = new PatternInfo
+        { bcnt = 3, θ = 0, σ = PI/24, Δθ = 0, ω = 0, a = 0, at = 0,
+          d = 0.3f, cd = 9f, ΔΣΘ = 0, v = new double[] { 3.5 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+        
+        // bewitching lotus pattern: 4x 90 degree shot that turns inward 
+        patterns[0][2] = new PatternInfo
+        { bcnt = 4, θ = 0, σ = 0, Δθ = PI/2f, ω = 0, a = -2.25f, at = 2,
+          d = 0, cd = 5f, ΔΣΘ = PI/12f, v = new double[] { 2.4 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        // shoot a 3-bullet spread shot every 7 seconds
+        patterns[1][0] = new PatternInfo
         { bcnt = 3, θ = -PI/12f, σ = 0, Δθ = PI/12f, ω = 0, a = 0, at = 0,
           d = 0, cd = 7f, ΔΣΘ = 0, v = new double[] { 2.5 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
-        
-        
-        //        patterns[0][1] = Linear().Init(new double[] { 2.5 }, 3, -0.2617994f, 0f,
-        //                               0.2617994f, 0, 0, 0, 0, 6f, 0);
-        //patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
+
+        // lemniscate velocity pattern
+        patterns[4][0] = new PatternInfo
+        { bcnt = 32, θ = 0, σ = 0, Δθ = 2 * 0.09817477f, ω = 0, a = 0, at = 0,
+          d = 0, cd = 2.5f, ΔΣΘ = 0, v = new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Petal };
         
         instance = this;
     }
@@ -128,14 +148,13 @@ public class BulletPatternGenerator : MonoBehaviour
                 if (difficulty >= 99f)
                 {
                     var bucket = patterns[3];
-                    var choice = bucket[Random.Range(0, bucket.Length - 1)];
+                    var choice = bucket[Random.Range(0, bucket.Length)];
                     b.pattern = instantiatePatternInfo(choice, b);
                 }
                 else
                 {
-                    Debug.Log("difficulty: " + difficulty); // 91.52057 on crash
                     var bucket = patterns[Mathf.FloorToInt((difficulty) / (100 / 5))];
-                    var choice = bucket[Random.Range(0, bucket.Length - 1)];
+                    var choice = bucket[Random.Range(0, bucket.Length)];
                     b.pattern = instantiatePatternInfo(choice, b);
                 }
             }

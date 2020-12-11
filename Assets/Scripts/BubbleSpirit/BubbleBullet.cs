@@ -6,20 +6,21 @@ using UnityEngine;
 public class BubbleBullet : MonoBehaviour
 {
     public Vector3 velocity;
+    public Vector3 direction;
     public float angularVelocity;
     public float acceleration;
     public float accelerationTimeout;
     private void Awake() 
     {
-        FindObjectOfType<AudioManager>().Play("Bubble_Shoot"); 
+        FindObjectOfType<AudioManager>().Play("Bubble_Shoot");
     }
     // Update is called once per frame
     void FixedUpdate()
     {
             if (accelerationTimeout > 0f)
             {
-                velocity += velocity.normalized * acceleration *
-                    Mathf.Min(Time.fixedDeltaTime, accelerationTimeout);
+                velocity += direction * acceleration *
+                    Time.fixedDeltaTime;
                 accelerationTimeout -= Time.fixedDeltaTime;
             }
             transform.rotation = Quaternion.RotateTowards(transform.rotation,
