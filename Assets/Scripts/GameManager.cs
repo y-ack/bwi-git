@@ -450,6 +450,8 @@ public class GameManager : MonoBehaviour
         uiControl.updateStage();
         originalPos = mPlayer.transform.position;
         currentState = gameState.RUN;
+        mPlayer.RestoreDefaultState();
+        mPlayer.isCapturing = false;
         unpauseGame();
     }
 

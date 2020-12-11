@@ -80,6 +80,11 @@ public class PlayerBehavior : MonoBehaviour
         Physics.IgnoreLayerCollision(11, 12); // player hitbox
     }
 
+    public void RestoreDefaultState()
+    {
+        captureState = CaptureState.IDLE;
+    }
+
     void Start()
     {
         cam = Camera.main;
