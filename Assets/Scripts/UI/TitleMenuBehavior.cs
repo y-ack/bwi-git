@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TitleMenuBehavior : MonoBehaviour
 {
     public TitleBehavior titleController;
-
+    
     public void newButton()
     {
         //titleController.newClicked();
@@ -43,7 +44,7 @@ public class TitleMenuBehavior : MonoBehaviour
 
     public void optionButton()
     {
-        
+        titleController.optionClicked();
     }
 
     public void exitButton()

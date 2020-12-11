@@ -16,8 +16,8 @@ public class MapGenerator : MonoBehaviour
     public TileBase wall;
     public TileBase wallTop;
     public TileBase obstacle;
-    public float seed;
-    public float threshold;
+    public double seed;
+    public double threshold;
     public bool isSaved;
 
     //xscale and yscale response to how big the obstacles would be
@@ -198,7 +198,7 @@ public class MapGenerator : MonoBehaviour
                     }
                     else
                     {
-                        float sample = Mathf.PerlinNoise(x / xscale + seed, y / yscale + seed);                                 
+                        float sample = Mathf.PerlinNoise(x / xscale + (float)seed, y / yscale + (float)seed);                                 
                         if (sample > threshold)
                         {
                             cavePoints[x,y] = 0;
@@ -236,7 +236,7 @@ public class MapGenerator : MonoBehaviour
         generationDone = true;  
     }
 
-    public void Generate(float seedValue, float thresholdValue)
+    public void Generate(double seedValue, double thresholdValue)
     {
         seed = seedValue;
         threshold = thresholdValue;

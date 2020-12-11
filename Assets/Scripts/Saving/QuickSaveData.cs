@@ -27,8 +27,8 @@ public class QuickSaveData
     public SerializablePlayerProjectile[] capturePlayerProjectile;
 
     // Map Generator Section
-    public float seedValue;
-    public float thresholdValue;
+    public double seedValue;
+    public double thresholdValue;
 
     // Player section
     public float moveSpeed;

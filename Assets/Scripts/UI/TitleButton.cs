@@ -12,12 +12,17 @@ public class TitleButton : MonoBehaviour
     private float shakeTime;
     private Vector3 originalPos;
     private float shakeMagnitude;
+    public Text helpText = null;
 
-
+    private CanvasGroup helpGroup;
     void Start()
     {
         shakeTime = 0f;
         originalPos = transform.localPosition;
+        if(helpText != null)
+        {
+            helpGroup = helpText.GetComponent<CanvasGroup>();
+        }
     }
 
     void FixedUpdate()
@@ -86,6 +91,11 @@ public class TitleButton : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
+    public void clearSaves()
+    {
+        SaveSystem.deleteSaveData();
+    }
+
     public void viewStatistic()
     {
         SceneManager.LoadScene("Statistic");
@@ -113,5 +123,55 @@ public class TitleButton : MonoBehaviour
         shakeMagnitude -= shakeMagnitude * Time.smoothDeltaTime;
     }
 
+    public void onNewText()
+    {
+        showHelpText();
+        helpText.text = "Start a new game";
+    }
+
+    public void onContinueText()
+    {
+        showHelpText();
+        helpText.text = "Continue from a quick save";
+    }
+
+    public void onStatisticText()
+    {
+        showHelpText();
+        helpText.text = "Check your all time statistic and global leaderboard";
+    }
+
+    public void onOptionText()
+    {
+        showHelpText();
+        helpText.text = "Change the game's setting";
+    }
+
+    public void onCreditText()
+    {
+        showHelpText();
+        helpText.text = "Show who made Bubble Witch Iris";
+    }
+
+    public void onQuitText()
+    {
+        showHelpText();
+        helpText.text = "Exit application";
+    }
+
+    public void offButtonText()
+    {
+        hideHelpText();
+    }
+
+    public void showHelpText()
+    {
+        helpGroup.alpha = 1;
+    }
+
+    public void hideHelpText()
+    {
+        helpGroup.alpha = 0;
+    }
 
 }

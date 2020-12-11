@@ -26,6 +26,7 @@ public class TitleBehavior : MonoBehaviour
     private CanvasGroup optionCanvas;
     private CanvasGroup creditCanvas;
     private CanvasGroup exampleCanvas;
+    private CanvasGroup continueCanvas;
 
     private string[] saveFile;
     private float introTime = 2f;
@@ -38,7 +39,8 @@ public class TitleBehavior : MonoBehaviour
         MAIN,
         NEW,
         LOAD,
-        CREDITS
+        CREDIT,
+        OPTION
     };
 
     private void Awake() {
@@ -55,8 +57,13 @@ public class TitleBehavior : MonoBehaviour
         mainMenuCanvas = mainMenuUI.GetComponent<CanvasGroup>();
         newGameCanvas = newGameUI.GetComponent<CanvasGroup>();
         exampleCanvas = exampleUI.GetComponent<CanvasGroup>();
+        continueCanvas = continueButton.GetComponent<CanvasGroup>();
+        optionCanvas = optionUI.GetComponent<CanvasGroup>();
+        creditCanvas = creditUI.GetComponent<CanvasGroup>();
+
         hideNew();
         hideSaves();
+        hideContinue();
         findSaves();
         createSaves();
         findQuick();
@@ -83,7 +90,10 @@ public class TitleBehavior : MonoBehaviour
             case TitleState.LOAD:
                 loadSequence();
                 break;
-            case TitleState.CREDITS:
+            case TitleState.OPTION:
+                optionSequence();
+                break;
+            case TitleState.CREDIT:
                 creditSequence();
                 break;
             default:
@@ -113,6 +123,7 @@ public class TitleBehavior : MonoBehaviour
     {
         hideNew();
         hideSaves();
+        hideOption();
         showMenu();
     }
 
@@ -138,6 +149,12 @@ public class TitleBehavior : MonoBehaviour
         showSaves();
     }
 
+    public void optionSequence()
+    {
+        hideMenu();
+        showOption();
+    }
+
     public void creditSequence()
     {
 
@@ -156,6 +173,11 @@ public class TitleBehavior : MonoBehaviour
     public void menuClicked()
     {
         currentState = TitleState.MAIN;
+    }
+
+    public void optionClicked()
+    {
+        currentState = TitleState.OPTION;
     }
 
     private void findSaves()
@@ -207,8 +229,7 @@ public class TitleBehavior : MonoBehaviour
     {
         if(SaveSystem.quickLoad() != null)
         {
-            GameObject e = Instantiate(Resources.Load("Prefabs/continueGameButton") as GameObject);
-            e.transform.SetParent(mainMenuUI.transform,false);
+            showContinue();
         }
     }
 
@@ -224,6 +245,49 @@ public class TitleBehavior : MonoBehaviour
         mainMenuCanvas.alpha = 0f;
         mainMenuCanvas.interactable = false;
         mainMenuCanvas.blocksRaycasts = false;
+    }
+
+    private void showOption()
+    {
+        optionCanvas.alpha = 1f;
+        optionCanvas.interactable = true;
+        optionCanvas.blocksRaycasts = true;
+    }
+
+    private void hideOption()
+    {
+        optionCanvas.alpha = 0f;
+        optionCanvas.interactable = false;
+        optionCanvas.blocksRaycasts = false;
+    }
+
+    private void showCredit()
+    {
+        creditCanvas.alpha = 1f;
+        creditCanvas.interactable = true;
+        creditCanvas.blocksRaycasts = true;
+
+    }
+
+    private void hideCredit()
+    {
+        creditCanvas.alpha = 0f;
+        creditCanvas.interactable = false;
+        creditCanvas.blocksRaycasts = false;
+
+    }
+    private void showContinue()
+    {
+        continueCanvas.alpha = 1f;
+        continueCanvas.interactable = true;
+        continueCanvas.blocksRaycasts = true;
+    }
+
+    private void hideContinue()
+    {
+        continueCanvas.alpha = 0f;
+        continueCanvas.interactable = false;
+        continueCanvas.blocksRaycasts = false;
     }
 
     public void showNew()
