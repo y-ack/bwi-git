@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            PlayFabManager.thePlayFabManager.GetLeaderboard();
+            //PlayFabManager.thePlayFabManager.GetLeaderboard();
         }
     }
 
@@ -108,12 +108,12 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.P))
             {
-                //currentState = gameState.LOSE;
+                setLose();
             }
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                //setCleared();
+                setCleared();
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -638,7 +638,6 @@ public class GameManager : MonoBehaviour
              
         }
 
-        
         currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");
         quickSave.currentBubbleProjectile = new SerializableBubbleProjectile[currentBubbleProjectile.Length];
         for (int i = 0; i < currentBubbleProjectile.Length; i++)

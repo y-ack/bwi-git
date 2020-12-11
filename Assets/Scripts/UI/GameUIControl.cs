@@ -20,6 +20,7 @@ public class GameUIControl : MonoBehaviour
     public Image lifeButtonUI;
     public Image tutorialOne;
     public Image tutorialTwo;
+    public Image sendScoreUI;
     public Text stageUI;
     public Text playerLifeUI;
     public Text scoreUI;
@@ -30,6 +31,7 @@ public class GameUIControl : MonoBehaviour
     private CanvasGroup resultScreenGroup;
     private CanvasGroup upgradeScreenGroup;
     private CanvasGroup helpScreenGroup;
+    private CanvasGroup sendScoreGroup;
 
     private float rollCooldown;
     private float trapCooldown;
@@ -49,6 +51,7 @@ public class GameUIControl : MonoBehaviour
         resultScreenGroup = resultScreenUI.GetComponent<CanvasGroup>();
         upgradeScreenGroup = upgradeScreenUI.GetComponent<CanvasGroup>();
         helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
+        sendScoreGroup = sendScoreUI.GetComponent<CanvasGroup>();
 
         /*
         rollCooldown = thePlayer.dashCoolDown;
@@ -252,6 +255,20 @@ public class GameUIControl : MonoBehaviour
         secondTutorialGroup.alpha = 0;
         secondTutorialGroup.interactable = false;
         secondTutorialGroup.blocksRaycasts = false;
+    }
+
+    public void showSendScore()
+    {
+        sendScoreGroup.alpha = 1;
+        sendScoreGroup.interactable = true;
+        sendScoreGroup.blocksRaycasts = true;
+    }
+
+    public void hideSendScore()
+    {
+        sendScoreGroup.alpha = 0;
+        sendScoreGroup.interactable = false;
+        sendScoreGroup.blocksRaycasts = false;
     }
 
     // Method used to update the result screen. 

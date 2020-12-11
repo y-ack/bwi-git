@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class ButtonControl : MonoBehaviour
@@ -9,6 +10,8 @@ public class ButtonControl : MonoBehaviour
     public PlayerBehavior thePlayer;
     public GameUIControl theUI;
     public StatisticUI theStatistic;
+    public Text userInput;
+    
 
     // Function used to set the game back to run
     public void resumeGame()
@@ -67,6 +70,39 @@ public class ButtonControl : MonoBehaviour
         GameManager.theManager.quickSave();
         SceneManager.LoadScene("TitleScreen");
         Debug.Log(SaveSystem.quickLoad().playerCurrentPos.x);
+    }
+
+    public void lostToSendButton()
+    {
+        theUI.showSendScore();
+        theUI.hideLost();
+    }
+
+    public void sendBackButton()
+    {
+        theUI.hideSendScore();
+        theUI.showLost();
+    }
+
+
+    // Method used to send the player's score to the leaderboard
+    public void sendScore()
+    {
+        string pName = userInput.text.Trim();
+
+        if (pName != "" && pName.Length >= 3 && pName.Length <= 6)
+        {
+            //FindObjectOfType<AudioManager>().Play("Menu_Clicked_Play");
+            RunStatistics.Instance.playerName = pName; // Set the game's playerName to the correct playerName
+
+            //FindObjectOfType<AudioManager>().Stop("Title_Theme");
+            //SceneManager.LoadScene("TitleScreen");
+        }
+        else
+        {
+            
+        }
+        
     }
 
     public void upgradeTrap()
