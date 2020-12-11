@@ -35,6 +35,16 @@ public class QuickSaveData
     public float normalSpeed;
     public float focusSpeed;
 
+    public enum PlayerState
+    {
+        NORMAL,
+        ROLLING,
+        FOCUS,
+        DEAD
+    };
+
+    public PlayerState movementState;
+
     public SerializableVector playerCurrentPos;
     public SerializableVector mousePos;
     public SerializableVector movementVector;
@@ -68,6 +78,7 @@ public class QuickSaveData
     public float spriteBlinkingTotalDuration;
     public bool startBlinking;
 
+    // UI section
     public SerializableUI savedUI;
 
     public QuickSaveData()

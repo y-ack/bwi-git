@@ -385,11 +385,15 @@ public class BubbleSpirit : MonoBehaviour
                 // Two different lerp function to facilitate a specific look for the bubble spirit travel speed
                 if(distanceFrom > 10f)
                 {
-                    transform.position = Vector3.Lerp(transform.position, IrisPos, 8f * Time.fixedDeltaTime); 
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 5f * Time.fixedDeltaTime); 
+                }
+                else if (distanceFrom > 2.5f)
+                {
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, 8f * Time.fixedDeltaTime);
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, IrisPos, 5f * Time.fixedDeltaTime);
+                    transform.position = Vector3.Lerp(transform.position, IrisPos, bubbleSpeed * Time.fixedDeltaTime);
                 }
                 //Play this sound when bubble almost reaches the player
                 //FindObjectOfType<AudioManager>().Play("Bubble_Collect");

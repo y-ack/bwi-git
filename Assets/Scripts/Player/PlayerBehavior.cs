@@ -69,7 +69,7 @@ public class PlayerBehavior : MonoBehaviour
     };
 
     [SerializeField]
-    private PlayerState movementState { get; set; }
+    private PlayerState movementState;
 
     // Start is called before the first frame update
     private void Awake() {
@@ -81,6 +81,7 @@ public class PlayerBehavior : MonoBehaviour
         Physics.IgnoreLayerCollision(11, 9); // bubble spirit
         Physics.IgnoreLayerCollision(11, 10); // player bullet
         Physics.IgnoreLayerCollision(11, 12); // player hitbox
+        movementState = PlayerState.NORMAL;
     }
 
     public void RestoreDefaultState()
@@ -88,10 +89,10 @@ public class PlayerBehavior : MonoBehaviour
         captureState = CaptureState.IDLE;
     }
 
+
     void Start()
     {
         cam = Camera.main;
-        movementState = PlayerState.NORMAL;
         resetTrapCount();
         rbody.gravityScale = 0;
         GameManager.theManager.isInvincible = false;
@@ -457,6 +458,32 @@ public class PlayerBehavior : MonoBehaviour
     public BubbleSpirit getbubbleSprite()
     {
         return capturedBubble;
+    }
+
+    public PlayerState getMovementState()
+    {
+        return movementState;
+    }
+
+    public void setNormal()
+    {
+        movementState = PlayerState.NORMAL;
+    }
+
+    public void setRoll()
+    {
+        movementState = PlayerState.ROLLING;
+
+    }
+
+    public void setFocus()
+    {
+        movementState = PlayerState.FOCUS;
+    }
+
+    public void setDead()
+    {
+        movementState = PlayerState.DEAD;
     }
 
 }

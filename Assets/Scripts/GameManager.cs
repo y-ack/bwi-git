@@ -320,6 +320,25 @@ public class GameManager : MonoBehaviour
 
         bubbleCounter = theSaveData.totalBubbles;
 
+        switch (theSaveData.movementState)
+        {
+            case QuickSaveData.PlayerState.ROLLING:
+                mPlayer.setRoll();
+                break;
+
+            case QuickSaveData.PlayerState.FOCUS:
+                mPlayer.setFocus();
+                break;
+
+            case QuickSaveData.PlayerState.DEAD:
+                mPlayer.setDead();
+                break;
+
+            default:
+                mPlayer.setNormal();
+                break;
+        }
+
         mPlayer.moveSpeed = theSaveData.moveSpeed;
         mPlayer.normalSpeed = theSaveData.normalSpeed;
         mPlayer.focusSpeed = theSaveData.focusSpeed;
@@ -573,6 +592,10 @@ public class GameManager : MonoBehaviour
         quickSave.thresholdValue = mapGenerator.threshold;
 
         // Game Actor Data
+
+        quickSave.movementState = (QuickSaveData.PlayerState)mPlayer.getMovementState();
+        Debug.Log("The QuickSave Movement State is " + quickSave.movementState);
+
         quickSave.moveSpeed = mPlayer.moveSpeed;
         quickSave.normalSpeed = mPlayer.normalSpeed;
         quickSave.focusSpeed = mPlayer.focusSpeed;

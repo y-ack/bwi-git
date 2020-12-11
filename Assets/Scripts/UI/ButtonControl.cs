@@ -68,8 +68,9 @@ public class ButtonControl : MonoBehaviour
     public void quickSaveAndQuit()
     {
         GameManager.theManager.quickSave();
+        FindObjectOfType<AudioManager>().Stop("Stage_BG");
+        FindObjectOfType<AudioManager>().Play("Title_Theme");
         SceneManager.LoadScene("TitleScreen");
-        Debug.Log(SaveSystem.quickLoad().playerCurrentPos.x);
     }
 
     public void lostToSendButton()
