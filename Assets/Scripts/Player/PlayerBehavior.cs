@@ -369,7 +369,7 @@ public class PlayerBehavior : MonoBehaviour
             }
             else
             {
-                CameraShaker.Instance.ShakeOnce(4f,2f,0.1f,1f);
+                CameraShaker.Instance.ShakeOnce(2f,2f,0.1f,1f);
                 GameManager.theManager.playerHit();
                 //dunno why this isnt making invincible
                 GameManager.theManager.isInvincible = true;
