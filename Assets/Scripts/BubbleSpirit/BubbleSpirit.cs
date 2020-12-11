@@ -59,10 +59,14 @@ public class BubbleSpirit : MonoBehaviour
     public bool cleared;
     public bool isChain;
 
+     void Awake()
+    {
+        state = State.NORMAL;
+    }
+
     void Start()
     {
         myLight = GetComponent<Light2D>();
-        state = State.NORMAL;
         playerTarget = (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
         /*
         initialPosition = transform.position;
@@ -447,5 +451,8 @@ public class BubbleSpirit : MonoBehaviour
         //return sum
     }
 
-    
+    public void quickSaveRestoreCapture()
+    {
+        state = State.CAPTURED;
+    }
 }

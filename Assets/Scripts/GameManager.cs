@@ -295,6 +295,7 @@ public class GameManager : MonoBehaviour
      * */
     private void quickSequence()
     {
+        RunStatistics.Instance.isQuick = false;
         quickLoad();
         generateStage(true);
         quickSpawnWorld();
@@ -343,7 +344,16 @@ public class GameManager : MonoBehaviour
         mPlayer.shootAfterSec = theSaveData.shootAfterSec;
 
         mPlayer.isCapturing = theSaveData.isCapturing;
-        mPlayer.capturedBubble = theSaveData.capturedBubble;
+
+        if(theSaveData.isCapturing == true)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
+            e.transform.position = theSaveData.capturedBubble.bubblePosition.getVectorThree();
+            e.GetComponent<BubbleSpirit>().SetColor(theSaveData.capturedBubble.color);
+            e.transform.SetParent(mPlayer.transform);
+            e.GetComponent<BubbleSpirit>().quickSaveRestoreCapture();
+            mPlayer.setCaptureBubble(e.GetComponent<BubbleSpirit>());
+        }
 
         mPlayer.extraTrap = theSaveData.extraTrap;
         mPlayer.trapCountCap = theSaveData.trapCountCap;
@@ -353,6 +363,18 @@ public class GameManager : MonoBehaviour
         mPlayer.spriteBlinkingMiniDuration = theSaveData.spriteBlinkingMiniDuration;
         mPlayer.spriteBlinkingTotalTimer = theSaveData.spriteBlinkingTotalTimer;
         mPlayer.spriteBlinkingTotalDuration = theSaveData.spriteBlinkingTotalDuration;
+
+        uiControl.rollCooldown = theSaveData.savedUI.rollCooldown;
+        uiControl.rollUI.fillAmount = theSaveData.savedUI.rollFill;
+        uiControl.trapCooldown = theSaveData.savedUI.trapCooldown;
+        uiControl.trapUI.fillAmount = theSaveData.savedUI.trapFill;
+        uiControl.captureCooldown = theSaveData.savedUI.captureCooldown;
+        uiControl.captureUI.fillAmount = theSaveData.savedUI.captureFill;
+        uiControl.trapCount = theSaveData.savedUI.trapCount;
+        uiControl.trapMax = theSaveData.savedUI.trapMax;
+        uiControl.captureMax = theSaveData.savedUI.captureMax;
+        uiControl.rollMax = theSaveData.savedUI.rollMax;
+        uiControl.lifeMax = theSaveData.savedUI.lifeMax;
     }
 
     private void quickSpawnWorld()
@@ -388,7 +410,7 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.time += Time.smoothDeltaTime;
         updateChainTimer();
 
-        if(isInvincible == true)
+        if (isInvincible == true)
         {
             showRoll();
         }
@@ -575,8 +597,16 @@ public class GameManager : MonoBehaviour
         quickSave.shootAfterSec = mPlayer.shootAfterSec;
 
         quickSave.isCapturing = mPlayer.isCapturing;
-        quickSave.capturedBubble = mPlayer.capturedBubble;
 
+        if(mPlayer.capturedBubble != null)
+        {
+            SerializableBubbleSpirit quickBubble = new SerializableBubbleSpirit();
+            quickBubble.state = SerializableBubbleSpirit.State.CAPTURED;
+            quickBubble.color = mPlayer.capturedBubble.color;
+            quickBubble.bubblePosition = new SerializableVector(mPlayer.capturedBubble.transform.position);
+            quickSave.capturedBubble = quickBubble;
+        }
+        
         quickSave.extraTrap = mPlayer.extraTrap;
         quickSave.trapCountCap = mPlayer.trapCountCap;
         quickSave.trapUpgrade = mPlayer.trapUpgrade;
@@ -586,13 +616,27 @@ public class GameManager : MonoBehaviour
         quickSave.spriteBlinkingTotalTimer = mPlayer.spriteBlinkingTotalTimer;
         quickSave.spriteBlinkingTotalDuration = mPlayer.spriteBlinkingTotalDuration;
 
+        //quicksaveUI
+        SerializableUI quickSavedUI = new SerializableUI();
+        quickSavedUI.rollCooldown = uiControl.rollCooldown;
+        quickSavedUI.rollFill = uiControl.rollUI.fillAmount;
+        quickSavedUI.trapCooldown = uiControl.trapCooldown;
+        quickSavedUI.trapFill = uiControl.trapUI.fillAmount;
+        quickSavedUI.captureCooldown = uiControl.captureCooldown;
+        quickSavedUI.captureFill = uiControl.captureUI.fillAmount;
+        quickSavedUI.trapCount = uiControl.trapCount;
+        quickSavedUI.trapMax = uiControl.trapMax;
+        quickSavedUI.captureMax = uiControl.captureMax;
+        quickSavedUI.rollMax = uiControl.rollMax;
+        quickSavedUI.lifeMax = uiControl.lifeMax;
+        quickSave.savedUI = quickSavedUI;
+
         //quickSave.currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
         currentBubbleUnit = GameObject.FindGameObjectsWithTag("BubbleUnit");
         quickSave.currentBubbleUnit = new SerializableBubbleUnit[currentBubbleUnit.Length];
 
         for(int i = 0; i < currentBubbleUnit.Length; i++)
         {
-            Debug.Log("The Length of the currentBubbleUnit Array is " + currentBubbleUnit.Length);
             SerializableBubbleUnit saveUnit = new SerializableBubbleUnit();
             saveUnit.unitPosition = new SerializableVector(currentBubbleUnit[i].transform.localPosition);
             saveUnit.initialPosition = new SerializableVector(currentBubbleUnit[i].GetComponent<BubbleUnit>().initialPosition);
@@ -635,7 +679,42 @@ public class GameManager : MonoBehaviour
                 theChildrenSpirit.isChain = theChildrenBubble[j].GetComponent<BubbleSpirit>().isChain;
                 saveUnit.childrenBubble[j] = theChildrenSpirit;
             }
-             
+        }
+
+        currentBubbleSpirit = GameObject.FindGameObjectsWithTag("BubbleSpirit");
+        GameObject[] specificSpirit = new GameObject[currentBubbleSpirit.Length];
+
+        Debug.Log("The length of the currentBubbleSpirit array is " + currentBubbleSpirit.Length);
+        quickSave.currentBubbleSpirit = new SerializableBubbleSpirit[currentBubbleSpirit.Length];
+
+        for(int i = 0; i < currentBubbleSpirit.Length; i++)
+        {
+            SerializableBubbleSpirit savedSpirit = new SerializableBubbleSpirit();
+            savedSpirit.bubblePosition = new SerializableVector(currentBubbleSpirit[i].transform.position);
+            savedSpirit.bubbleSize = new SerializableVector(currentBubbleSpirit[i].transform.localScale);
+            savedSpirit.launchDirection = new SerializableVector(currentBubbleSpirit[i].GetComponent<BubbleSpirit>().launchDirection);
+            savedSpirit.bubbleRotation = new SerializableVector(currentBubbleSpirit[i].transform.rotation);
+
+            switch (currentBubbleSpirit[i].GetComponent<BubbleSpirit>().state)
+            {
+                case BubbleSpirit.State.CLEARED:
+                    savedSpirit.state = SerializableBubbleSpirit.State.CLEARED;
+                    break;
+
+                case BubbleSpirit.State.LAUNCHED:
+                    savedSpirit.state = SerializableBubbleSpirit.State.LAUNCHED;
+                    break;
+
+                default:
+                    savedSpirit.state = SerializableBubbleSpirit.State.NORMAL;
+                    break;
+            }
+
+            savedSpirit.color = currentBubbleSpirit[i].GetComponent<BubbleSpirit>().color;
+            savedSpirit.rebounds = currentBubbleSpirit[i].GetComponent<BubbleSpirit>().rebounds;
+            savedSpirit.cleared = currentBubbleSpirit[i].GetComponent<BubbleSpirit>().cleared;
+            savedSpirit.isChain = currentBubbleSpirit[i].GetComponent<BubbleSpirit>().isChain;
+            quickSave.currentBubbleSpirit[i] = savedSpirit;
         }
 
         currentBubbleProjectile = GameObject.FindGameObjectsWithTag("EnemyBullet");

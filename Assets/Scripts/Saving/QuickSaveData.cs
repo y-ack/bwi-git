@@ -54,7 +54,7 @@ public class QuickSaveData
     public float shootAfterSec;
 
     public bool isCapturing;
-    public BubbleSpirit capturedBubble;
+    public SerializableBubbleSpirit capturedBubble;
 
     public float extraTrap;
     public int trapCountCap;
@@ -68,10 +68,10 @@ public class QuickSaveData
     public float spriteBlinkingTotalDuration;
     public bool startBlinking;
 
+    public SerializableUI savedUI;
 
     public QuickSaveData()
     {
-
     }
 
 

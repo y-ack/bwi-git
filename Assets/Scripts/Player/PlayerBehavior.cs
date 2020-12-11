@@ -57,6 +57,7 @@ public class PlayerBehavior : MonoBehaviour
         CAPTURING
     };
 
+    [SerializeField]
     private CaptureState captureState;
 
     public enum PlayerState
@@ -66,6 +67,8 @@ public class PlayerBehavior : MonoBehaviour
         FOCUS,
         DEAD
     };
+
+    [SerializeField]
     private PlayerState movementState { get; set; }
 
     // Start is called before the first frame update
@@ -445,6 +448,11 @@ public class PlayerBehavior : MonoBehaviour
         RunStatistics.Instance.trapCount = trapCount;
     }
 
+    public void setCaptureBubble(BubbleSpirit cBubble)
+    {
+        capturedBubble = cBubble;
+        captureState = CaptureState.CAPTURING;
+    }
 
     public BubbleSpirit getbubbleSprite()
     {

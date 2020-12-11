@@ -7,6 +7,8 @@ public class SerializableBubbleSpirit
 {
 
     public SerializableVector bubblePosition; // vector3
+    public SerializableVector bubbleRotation; // Quaternion
+    public SerializableVector bubbleSize;
     public SerializableVector gridPosition; // vector2int
     public string spritePath;
     public State state;
@@ -25,6 +27,7 @@ public class SerializableBubbleSpirit
     public bool searched; // for parent path searching ... not impl yet.
 
     public PatternInfo pattern;
+    public string patternPrefab;
     public bool cleared;
     public bool isChain;
 }

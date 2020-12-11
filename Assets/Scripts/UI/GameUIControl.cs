@@ -33,10 +33,10 @@ public class GameUIControl : MonoBehaviour
     private CanvasGroup helpScreenGroup;
     private CanvasGroup sendScoreGroup;
 
-    private float rollCooldown;
-    private float trapCooldown;
-    private float captureCooldown;
-    private int trapCount;
+    public float rollCooldown;
+    public float trapCooldown;
+    public float captureCooldown;
+    public int trapCount;
 
     public bool trapMax = false;
     public bool captureMax = false;
@@ -486,9 +486,6 @@ public class GameUIControl : MonoBehaviour
     public void activateRoll()
     {
         rollUI.fillAmount = 0;
-        GameObject iconHUD = rollUI.transform.Find("rollHUD").gameObject;
-        Image iconImage = iconHUD.GetComponent<Image>();
-        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
     }
 
     private void colorRoll()
@@ -501,14 +498,14 @@ public class GameUIControl : MonoBehaviour
     public void updateRoll()
     {
         rollUI.fillAmount += 1 / rollCooldown * Time.smoothDeltaTime;
+        GameObject iconHUD = rollUI.transform.Find("rollHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
     }
 
     public void activateTrap()
     {
         trapUI.fillAmount = 0;
-        GameObject iconHUD = trapUI.transform.Find("trapHUD").gameObject;
-        Image iconImage = iconHUD.GetComponent<Image>();
-        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
     }
 
     private void colorTrap()
@@ -521,15 +518,14 @@ public class GameUIControl : MonoBehaviour
     public void updateTrap() 
     {
         trapUI.fillAmount += 1 / trapCooldown * Time.smoothDeltaTime;
+        GameObject iconHUD = trapUI.transform.Find("trapHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
     }
 
     public void activateCapture()
     {
         captureUI.fillAmount = 0;
-        
-        GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
-        Image iconImage = iconHUD.GetComponent<Image>();
-        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
     }
 
     private void colorCapture()
@@ -575,6 +571,9 @@ public class GameUIControl : MonoBehaviour
     public void updateCapture()
     {
         captureUI.fillAmount += 1 / captureCooldown * Time.smoothDeltaTime;
+        GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
+        Image iconImage = iconHUD.GetComponent<Image>();
+        iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
     }
 
     public void updateLives()

@@ -30,6 +30,7 @@ public class Spawner : MonoBehaviour
     public int unitCount = 0;
     private bool spawnPosFound = false;
     List<List<MapGenerator.Coord>> spawnPool;
+
     private void Start()
     {
         unitsSize = new List<int>();
@@ -581,6 +582,36 @@ public class Spawner : MonoBehaviour
 
             e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;
             e.GetComponent<BubbleUnit>().bubbleCount = theSaveData.currentBubbleUnit[i].bubbleCount;
+        }
+
+        for (int i = 0; i < theSaveData.currentBubbleSpirit.Length; i++){
+            if (theSaveData.currentBubbleSpirit[i].state != SerializableBubbleSpirit.State.NORMAL)
+            {
+                GameObject f = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
+
+                switch (theSaveData.currentBubbleSpirit[i].state)
+                {
+                    case SerializableBubbleSpirit.State.LAUNCHED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.LAUNCHED;
+                        break;
+
+                    case SerializableBubbleSpirit.State.CLEARED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.CLEARED;
+                        break;
+
+                    default:
+                        break;
+                }
+                f.transform.position = theSaveData.currentBubbleSpirit[i].bubblePosition.getVectorThree();
+                f.transform.localScale = theSaveData.currentBubbleSpirit[i].bubbleSize.getVectorThree();
+                f.transform.rotation = theSaveData.currentBubbleSpirit[i].bubbleRotation.getQuaternion();
+
+                f.GetComponent<BubbleSpirit>().rebounds = theSaveData.currentBubbleSpirit[i].rebounds;
+                f.GetComponent<BubbleSpirit>().launchDirection = theSaveData.currentBubbleSpirit[i].launchDirection.getVectorThree();
+                f.GetComponent<BubbleSpirit>().cleared = theSaveData.currentBubbleSpirit[i].cleared;
+                f.GetComponent<BubbleSpirit>().isChain = theSaveData.currentBubbleSpirit[i].isChain;
+                f.GetComponent<BubbleSpirit>().SetColor(theSaveData.currentBubbleSpirit[i].color);
+            }
         }
     }
 
