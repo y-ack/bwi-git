@@ -25,42 +25,6 @@ public class BulletPatternGenerator : MonoBehaviour
         return (BubbleBulletPatternLemniscate)Resources.Load("Prefabs/BubbleBulletPatternLemniscate",
                                                              typeof(BubbleBulletPatternLemniscate));
     }
-    public void Awake()
-    {
-        bulletPrefab1 = (BubbleBullet)Resources.Load("Prefabs/BubbleBulletPrefab",
-                                                     typeof(BubbleBullet));
-        for (int i = 0; i < 5; ++i)
-        {
-            for (int j = 0; j < 3; ++j)
-            {
-                var a = new PatternInfo
-                {
-                    bcnt = 1,
-                    θ = 0,
-                    σ = 0,
-                    Δθ = 0,
-                    ω = 0,
-                    a = 0,
-                    at = 0,
-                    d = 0,
-                    cd = 5f,
-                    ΔΣΘ = 0,
-                    bulletPrefab = bulletPrefab1,
-                    v = new double[] { 2.0 },
-                    patternType = PatternType.Linear,
-                };
-                patterns[i][j] = a;//Linear().Init(new double[] { 2.0 }, 1, 0f, 0,
-                                   //              0, 0, 0, 0, 0, 5f, 0);
-            }
-        }
-        //15deg = 0.2617994
-        //        patterns[0][1] = Linear().Init(new double[] { 2.5 }, 3, -0.2617994f, 0f,
-        //                               0.2617994f, 0, 0, 0, 0, 6f, 0);
-        //patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
-        
-        instance = this;
-    }
-
     public BubbleBulletPattern instantiatePatternInfo(PatternInfo pattern,
                                                       BubbleSpirit parent)
     {
@@ -80,6 +44,48 @@ public class BulletPatternGenerator : MonoBehaviour
         newPattern.parentBubble = parent;
         return newPattern;
     }
+
+    public void Awake()
+    {
+        bulletPrefab1 = (BubbleBullet)Resources.Load("Prefabs/BubbleBulletPrefab",
+                                                     typeof(BubbleBullet));
+        for (int i = 0; i < 5; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                patterns[i][j] = new PatternInfo
+                {
+                    bcnt = 1, // bullet count
+                    θ = 0,    // base angle
+                    σ = 0,    // angle variation: +/- variation from player dir
+                    Δθ = 0,   // angle delta: spread between each bullet
+                    ω = 0,    // angular velocity (bullet sprite rotation)
+                    a = 0,    // acceleration
+                    at = 0,   // disable acceleration after this many seconds 
+                    d = 0,    // delay time between each bullet in pattern
+                    cd = 5f,  // cooldown time between each fire of pattern
+                    ΔΣΘ = 0,  // change in pattern base angle after each firing
+                    bulletPrefab = bulletPrefab1, // prefab to spawn
+                    v = new double[] { 2.0 },     // velocity parameters (see class)
+                    patternType = PatternType.Linear, // pattern velocity type
+                };
+            }
+        } 
+        //15deg = 0.2617994 = PI/12
+        const float PI = Mathf.PI;
+        patterns[0][1] = new PatternInfo
+        { bcnt = 3, θ = -PI/12f, σ = 0, Δθ = PI/12f, ω = 0, a = 0, at = 0,
+          d = 0, cd = 7f, ΔΣΘ = 0, v = new double[] { 2.5 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+        
+        
+        //        patterns[0][1] = Linear().Init(new double[] { 2.5 }, 3, -0.2617994f, 0f,
+        //                               0.2617994f, 0, 0, 0, 0, 6f, 0);
+        //patterns[4][0] = Petal().Init(new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 }, 32, 0f, 0, 2 * 0.09817477f, 0, 0, 0, 0, 2.5f, 0);
+        
+        instance = this;
+    }
+
     // Method used to add a savedPatern. Doesn't work cause Idk how this works. :(
     public void addSavedPattern(BubbleSpirit b,
                                 PatternInfo info)
@@ -89,6 +95,7 @@ public class BulletPatternGenerator : MonoBehaviour
         b.pattern = pattern;
     }
 
+    
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)
     {
         const float patternChance = 1.0f;
@@ -126,7 +133,8 @@ public class BulletPatternGenerator : MonoBehaviour
                 }
                 else
                 {
-                    var bucket = patterns[Mathf.RoundToInt((difficulty) / (100 / 5))];                  
+                    Debug.Log("difficulty: " + difficulty); // 91.52057 on crash
+                    var bucket = patterns[Mathf.FloorToInt((difficulty) / (100 / 5))];
                     var choice = bucket[Random.Range(0, bucket.Length - 1)];
                     b.pattern = instantiatePatternInfo(choice, b);
                 }
