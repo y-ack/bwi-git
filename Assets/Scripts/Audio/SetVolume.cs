@@ -26,9 +26,10 @@ public class SetVolume : MonoBehaviour
             mixer.SetFloat("MusicVol", Mathf.Log10(100/100) * 20);
             volumeSlider.value = 1;
             volumeInput.text = 100.ToString();
-        } else if (vInput < 0)
+        } 
+        else if (vInput <= 0)
         {
-            mixer.SetFloat("MusicVol", Mathf.Log10(0/100) * 20);
+            mixer.SetFloat("MusicVol", Mathf.Log10(0.0001f/100) * 20);
             volumeSlider.value = 0;
             volumeInput.text = 0.ToString();
         }
