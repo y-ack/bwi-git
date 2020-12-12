@@ -72,13 +72,20 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     const float activationRadius = 15f;
     public void FixedUpdate()
     {
-        if(GameManager.theManager.canMove &&
-           parentBubble.state == BubbleSpirit.State.NORMAL)
+        if(GameManager.theManager.canMove
+           && parentBubble.state == BubbleSpirit.State.NORMAL)
         {
             arg.patternLifetime -= Time.fixedDeltaTime;
-            var playerDist = Vector3.Distance(transform.position, playerTarget.transform.position);
+            var playerDist = Vector3.Distance(transform.position,
+                                              playerTarget.transform.position);
+            // 1. is pattern delay up?
+            // 2. is the between-bullet delay satisfied?
+            // 3. is the player close enough?
+            // 4. is the neighbor count pattern activation satisfied?
             if (((arg.lifetime <= 0 && arg.delayTime != 0) || playerDist < activationRadius)
-                && arg.patternLifetime <= 0)
+                && arg.patternLifetime <= 0
+                && (parentBubble.neighborCount <= 3
+                    && (parentBubble.neighborCount % 2 == 0)))
             {
                 arg.lifetime -= Time.fixedDeltaTime;
                 // while there are more bullets in the cycle and it's time

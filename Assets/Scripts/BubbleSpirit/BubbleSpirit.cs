@@ -58,8 +58,9 @@ public class BubbleSpirit : MonoBehaviour
     public BubbleBulletPattern pattern; //maybe an array
     public bool cleared;
     public bool isChain;
+    public int neighborCount;
 
-     void Awake()
+    void Awake()
     {
         state = State.NORMAL;
     }
@@ -68,12 +69,7 @@ public class BubbleSpirit : MonoBehaviour
     {
         myLight = GetComponent<Light2D>();
         playerTarget = (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
-        /*
-        initialPosition = transform.position;
-        //moveTimer = timeToMove;
-        movePosition = new Vector3(initialPosition.x + UnityEngine.Random.Range(-radius, radius),
-                               initialPosition.y + UnityEngine.Random.Range(-radius, radius), 0f);
-                               */
+        updateNeighborCountActual();
     }
 
     [SerializeField] private float orbit_x = 0.9f;
@@ -119,7 +115,6 @@ public class BubbleSpirit : MonoBehaviour
                 clearAnimation();
                 break;
         }        
-        // TODO[RETRO] add gleam animation for bubble spirits
     }
     
     void OnCollisionEnter2D(Collision2D collision)
@@ -309,7 +304,28 @@ public class BubbleSpirit : MonoBehaviour
         transform.parent = playerTarget.transform;
         rebounds = 1;
     }
-        
+
+    private bool isUpdatePending = false;
+    public void updateNeighborCount()
+    {
+        if (isUpdatePending || cleared)
+            return;
+        // wait a little bit so all the changes are in
+        Invoke("updateNeighborCountActual", 0.04f); 
+        isUpdatePending = true;
+    }
+    private void updateNeighborCountActual()
+    {
+        if (cleared) return;
+        isUpdatePending = false;
+        neighborCount = 0;
+        BubbleNeighbors bn = parentUnit.getNeighbors(this);
+        foreach (BubbleSpirit neighbor in bn.neighbors)
+        {
+            if (neighbor != null) neighborCount++;
+        }
+    }
+
     private void tryMatch()
     {
         BubbleNeighbors bn = parentUnit.getNeighbors(this);
@@ -325,17 +341,31 @@ public class BubbleSpirit : MonoBehaviour
                 FindObjectOfType<AudioManager>().Play("Bubble_Matched");
                 hasMatch = true;
                 break;
+            } else if (neighbor != null)
+            {
+                neighbor.updateNeighborCount();
             }
         }
         if (hasMatch)
         {            
             ChainClear();
+        } else
+        {
+            updateNeighborCount();
         }
-        
     }
     
     public void Clear()
     {
+        if (state == State.NORMAL)
+        {
+            BubbleNeighbors bn = parentUnit.getNeighbors(this);
+            foreach (BubbleSpirit neighbor in bn.neighbors)
+            {
+                if (neighbor != null)
+                    neighbor.updateNeighborCount();
+            }
+        }
         cleared = true;
         state = State.CLEARED;       
         Unparent();
@@ -444,9 +474,7 @@ public class BubbleSpirit : MonoBehaviour
         {
             if (bn != null && BubbleColor.match(color, bn.color))
             {
-                //Debug.Log(bn.color);
-                bn.ChainClear(); // sum += bm.chaincleared()
-                // bubble counter
+                bn.ChainClear(); // sum += bm.chaincleared()                
             }
         }
         Debug.Log("playerTarget.getTrapCount(): " + playerTarget.getTrapCount());

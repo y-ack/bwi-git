@@ -129,6 +129,7 @@ public class BulletPatternGenerator : MonoBehaviour
                 b.pattern = instantiatePatternInfo(patterns[4][0], b);
             }
         }
+        /*
         if (unit_type == 0 && b.gridPosition == Vector2Int.zero)
         {            
             if (noneShooter > miniBoss) //chance to be a mini boss
@@ -137,8 +138,8 @@ public class BulletPatternGenerator : MonoBehaviour
                 b.pattern = instantiatePatternInfo(patterns[4][0], b);
                 return;
             }
-        }
-        if (unit_type == 0)
+            }*/
+        if (unit_type >= 0) // add patterns to boss bubbles too now
         {
             //chance to not use pattern
             if (Random.value <= patternChance)

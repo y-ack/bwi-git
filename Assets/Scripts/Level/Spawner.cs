@@ -30,7 +30,6 @@ public class Spawner : MonoBehaviour
     public int unitCount = 0;
     private bool spawnPosFound = false;
     List<List<MapGenerator.Coord>> spawnPool;
-
     private void Start()
     {
         unitsSize = new List<int>();
@@ -62,10 +61,83 @@ public class Spawner : MonoBehaviour
 
         }
     }
-    
-    void Clear(int i)
+
+    private Vector2Int cube2oddr(List<int> coords)
     {
+        var x = coords[0] + (coords[2] - (coords[2] & 1)) / 2;
+        return new Vector2Int(x, coords[2]);
+    }
+    private List<int> oddr2cube(Vector2Int coords)
+    {
+        int x = coords.x - (coords.y - (coords.y & 1)) / 2;
+        int z = coords.y;
+        return new List<int>{ x, -x - z, z };
+    }
+
+    Vector2Int[] oddr_ringdir = new Vector2Int[] {
+        new Vector2Int(-1, -1), new Vector2Int(-1,  0), new Vector2Int( 0,+1),
+        new Vector2Int( 0, +1), new Vector2Int(+1,  0), new Vector2Int(+1,-1),
+    };
+
+    public int spawnUnitRingSeg(BubbleUnit parent, float difficulty, int dshift,
+                                 int ring, int segs, List<int> color, int quota)
+    {
+        int runlen = (ring == 0) ? 1 : ring * 6 / segs; int shift = 0;
+        Vector2Int cell = new Vector2Int(ring, 0);
         
+        bubbles = new GameObject[6 * ring];
+        bubbleChild = new BubbleSpirit[6 * ring];
+        for (int i = 0; i < 6; ++i)
+        {
+            for (int j = 0; j < ring; ++j)
+            {
+                if (quota-- <= 0) return quota;
+                int seg = (i * j + j + shift) / runlen;
+                if (color[seg] == -1) continue;
+                bubbles[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
+                bubbleChild[i] = bubbles[i].GetComponent<BubbleSpirit>();
+                bubbleChild[i].setParent(parent, cell);
+                bubbleChild[i].SetColor(color[seg]);
+                BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0,
+                                                            difficulty);
+                cell = cell + oddr_ringdir[i];
+                shift += dshift;
+            }
+        }
+        return quota;
+    }
+    public List<int> colorsForDifficulty(float difficulty)
+    {
+        return new List<int>(0);
+        // how does this need to scale again?
+        // also, have a chance of add color -1 for empty sections
+    }
+    public void spawnUnit(int wx, int wy, float difficulty)
+    {
+        GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
+        BubbleUnit bubbleParent = e.GetComponent<BubbleUnit>();
+        bubbleParent.transform.localPosition = new Vector3(wy, wx, 0);
+        int quota = Random.Range(2, 8);//Mathf.FloorToInt(difficulty * 5f);
+        int ring = 0; int segs = Random.Range(1, Mathf.FloorToInt(difficulty));
+        List<int> colors = new List<int>(segs);
+        // colors = colorsForDifficulty(difficulty);
+        // uhhh.
+        for (int i = 0; i < colors.Count; ++i)
+        {
+            colors[i] = i % BubbleColor.purple;
+        }
+        while (quota > 0)
+        {
+            // delta shift enables noncontig
+            // but idk what this value should actually be
+            int dshift = difficulty > 20 ? 1: 0; 
+            quota = spawnUnitRingSeg(bubbleParent, difficulty, dshift,
+                                     ring++, segs, colors, quota);
+        }
+    }
+
+    void Clear(int i)
+    {   
     }
     public IEnumerator setNormal(float difficulty)
     {   
@@ -203,7 +275,7 @@ public class Spawner : MonoBehaviour
         }
     yield return new WaitForSeconds(0);
     }
-
+    
     public void spawnBoss(float difficulty)
     {
         currentLevel = mGrid.GetComponent<MapGenerator>();
@@ -575,49 +647,13 @@ public class Spawner : MonoBehaviour
                 f.GetComponent<BubbleSpirit>().isChain = unitChildren[j].isChain;
                 f.GetComponent<BubbleSpirit>().SetColor(unitChildren[j].color);
                 f.GetComponent<BubbleSpirit>().setParent(e.GetComponent<BubbleUnit>(), unitChildren[j].gridPosition.getVectorTwoInt());
-                PatternInfo savedPattern = unitChildren[j].pattern;
-                BubbleBullet savedBubbleBullet = savedPattern.bulletPrefab;
-                savedBubbleBullet.velocity = unitChildren[j].patternPrefab.velocity.getVectorThree();
-                savedBubbleBullet.angularVelocity = unitChildren[j].patternPrefab.angularVelocity;
-                savedBubbleBullet.acceleration = unitChildren[j].patternPrefab.acceleration;
-                savedBubbleBullet.accelerationTimeout = unitChildren[j].patternPrefab.accelerationTimeout;
-
-                savedPattern.bulletPrefab = savedBubbleBullet;
-                BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), savedPattern);   
+                
+                BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), unitChildren[j].pattern);
+                 
             }
 
             e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;
             e.GetComponent<BubbleUnit>().bubbleCount = theSaveData.currentBubbleUnit[i].bubbleCount;
-        }
-
-        for (int i = 0; i < theSaveData.currentBubbleSpirit.Length; i++){
-            if (theSaveData.currentBubbleSpirit[i].state != SerializableBubbleSpirit.State.NORMAL)
-            {
-                GameObject f = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
-
-                switch (theSaveData.currentBubbleSpirit[i].state)
-                {
-                    case SerializableBubbleSpirit.State.LAUNCHED:
-                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.LAUNCHED;
-                        break;
-
-                    case SerializableBubbleSpirit.State.CLEARED:
-                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.CLEARED;
-                        break;
-
-                    default:
-                        break;
-                }
-                f.transform.position = theSaveData.currentBubbleSpirit[i].bubblePosition.getVectorThree();
-                f.transform.localScale = theSaveData.currentBubbleSpirit[i].bubbleSize.getVectorThree();
-                f.transform.rotation = theSaveData.currentBubbleSpirit[i].bubbleRotation.getQuaternion();
-
-                f.GetComponent<BubbleSpirit>().rebounds = theSaveData.currentBubbleSpirit[i].rebounds;
-                f.GetComponent<BubbleSpirit>().launchDirection = theSaveData.currentBubbleSpirit[i].launchDirection.getVectorThree();
-                f.GetComponent<BubbleSpirit>().cleared = theSaveData.currentBubbleSpirit[i].cleared;
-                f.GetComponent<BubbleSpirit>().isChain = theSaveData.currentBubbleSpirit[i].isChain;
-                f.GetComponent<BubbleSpirit>().SetColor(theSaveData.currentBubbleSpirit[i].color);
-            }
         }
     }
 
@@ -630,7 +666,6 @@ public class Spawner : MonoBehaviour
             GameObject e = Instantiate(Resources.Load("Prefabs/BubbleBulletPrefab")) as GameObject;
             e.transform.localPosition = theSaveData.currentBubbleProjectile[i].projectilePosition.getVectorThree();
             e.transform.localRotation = theSaveData.currentBubbleProjectile[i].projectilePosition.getQuaternion();
-            e.GetComponent<BubbleBullet>().direction = theSaveData.currentBubbleProjectile[i].projectileDirection.getVectorThree();
             e.GetComponent<BubbleBullet>().velocity = theSaveData.currentBubbleProjectile[i].velocity.getVectorThree();
             e.GetComponent<BubbleBullet>().angularVelocity = theSaveData.currentBubbleProjectile[i].angularVelocity;
             e.GetComponent<BubbleBullet>().acceleration = theSaveData.currentBubbleProjectile[i].acceleration;
