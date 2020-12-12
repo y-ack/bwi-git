@@ -35,6 +35,12 @@ public class PlayerBehavior : MonoBehaviour
     public float shootCoolDown = 0.4f;
     public float shootAfterSec;
 
+    public float beamCoolDown = 0.1f;
+    public float beamAfterSec;
+
+    public float beamDuration = 2f;
+    public float beamDurationAfterSec;
+
     public bool isCapturing { get; set; } = false;
     public BubbleSpirit capturedBubble { get; set; }
 
@@ -209,6 +215,55 @@ public class PlayerBehavior : MonoBehaviour
             captureAfterSec = captureCoolDown;
             SubTrapForSplash();
         }
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            /*
+            int counter = 0;
+            while(beamDurationAfterSec >= 0f)
+            {
+                if(beamAfterSec >= 0f)
+                {
+                    */
+                    GameObject e = Instantiate(Resources.Load("Prefabs/beam") as
+                                    GameObject);
+                    e.transform.localPosition = transform.localPosition;
+                    e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                    /*
+                    beamAfterSec = beamCoolDown;
+
+                }
+
+                beamAfterSec -= Time.fixedDeltaTime;
+
+                //StartCoroutine(SpawnBubbles());
+                beamDurationAfterSec -= Time.fixedDeltaTime;
+                Debug.Log("Hello world");
+            }
+            beamAfterSec = beamCoolDown;
+            beamDurationAfterSec = beamDuration;
+            */
+                /*
+                if(beamAfterSec <= 0)
+                {
+                    GameObject e = Instantiate(Resources.Load("Prefabs/beam") as
+                                    GameObject);
+                    e.transform.localPosition = transform.localPosition;
+                    e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                    //beamAfterSec = beamCoolDown;
+                }
+                */
+                //if (beamDurationAfterSec >= 0) { beamDurationAfterSec -= Time.fixedDeltaTime; }
+        }
+    }
+
+    IEnumerator SpawnBubbles()
+    {
+        GameObject e = Instantiate(Resources.Load("Prefabs/beam") as
+                                    GameObject);
+        e.transform.localPosition = transform.localPosition;
+        e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        yield return new WaitForSeconds(1);
     }
 
     private void playerMovementControls()
@@ -292,8 +347,10 @@ public class PlayerBehavior : MonoBehaviour
         moveSpeed = normalSpeed;
         focusSpeed = normalSpeed / 2;
         dashCoolDown = 4.5f;
+        beamDuration = 10f;
         captureCoolDown = 1.2f;
         shootCoolDown = 0.4f;
+        beamCoolDown = 2f;
         trapCountCap = 4;
         isCapturing = false;
         capturedBubble = null;
@@ -336,6 +393,8 @@ public class PlayerBehavior : MonoBehaviour
         if (dashAfterSec >= 0) { dashAfterSec -= Time.fixedDeltaTime; }
         if (captureAfterSec >= 0) { captureAfterSec -= Time.fixedDeltaTime; }
         if (shootAfterSec >= 0) { shootAfterSec -= Time.fixedDeltaTime; }
+        //if (beamAfterSec >= 0) { beamAfterSec -= Time.fixedDeltaTime; }
+        //if (beamDurationAfterSec >= 0) { beamDurationAfterSec -= Time.fixedDeltaTime; }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
