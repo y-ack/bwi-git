@@ -43,10 +43,6 @@ public class TitleBehavior : MonoBehaviour
         OPTION
     };
 
-    private void Awake() {
-        GameObject audioManager = Instantiate(Resources.Load("Prefabs/AudioManager") as GameObject);
-    }
-
     void Start()
     {
         //PlayFabManager.thePlayFabManager.Login("bab");
