@@ -11,6 +11,8 @@ public class ButtonControl : MonoBehaviour
     public GameUIControl theUI;
     public StatisticUI theStatistic;
     public Text userInput;
+    public GameObject loaderFinder;
+    public Image loader;
     
 
     // Function used to set the game back to run
@@ -75,6 +77,9 @@ public class ButtonControl : MonoBehaviour
 
     public void lostToSendButton()
     {
+        loaderFinder = GameObject.Find("SendScoreUI/SendBackground/Loader");
+        loader = loaderFinder.GetComponent<Image>();
+        loader.enabled = false;
         theUI.showSendScore();
         theUI.hideLost();
     }
@@ -109,9 +114,13 @@ public class ButtonControl : MonoBehaviour
 
     IEnumerator SendHighScore(string firstName)
     {
+        loaderFinder = GameObject.Find("SendScoreUI/SendBackground/Loader");
+        loader = loaderFinder.GetComponent<Image>();
+        loader.enabled = true;
         PlayFabManager.thePlayFabManager.Login(firstName);
         yield return new WaitForSecondsRealtime(3);
         PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
+        loader.enabled = false;
     }
 
     public void upgradeTrap()
@@ -210,6 +219,7 @@ public class ButtonControl : MonoBehaviour
 
     public void toShowGlobalStatistic()
     {
+
         theStatistic.showGlobal();
         theStatistic.hideLocal();
     }

@@ -14,10 +14,17 @@ public class StatisticUI : MonoBehaviour
     private CanvasGroup localCanvas;
     private CanvasGroup globalCanvas;
     private GetLeaderboardResult board;
+    public GameObject loaderFinder;
+    public Image loader;
+    private bool stillLoading = true;
+
 
     void Start()
     {
-        FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
+        loaderFinder = GameObject.Find("Loader");
+        loader = loaderFinder.GetComponent<Image>();
+        loader.enabled = false;
+        //FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
         localCanvas = localStatistic.GetComponent<CanvasGroup>();
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
         showLocal();
@@ -31,16 +38,15 @@ public class StatisticUI : MonoBehaviour
     {
         PlayFabManager.thePlayFabManager.Login("ccb");
         yield return new WaitForSecondsRealtime(3);
+        loader.enabled = true;
         int currentPosition = 1;
         GameObject statisticBG = globalStatistic.transform.Find("Global Statistic View").gameObject;
 
         PlayFabManager.thePlayFabManager.GetLeaderboard();
         yield return new WaitForSecondsRealtime(3);
         board = PlayFabManager.thePlayFabManager.returnLeaderboard();
-        Debug.Log("Makes it this far");
 
         foreach(var item in board.Leaderboard){
-            Debug.Log("Makes it into here");
             GameObject e = Instantiate(Resources.Load("Prefabs/PlayerRanking") as
                                    GameObject);
             GameObject pPlayerPositionText = e.transform.Find("PlayerPosition").gameObject;
@@ -54,6 +60,8 @@ public class StatisticUI : MonoBehaviour
             e.transform.SetParent(statisticBG.transform);
             e.transform.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
+        loader.enabled = false;
+        stillLoading = false;
     }
 
 
@@ -76,6 +84,10 @@ public class StatisticUI : MonoBehaviour
         globalCanvas.alpha = 1f;
         globalCanvas.interactable = true;
         globalCanvas.blocksRaycasts = true;
+        if(stillLoading)
+        {
+            loader.enabled = true;
+        }
     }
 
     public void hideGlobal()
@@ -135,58 +147,4 @@ public class StatisticUI : MonoBehaviour
             pBossText.GetComponent<Text>().text = "Previous Boss Cleared: " + saveData.lastBossCleared;
         }
     }
-
-    /*
-    public GetLeaderboardResult getBoard()
-    {
-        PlayFabManager.thePlayFabManager.getLeaderBoard();
-    }
-    */
-
-    /*
-    public void SendLeaderboard(int score)
-    {
-        var request = new UpdatePlayerStatisticsRequest
-        {
-            Statistics = new List<StatisticUpdate>
-            {
-                new StatisticUpdate
-                {
-                    StatisticName = "GameScore",
-                    Value = score
-                }
-            }
-        };
-        PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
-    }
-
-    void OnLeaderboardUpdate(UpdatePlayerStatisticsResult result)
-    {
-        Debug.Log("Successful Leaderboard sent");
-    }
-    public void GetLeaderboard(){
-        var request = new GetLeaderboardRequest{
-            StatisticName = "GameScore",
-            StartPosition = 0,
-            MaxResultsCount = 1
-        };
-        PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
-    }
-
-    void OnLeaderboardGet(GetLeaderboardResult result){
-
-        foreach(var item in result.Leaderboard){
-            playFabIDList.Add(item.PlayFabId);
-            playFabScoreList.Add(item.StatValue.ToString());
-            Debug.Log(item.DisplayName + " " + item.Position + " " + item.PlayFabId + " " + item.StatValue);
-        }
-
-    }
-
-    void OnGetError(PlayFabError error)
-    {
-        Debug.Log("Error Getting Data");
-        Debug.Log(error.GenerateErrorReport());
-    }
-    */
 }
