@@ -27,7 +27,7 @@ public class SerializableBubbleSpirit
     public bool searched; // for parent path searching ... not impl yet.
 
     public PatternInfo pattern;
-    public string patternPrefab;
+    public SerializableBubbleProjectile patternPrefab;
     public bool cleared;
     public bool isChain;
 }

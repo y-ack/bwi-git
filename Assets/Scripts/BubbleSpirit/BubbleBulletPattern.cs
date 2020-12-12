@@ -108,6 +108,7 @@ public abstract class BubbleBulletPattern : MonoBehaviour
     {
         arg.velocityParameters = v;
     }
+
     public void setPatternInfo(PatternInfo state)
     {
         arg = state;

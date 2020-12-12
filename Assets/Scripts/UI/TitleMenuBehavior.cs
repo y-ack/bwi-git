@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TitleMenuBehavior : MonoBehaviour
 {
     public TitleBehavior titleController;
-    
+
     public void newButton()
     {
         //titleController.newClicked();
@@ -56,4 +56,5 @@ public class TitleMenuBehavior : MonoBehaviour
     {
         titleController.menuClicked();
     }
+
 }

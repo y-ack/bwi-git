@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] currentBubbleSpirit;
     public GameObject[] currentBubbleProjectile;
     public GameObject[] currentProjectile;
+    public float difficulty;
     public int unitCounter = 0;
     public int bubbleCounter = 0;
     public bool canMove;
@@ -249,7 +250,15 @@ public class GameManager : MonoBehaviour
     private void generateStage(bool isQuick)
     {
         mPlayer.setTrapCount(RunStatistics.Instance.trapCount);
-        float difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);      
+        QuickSaveData quickSave = SaveSystem.quickLoad();
+        if (isQuick == true)
+        {
+            difficulty = quickSave.difficultyValue;
+        }
+        else
+        {
+            difficulty = setStageDifficulty(RunStatistics.Instance.currentStage);
+        }
         Debug.Log("Current difficulty: " + difficulty);
         //spawn boss bubble every 3 level for alpha playtest
 
@@ -271,7 +280,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            QuickSaveData quickSave = SaveSystem.quickLoad();
+            
 
             if (RunStatistics.Instance.currentStage % 3 == 0)
             {
@@ -283,7 +292,7 @@ public class GameManager : MonoBehaviour
                 mapGenerator.normalGeneration(difficulty);
             }
 
-            mapGenerator.Generate(quickSave.seedValue, quickSave.thresholdValue);
+            mapGenerator.Generate(quickSave.seedValue, quickSave.thresholdValue, quickSave.xValue,quickSave.yValue,difficulty);
             mapGenerator.generateNewGrid();
         }
         
@@ -295,12 +304,12 @@ public class GameManager : MonoBehaviour
      * */
     private void quickSequence()
     {
-        RunStatistics.Instance.isQuick = false;
         quickLoad();
         generateStage(true);
         quickSpawnWorld();
         FindObjectOfType<AudioManager>().Play("Stage_BG");
         uiControl.updateStage();
+        RunStatistics.Instance.isQuick = false;
         setPause();
     }
 
@@ -590,6 +599,9 @@ public class GameManager : MonoBehaviour
         // Mapp generator Value
         quickSave.seedValue = mapGenerator.seed;
         quickSave.thresholdValue = mapGenerator.threshold;
+        quickSave.xValue = mapGenerator.xscale;
+        quickSave.yValue = mapGenerator.yscale;
+        quickSave.difficultyValue = difficulty;
 
         // Game Actor Data
 
@@ -692,6 +704,15 @@ public class GameManager : MonoBehaviour
                 if(theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern != null)
                 {
                     theChildrenSpirit.pattern = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.arg;
+
+                    SerializableBubbleProjectile bubbleProjectile = new SerializableBubbleProjectile();
+
+                    bubbleProjectile.velocity = new SerializableVector(theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.arg.bulletPrefab.velocity);
+                    bubbleProjectile.angularVelocity = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.arg.bulletPrefab.angularVelocity;
+                    bubbleProjectile.acceleration = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.arg.bulletPrefab.acceleration;
+                    bubbleProjectile.accelerationTimeout = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.arg.bulletPrefab.accelerationTimeout;
+
+                    theChildrenSpirit.patternPrefab = bubbleProjectile;
                     //theChildrenSpirit.patternParameter = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.velocityParameters;
                 }
                 //theChildrenSpirit.patternType = theChildrenBubble[j].GetComponent<BubbleSpirit>().pattern.GetType().ToString();
@@ -747,6 +768,7 @@ public class GameManager : MonoBehaviour
             SerializableBubbleProjectile bubbleProjectile = new SerializableBubbleProjectile();
             bubbleProjectile.projectilePosition = new SerializableVector(currentBubbleProjectile[i].transform.position);
             bubbleProjectile.projectileRotation = new SerializableVector(currentBubbleProjectile[i].transform.localRotation);
+            bubbleProjectile.projectileDirection = new SerializableVector(currentBubbleProjectile[i].GetComponent<BubbleBullet>().direction);
             bubbleProjectile.velocity = new SerializableVector(currentBubbleProjectile[i].GetComponent<BubbleBullet>().velocity);
             bubbleProjectile.angularVelocity = currentBubbleProjectile[i].GetComponent<BubbleBullet>().angularVelocity;
             bubbleProjectile.acceleration = currentBubbleProjectile[i].GetComponent<BubbleBullet>().acceleration;
@@ -884,6 +906,7 @@ public class GameManager : MonoBehaviour
         pauseGame();
         clearEnemy();
         SaveSystem.deleteQuick();
+        uiControl.updateSendScore();
         currentState = gameState.LOSE;
     }
 

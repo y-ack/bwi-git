@@ -480,7 +480,17 @@ public class GameUIControl : MonoBehaviour
     {
         GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
         GameObject costText = upgradeBG.transform.Find("costText").gameObject;
+        CanvasGroup costCanvas = costText.GetComponent<CanvasGroup>();
+        costCanvas.alpha = 1;
         costText.GetComponent<Text>().text = "Cost: " + upgradeCost + " Points";
+    }
+
+    public void hideCost()
+    {
+        GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
+        GameObject costText = upgradeBG.transform.Find("costText").gameObject;
+        CanvasGroup costCanvas = costText.GetComponent<CanvasGroup>();
+        costCanvas.alpha = 0;
     }
 
     public void activateRoll()
@@ -574,6 +584,14 @@ public class GameUIControl : MonoBehaviour
         GameObject iconHUD = captureUI.transform.Find("captureHUD").gameObject;
         Image iconImage = iconHUD.GetComponent<Image>();
         iconImage.GetComponent<Image>().color = new Color32(90, 89, 89, 255);
+    }
+
+    public void updateSendScore()
+    {
+        GameObject sendBackground = sendScoreUI.transform.Find("SendBackground").gameObject;
+        GameObject sendScore = sendBackground.transform.Find("SendScore").gameObject;
+        Text sendScoreText = sendScore.GetComponent<Text>();
+        sendScoreText.text = "Your Score: " + RunStatistics.Instance.totalScore;
     }
 
     public void updateLives()

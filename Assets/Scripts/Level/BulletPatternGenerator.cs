@@ -107,8 +107,7 @@ public class BulletPatternGenerator : MonoBehaviour
     }
 
     // Method used to add a savedPatern. Doesn't work cause Idk how this works. :(
-    public void addSavedPattern(BubbleSpirit b,
-                                PatternInfo info)
+    public void addSavedPattern(BubbleSpirit b, PatternInfo info)
     {
         var pattern = instantiatePatternInfo(info, b);
         pattern.setPatternInfo(info);

@@ -29,6 +29,10 @@ public class QuickSaveData
     // Map Generator Section
     public double seedValue;
     public double thresholdValue;
+    public float xValue;
+    public float yValue;
+    public float difficultyValue;
+    
 
     // Player section
     public float moveSpeed;

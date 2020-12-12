@@ -7,6 +7,7 @@ public class SerializableBubbleProjectile
 {
     public SerializableVector projectilePosition;
     public SerializableVector projectileRotation;
+    public SerializableVector projectileDirection;
     public SerializableVector velocity;
     public float angularVelocity;
     public float acceleration;

@@ -166,6 +166,7 @@ public class MapGenerator : MonoBehaviour
             yscale = minYScale + difficulty * scaleStep;  
             threshold = maxThreshold - difficulty * thresholdStep; 
         }
+
         Debug.Log("Normal level: " + difficulty);
     }
 
@@ -236,11 +237,14 @@ public class MapGenerator : MonoBehaviour
         generationDone = true;  
     }
 
-    public void Generate(double seedValue, double thresholdValue)
+    public void Generate(double seedValue, double thresholdValue, float xValue, float yValue, float dValue)
     {
         seed = seedValue;
         threshold = thresholdValue;
+        xscale = xValue;
+        yscale = yValue;
         isSaved = true;
+        
     }
 
     public List<List<Coord>> GetRegions(int tileType) {

@@ -234,6 +234,11 @@ public class ButtonControl : MonoBehaviour
         theUI.setCost(1000);
     }
 
+    public void offHoverCost()
+    {
+        theUI.hideCost();
+    }
+
     public void nextHelp()
     {
         theUI.helpPageTwo();

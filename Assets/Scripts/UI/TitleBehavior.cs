@@ -13,8 +13,8 @@ public class TitleBehavior : MonoBehaviour
     public Image newGameUI;
     public Image optionUI;
     public Image creditUI;
-    public Image titleBubbleSpirit;
     public Image continueButton;
+    public Image clearSavesButton;
     public Text userInput;
     public Text exampleUI;
 
@@ -27,6 +27,7 @@ public class TitleBehavior : MonoBehaviour
     private CanvasGroup creditCanvas;
     private CanvasGroup exampleCanvas;
     private CanvasGroup continueCanvas;
+    private CanvasGroup clearSavesCanvas;
 
     private string[] saveFile;
     private float introTime = 2f;
@@ -56,12 +57,11 @@ public class TitleBehavior : MonoBehaviour
         continueCanvas = continueButton.GetComponent<CanvasGroup>();
         optionCanvas = optionUI.GetComponent<CanvasGroup>();
         creditCanvas = creditUI.GetComponent<CanvasGroup>();
+        clearSavesCanvas = clearSavesButton.GetComponent<CanvasGroup>();
 
         hideNew();
         hideSaves();
         hideContinue();
-        findSaves();
-        createSaves();
         findQuick();
     }
 
@@ -147,6 +147,7 @@ public class TitleBehavior : MonoBehaviour
 
     public void optionSequence()
     {
+        findSaves();
         hideMenu();
         showOption();
     }
@@ -178,15 +179,13 @@ public class TitleBehavior : MonoBehaviour
 
     private void findSaves()
     {
-        try
+        if (SaveSystem.loadPlayer() != null)
         {
-            saveFile = Directory.GetFiles(@Application.persistentDataPath, "*.score*");
-            //RunStatistics.Instance.totalSaveNum = saveFile.Length; keeping the multiple save code incase we switch back for some reason
+            enableClearSave();
         }
-        catch (FileNotFoundException e)
+        else
         {
-            Debug.LogError("No Save Files Found");
-            throw e;  
+            disableClearSave();
         }
     }
 
@@ -333,5 +332,17 @@ public class TitleBehavior : MonoBehaviour
         exampleCanvas.alpha = 0f;
         exampleCanvas.interactable = false;
         exampleCanvas.blocksRaycasts = false;
+    }
+
+    private void enableClearSave()
+    {
+        clearSavesCanvas.interactable = true;
+        clearSavesCanvas.blocksRaycasts = true;
+    }
+
+    private void disableClearSave()
+    {
+        clearSavesCanvas.interactable = false;
+        clearSavesCanvas.blocksRaycasts = false;
     }
 }

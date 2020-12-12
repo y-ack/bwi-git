@@ -575,9 +575,15 @@ public class Spawner : MonoBehaviour
                 f.GetComponent<BubbleSpirit>().isChain = unitChildren[j].isChain;
                 f.GetComponent<BubbleSpirit>().SetColor(unitChildren[j].color);
                 f.GetComponent<BubbleSpirit>().setParent(e.GetComponent<BubbleUnit>(), unitChildren[j].gridPosition.getVectorTwoInt());
-                
-                BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), unitChildren[j].pattern);
-                 
+                PatternInfo savedPattern = unitChildren[j].pattern;
+                BubbleBullet savedBubbleBullet = savedPattern.bulletPrefab;
+                savedBubbleBullet.velocity = unitChildren[j].patternPrefab.velocity.getVectorThree();
+                savedBubbleBullet.angularVelocity = unitChildren[j].patternPrefab.angularVelocity;
+                savedBubbleBullet.acceleration = unitChildren[j].patternPrefab.acceleration;
+                savedBubbleBullet.accelerationTimeout = unitChildren[j].patternPrefab.accelerationTimeout;
+
+                savedPattern.bulletPrefab = savedBubbleBullet;
+                BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), savedPattern);   
             }
 
             e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;
@@ -624,6 +630,7 @@ public class Spawner : MonoBehaviour
             GameObject e = Instantiate(Resources.Load("Prefabs/BubbleBulletPrefab")) as GameObject;
             e.transform.localPosition = theSaveData.currentBubbleProjectile[i].projectilePosition.getVectorThree();
             e.transform.localRotation = theSaveData.currentBubbleProjectile[i].projectilePosition.getQuaternion();
+            e.GetComponent<BubbleBullet>().direction = theSaveData.currentBubbleProjectile[i].projectileDirection.getVectorThree();
             e.GetComponent<BubbleBullet>().velocity = theSaveData.currentBubbleProjectile[i].velocity.getVectorThree();
             e.GetComponent<BubbleBullet>().angularVelocity = theSaveData.currentBubbleProjectile[i].angularVelocity;
             e.GetComponent<BubbleBullet>().acceleration = theSaveData.currentBubbleProjectile[i].acceleration;

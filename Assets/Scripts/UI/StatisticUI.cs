@@ -24,7 +24,7 @@ public class StatisticUI : MonoBehaviour
         loaderFinder = GameObject.Find("Loader");
         loader = loaderFinder.GetComponent<Image>();
         loader.enabled = false;
-        //FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
+        FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
         localCanvas = localStatistic.GetComponent<CanvasGroup>();
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
         showLocal();
