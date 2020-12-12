@@ -133,7 +133,7 @@ public class BubbleUnit : MonoBehaviour
 
     private void destroySelf()
     {
-        Destroy(gameObject,0.5f);
+        Destroy(gameObject,0.1f);
     }
 
     float maxRange;
