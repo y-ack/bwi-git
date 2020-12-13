@@ -298,7 +298,7 @@ public class GameUIControl : MonoBehaviour
 
         scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
         stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
-        timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
+        timeText.GetComponent<Text>().text = "Session Time: " + System.Math.Round(RunStatistics.Instance.time,2);
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
         int chainCleard = 0;
         for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)
@@ -321,7 +321,7 @@ public class GameUIControl : MonoBehaviour
 
         scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
         stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
-        timeText.GetComponent<Text>().text = "Session Time: " + RunStatistics.Instance.time;
+        timeText.GetComponent<Text>().text = "Session Time: " + System.Math.Round(RunStatistics.Instance.time,2);
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
         int chainCleard = 0;
         for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)

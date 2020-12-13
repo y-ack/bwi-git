@@ -266,7 +266,7 @@ public class GameManager : MonoBehaviour
         {
             if (RunStatistics.Instance.currentStage % 3 == 0)
             {
-                StartCoroutine(PlayStageBG(0.5f,"Boss_BG")); 
+                StartCoroutine(PlayApart("Stage_Start",0.5f,"Boss_BG")); 
                 mapGenerator.bossGeneration(difficulty);
                 mapGenerator.generateNewGrid();
                 gameSpawner.spawnBoss(difficulty);
@@ -274,7 +274,7 @@ public class GameManager : MonoBehaviour
             // spawn normal bubbles
             else
             {
-                StartCoroutine(PlayStageBG(0.5f,"Normal_BG"));
+                StartCoroutine(PlayApart("Stage_Start",0.5f,"Normal_BG"));
                 mapGenerator.normalGeneration(difficulty);
                 mapGenerator.generateNewGrid();
                 gameSpawner.spawnNormal(difficulty);
@@ -286,13 +286,13 @@ public class GameManager : MonoBehaviour
 
             if (RunStatistics.Instance.currentStage % 3 == 0)
             {
-                StartCoroutine(PlayStageBG(0.5f,"Boss_BG"));
+                StartCoroutine(PlayApart("Stage_Start",0.5f,"Boss_BG"));
                 mapGenerator.bossGeneration(difficulty);
             }
             // spawn normal bubbles
             else
             {
-                StartCoroutine(PlayStageBG(0.5f,"Normal_BG"));                 
+                StartCoroutine(PlayApart("Stage_Start",0.5f,"Normal_BG"));                 
                 mapGenerator.normalGeneration(difficulty);
             }
 
@@ -486,12 +486,15 @@ public class GameManager : MonoBehaviour
     // method used to control the upgrade sequence gamestate
     private void upgradeSequence()
     {
+        
         uiControl.updateUpgrade();
     }
 
     // nextSequence method, used to create a new stage for player
     private void nextSequence()
     {
+        //FindObjectOfType<AudioManager>().Stop("Stage_BG");
+        //FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
         //Reset player, can be used to keep the trap count from the previus stage.
         RunStatistics.Instance.trapCount = 0;
         uiControl.hideResult();
@@ -918,26 +921,27 @@ public class GameManager : MonoBehaviour
     public void setCleared()
     {         
         FindObjectOfType<AudioManager>().Stop("Stage_BG");
-        FindObjectOfType<AudioManager>().Play("Stage_Cleared");   
-        FindObjectOfType<AudioManager>().Play("Upgrading_BG");
-        pauseGame();
+        //FindObjectOfType<AudioManager>().Play("Stage_Cleared");   
+        //FindObjectOfType<AudioManager>().Play("Upgrading_BG");
+        StartCoroutine(PlayApart("Stage_Cleared",1.5f,"Upgrading_BG"));
+        pauseGame();  
         RunStatistics.Instance.stagesCleared++;
         SaveSystem.deleteQuick();
         currentState = gameState.CLEARED;
     }
 
-    IEnumerator PlayStageBG(float seconds, string song)
+    IEnumerator PlayApart(string song1, float seconds, string song2)
     {   
-        FindObjectOfType<AudioManager>().Play("Stage_Start");   
+        FindObjectOfType<AudioManager>().Play(song1);   
         //Wait 1 second
         yield return StartCoroutine(WaitIn(seconds));
         //Do process stuff
-        FindObjectOfType<AudioManager>().Play(song);
+        FindObjectOfType<AudioManager>().Play(song2);
     }
     
     IEnumerator WaitIn(float seconds)
     {
-        yield return new WaitForSeconds(seconds);
+        yield return new WaitForSecondsRealtime(seconds);
     }
 
 
@@ -951,7 +955,7 @@ public class GameManager : MonoBehaviour
 
     // Method for button to change game state to NEXT
     public void setNextSequence()
-    {
+    {       
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
         currentState = gameState.NEXT;
     }
@@ -959,7 +963,7 @@ public class GameManager : MonoBehaviour
     // Method for when the player is hit by an enemy bullet. Reduce 1 life and return to stage's original position
     public void playerHit()
     {
-        FindObjectOfType<AudioManager>().Play("Iris_Hit"); 
+        StartCoroutine(PlayApart("Iris_Hit",0.3f,"Iris_Hit_Voice")); 
         RunStatistics.Instance.currentLife--;
         //mPlayer.transform.position = originalPos;
     }
