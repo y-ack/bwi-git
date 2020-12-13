@@ -207,7 +207,7 @@ public class PlayerBehavior : MonoBehaviour
 
         if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 2) && (trapCount >= 4))
         {
-            GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+            GameObject e = Instantiate(Resources.Load("Prefabs/Splash") as
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
             e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
