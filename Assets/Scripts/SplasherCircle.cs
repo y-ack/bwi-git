@@ -18,9 +18,12 @@ public class SplasherCircle : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D c)
     {
-        if(c.gameObject.tag == "BubbleSpirit")
-        {
-            Destroy(transform.gameObject);
-        }
+        StartCoroutine(Die());
+    }
+
+    IEnumerator Die()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(transform.gameObject);
     }
 }

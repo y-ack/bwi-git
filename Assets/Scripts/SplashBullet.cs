@@ -36,7 +36,7 @@ public class SplashBullet : MonoBehaviour
         {
             case "Wall Top":
                 disabled = true;
-                GameObject e = Instantiate(Resources.Load("Prefabs/Splasher") as
+                GameObject e = Instantiate(Resources.Load("Prefabs/Whirlwind") as
                                    GameObject);
                 e.transform.localPosition = transform.localPosition;
                 destroySelf();
@@ -45,7 +45,7 @@ public class SplashBullet : MonoBehaviour
                 //disabled by bs collision
                 if (c.gameObject.GetComponent<BubbleSpirit>().state == BubbleSpirit.State.NORMAL)
                 {
-                    GameObject f = Instantiate(Resources.Load("Prefabs/Splasher") as
+                    GameObject f = Instantiate(Resources.Load("Prefabs/Whirlwind") as
                                    GameObject);
                     f.transform.localPosition = transform.localPosition;
                     destroySelf();
