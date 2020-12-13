@@ -17,6 +17,8 @@ public class StatisticUI : MonoBehaviour
     public GameObject loaderFinder;
     public Image loader;
     private bool stillLoading = true;
+    public GameObject textFinder;
+    public Text loadingText;
 
 
     void Start()
@@ -24,7 +26,10 @@ public class StatisticUI : MonoBehaviour
         loaderFinder = GameObject.Find("Loader");
         loader = loaderFinder.GetComponent<Image>();
         loader.enabled = false;
-        FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
+        textFinder = GameObject.Find("Loading");
+        loadingText = textFinder.GetComponent<Text>();
+        loadingText.enabled = false;
+        //FindObjectOfType<AudioManager>().Stop("Title_Theme"); 
         localCanvas = localStatistic.GetComponent<CanvasGroup>();
         globalCanvas = globalStatistic.GetComponent<CanvasGroup>();
         showLocal();
@@ -38,7 +43,6 @@ public class StatisticUI : MonoBehaviour
     {
         PlayFabManager.thePlayFabManager.Login("ccb");
         yield return new WaitForSecondsRealtime(3);
-        loader.enabled = true;
         int currentPosition = 1;
         GameObject statisticBG = globalStatistic.transform.Find("Global Statistic View").gameObject;
 
@@ -54,13 +58,16 @@ public class StatisticUI : MonoBehaviour
             GameObject pPlayerScoreText = e.transform.Find("PlayerScore").gameObject;
 
             pPlayerPositionText.GetComponent<Text>().text = currentPosition.ToString();
-            pPlayerNameText.GetComponent<Text>().text = item.DisplayName;
+            string[] splitArray =  item.DisplayName.Split(char.Parse("/"));
+            //strArr = item.DisplayName.Split("/");
+            pPlayerNameText.GetComponent<Text>().text = splitArray[0];
             pPlayerScoreText.GetComponent<Text>().text =  item.StatValue.ToString();
             currentPosition++;
             e.transform.SetParent(statisticBG.transform);
             e.transform.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
         loader.enabled = false;
+        loadingText.enabled = false;
         stillLoading = false;
     }
 
@@ -87,6 +94,7 @@ public class StatisticUI : MonoBehaviour
         if(stillLoading)
         {
             loader.enabled = true;
+            loadingText.enabled = true;
         }
     }
 

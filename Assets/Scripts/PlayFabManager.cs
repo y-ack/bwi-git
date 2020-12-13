@@ -11,6 +11,7 @@ public class PlayFabManager : MonoBehaviour
 
     private string playerLeaderboardName;
     string myGUID = System.Guid.NewGuid().ToString();
+    private static Random random = new Random();
 
     public GetLeaderboardResult publicLeaderboard;
 
@@ -32,7 +33,7 @@ public class PlayFabManager : MonoBehaviour
     }
     public void Login(string loginName)
     {
-        playerLeaderboardName = loginName;
+        playerLeaderboardName = loginName + "/" + Random.Range(1000,9999);
         var request = new LoginWithCustomIDRequest 
         {
             CustomId = myGUID,

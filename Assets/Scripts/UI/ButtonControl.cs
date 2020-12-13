@@ -13,8 +13,11 @@ public class ButtonControl : MonoBehaviour
     public Text userInput;
     public GameObject loaderFinder;
     public Image loader;
+    public GameObject textFinderForSent;
+    public Text sentText;
+    public GameObject textFinderForSending;
+    public Text sendingText;
     
-
     // Function used to set the game back to run
     public void resumeGame()
     {
@@ -80,6 +83,15 @@ public class ButtonControl : MonoBehaviour
         loaderFinder = GameObject.Find("SendScoreUI/SendBackground/Loader");
         loader = loaderFinder.GetComponent<Image>();
         loader.enabled = false;
+
+        textFinderForSent = GameObject.Find("SendScoreUI/SendBackground/SentText");
+        sentText = textFinderForSent.GetComponent<Text>();
+        sentText.enabled = false;
+
+        textFinderForSending = GameObject.Find("SendScoreUI/SendBackground/Sending");
+        sendingText = textFinderForSending.GetComponent<Text>();
+        sendingText.enabled = false;
+
         theUI.showSendScore();
         theUI.hideLost();
     }
@@ -117,10 +129,17 @@ public class ButtonControl : MonoBehaviour
         loaderFinder = GameObject.Find("SendScoreUI/SendBackground/Loader");
         loader = loaderFinder.GetComponent<Image>();
         loader.enabled = true;
+        textFinderForSending = GameObject.Find("SendScoreUI/SendBackground/Sending");
+        sendingText = textFinderForSending.GetComponent<Text>();
+        sendingText.enabled = true;
         PlayFabManager.thePlayFabManager.Login(firstName);
         yield return new WaitForSecondsRealtime(3);
         PlayFabManager.thePlayFabManager.SendLeaderboard(RunStatistics.Instance.totalScore);
         loader.enabled = false;
+        sendingText.enabled = false;
+        textFinderForSent = GameObject.Find("SendScoreUI/SendBackground/SentText");
+        sentText = textFinderForSent.GetComponent<Text>();
+        sentText.enabled = true;
     }
 
     public void upgradeTrap()
