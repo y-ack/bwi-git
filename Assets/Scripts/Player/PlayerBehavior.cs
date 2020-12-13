@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class PlayerBehavior : MonoBehaviour
@@ -41,6 +42,9 @@ public class PlayerBehavior : MonoBehaviour
     public float beamDuration = 2f;
     public float beamDurationAfterSec;
 
+    private bool shootBeam = false;
+    private int counter = 0;
+
     public bool isCapturing { get; set; } = false;
     public BubbleSpirit capturedBubble { get; set; }
 
@@ -56,6 +60,15 @@ public class PlayerBehavior : MonoBehaviour
     public float spriteBlinkingTotalTimer = 0.0f;
     public float spriteBlinkingTotalDuration = 1.5f;
     public bool startBlinking = false;
+
+    public KeyCode chargeAttack;
+    public float attackChargeTimer = 0f;
+
+    public Image cutIn = null;
+    private bool showCutIn = false;
+    private bool flag = false;
+    private float cutInDuration;
+    private bool canMove = true;
 
     private float walkingTimer;
     public float walkingDelay = 0.3f;
@@ -107,6 +120,7 @@ public class PlayerBehavior : MonoBehaviour
         //set to 10 for testing, should discuss this later on.
         normalSpeed = 4.9f;
         DashAmount = 1f;
+        cutIn.enabled = false;
         setDefaultState();
     }
 
@@ -169,6 +183,8 @@ public class PlayerBehavior : MonoBehaviour
             movementState = PlayerState.NORMAL;
         }
 
+
+        /*
         if (((Input.GetMouseButton(1) && shootAfterSec <= 0) && (trapCount > 0)) || 
             ((Input.GetKey(KeyCode.L) && shootAfterSec <= 0) && (trapCount > 0)))
         {
@@ -181,6 +197,40 @@ public class PlayerBehavior : MonoBehaviour
             shootAfterSec = shootCoolDown;
             subtrapCount();
         }
+
+        */
+
+        if(Input.GetKey(KeyCode.Mouse1))
+        {
+            attackChargeTimer += Time.deltaTime;
+        }
+
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 2) && (trapCount >= 4))
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            captureAfterSec = captureCoolDown;
+            SubTrapForSplash();
+            attackChargeTimer = 0;   
+        }
+
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer < 2) && (trapCount > 0))
+        {
+            FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
+            FindObjectOfType<AudioManager>().Play("Iris_Trap2");
+            GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
+            shootAfterSec = shootCoolDown;
+            subtrapCount();
+            attackChargeTimer = 0;   
+        }
+
+
+
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K))
         {
             if (captureAfterSec <= 0 && !isCapturing)
@@ -215,50 +265,64 @@ public class PlayerBehavior : MonoBehaviour
                                    GameObject);
             e.transform.localPosition = transform.localPosition;
             e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            captureAfterSec = captureCoolDown;
             SubTrapForSplash();
         }
 
         if (Input.GetKeyDown(KeyCode.V))
         {
-            /*
-            int counter = 0;
-            while(beamDurationAfterSec >= 0f)
+            //shootBeam = true;
+            canMove = false;
+            cutIn.enabled = true;
+            //showCutIn = true;
+            cutInDuration = 1.5f;
+            GameManager.theManager.isInvincible = true;
+        }
+        if(cutInDuration < 0f)
             {
-                if(beamAfterSec >= 0f)
-                {
-                    */
-                    GameObject e = Instantiate(Resources.Load("Prefabs/beam") as
-                                    GameObject);
-                    e.transform.localPosition = transform.localPosition;
-                    e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-                    /*
-                    beamAfterSec = beamCoolDown;
-
-                }
-
-                beamAfterSec -= Time.fixedDeltaTime;
-
-                //StartCoroutine(SpawnBubbles());
-                beamDurationAfterSec -= Time.fixedDeltaTime;
-                Debug.Log("Hello world");
+                cutIn.enabled = false;
+                shootBeam = true;
             }
-            beamAfterSec = beamCoolDown;
-            beamDurationAfterSec = beamDuration;
+        if(showCutIn)
+        {
+            /*
+            float step = 100f * Time.fixedDeltaTime;
+            Vector3 checkPosition = new Vector3(480f, 300f, 0f);
+            if(!(cutIn.transform.position == checkPosition) && flag == false)
+            {
+                cutIn.transform.position = Vector2.MoveTowards(cutIn.transform.position, checkPosition, step);
+            }
+            if(cutIn.transform.position == checkPosition)
+            {
+                //play sound
+                flag = true;
+                cutIn.transform.position = Vector2.MoveTowards(cutIn.transform.position, checkPosition, step);
+            }
             */
-                /*
-                if(beamAfterSec <= 0)
-                {
-                    GameObject e = Instantiate(Resources.Load("Prefabs/beam") as
-                                    GameObject);
-                    e.transform.localPosition = transform.localPosition;
-                    e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-                    //beamAfterSec = beamCoolDown;
+        }
+        
+        if(shootBeam)
+        {
+            if(beamAfterSec <= 0f)
+            {
+                Debug.Log("Making it into here");
+                GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
+                                GameObject);
+                e.transform.localPosition = transform.localPosition;
+                e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                beamAfterSec = beamCoolDown;
+                ++counter;
+                if(counter > 20)
+                { 
+                    shootBeam = false; 
+                    counter = 0; 
+                    GameManager.theManager.isInvincible = false; 
+                    cutInDuration = 0f;
+                    canMove = true;
                 }
-                */
-                //if (beamDurationAfterSec >= 0) { beamDurationAfterSec -= Time.fixedDeltaTime; }
+            }
         }
     }
+
 
     IEnumerator SpawnBubbles()
     {
@@ -281,25 +345,28 @@ public class PlayerBehavior : MonoBehaviour
 
     private void playerMovementControls()
     {
-        movementVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-        if (movementVector != Vector2.zero)
+        if(canMove)
         {
-            WalkingSound();
+            movementVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
+            if (movementVector != Vector2.zero)
+            {
+                WalkingSound();
+            }
+            float horizontalSpeed = Mathf.Abs(Input.GetAxis("Horizontal") * moveSpeed);
+            float verticalSpeed = Mathf.Abs(Input.GetAxis("Vertical") * moveSpeed);
+
+            irisAnimator.SetFloat("Speed", horizontalSpeed + verticalSpeed);
+
+            rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+            rbody.angularVelocity = 0f;
+            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+            directionHandling();
+
+            moveDir = new Vector3(Input.GetAxis("Horizontal"),
+                Input.GetAxis("Vertical")).normalized;
         }
-        float horizontalSpeed = Mathf.Abs(Input.GetAxis("Horizontal") * moveSpeed);
-        float verticalSpeed = Mathf.Abs(Input.GetAxis("Vertical") * moveSpeed);
-
-        irisAnimator.SetFloat("Speed", horizontalSpeed + verticalSpeed);
-
-        rbody.MovePosition(rbody.position + movementVector * moveSpeed * Time.fixedDeltaTime);
-        rbody.angularVelocity = 0f;
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-
-        directionHandling();
-
-        moveDir = new Vector3(Input.GetAxis("Horizontal"),
-            Input.GetAxis("Vertical")).normalized;
     }
 
     private void directionHandling()
@@ -366,7 +433,7 @@ public class PlayerBehavior : MonoBehaviour
         beamDuration = 10f;
         captureCoolDown = 1.2f;
         shootCoolDown = 0.4f;
-        beamCoolDown = 2f;
+        beamCoolDown = 0.01f;
         trapCountCap = 4;
         isCapturing = false;
         capturedBubble = null;
@@ -406,10 +473,11 @@ public class PlayerBehavior : MonoBehaviour
 
     public void countdownCooldown()
     {
-        if (dashAfterSec >= 0) { dashAfterSec -= Time.fixedDeltaTime; }
-        if (captureAfterSec >= 0) { captureAfterSec -= Time.fixedDeltaTime; }
-        if (shootAfterSec >= 0) { shootAfterSec -= Time.fixedDeltaTime; }
-        //if (beamAfterSec >= 0) { beamAfterSec -= Time.fixedDeltaTime; }
+        if (dashAfterSec > 0) { dashAfterSec -= Time.fixedDeltaTime; }
+        if (captureAfterSec > 0) { captureAfterSec -= Time.fixedDeltaTime; }
+        if (shootAfterSec > 0) { shootAfterSec -= Time.fixedDeltaTime; }
+        if (beamAfterSec > 0) { beamAfterSec -= Time.fixedDeltaTime; }
+        if(cutInDuration > 0){ cutInDuration -= Time.fixedDeltaTime; }
         //if (beamDurationAfterSec >= 0) { beamDurationAfterSec -= Time.fixedDeltaTime; }
     }
 
