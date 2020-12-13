@@ -139,7 +139,7 @@ public class GameUIControl : MonoBehaviour
 
     // Method used to show the lose screen
     public void showLost()
-    {
+    {    
         lostScreenGroup.alpha = 1f;
         lostScreenGroup.blocksRaycasts = true;
         lostScreenGroup.interactable = true;
@@ -156,14 +156,29 @@ public class GameUIControl : MonoBehaviour
     // Method used to show the result screen
     public void showResult()
     {
+        
         resultScreenGroup.alpha = 1f;
         resultScreenGroup.blocksRaycasts = true;
         resultScreenGroup.interactable = true;
     }
 
+    IEnumerator Play(float seconds, string song)
+    { 
+        //Wait a bit
+        yield return StartCoroutine(WaitIn(seconds));
+        //Do stuff
+        FindObjectOfType<AudioManager>().Play(song);
+    }
+    
+    IEnumerator WaitIn(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+    }
+
     // Method used to hide the result screen
     public void hideResult()
     {
+
         resultScreenGroup.alpha = 0f;
         resultScreenGroup.blocksRaycasts = false;
         resultScreenGroup.interactable = false;

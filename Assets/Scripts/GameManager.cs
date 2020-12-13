@@ -231,7 +231,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Diff: " + difficulty);
         generateStage(false);
         originalPos = mPlayer.transform.position;
-        FindObjectOfType<AudioManager>().Play("Stage_BG"); 
+
         uiControl.updateStage();
         if (RunStatistics.Instance.isNew == true)
         {
@@ -266,6 +266,7 @@ public class GameManager : MonoBehaviour
         {
             if (RunStatistics.Instance.currentStage % 3 == 0)
             {
+                StartCoroutine(PlayStageBG(0.5f,"Boss_BG")); 
                 mapGenerator.bossGeneration(difficulty);
                 mapGenerator.generateNewGrid();
                 gameSpawner.spawnBoss(difficulty);
@@ -273,6 +274,7 @@ public class GameManager : MonoBehaviour
             // spawn normal bubbles
             else
             {
+                StartCoroutine(PlayStageBG(0.5f,"Normal_BG"));
                 mapGenerator.normalGeneration(difficulty);
                 mapGenerator.generateNewGrid();
                 gameSpawner.spawnNormal(difficulty);
@@ -284,11 +286,13 @@ public class GameManager : MonoBehaviour
 
             if (RunStatistics.Instance.currentStage % 3 == 0)
             {
+                StartCoroutine(PlayStageBG(0.5f,"Boss_BG"));
                 mapGenerator.bossGeneration(difficulty);
             }
             // spawn normal bubbles
             else
             {
+                StartCoroutine(PlayStageBG(0.5f,"Normal_BG"));                 
                 mapGenerator.normalGeneration(difficulty);
             }
 
@@ -297,7 +301,6 @@ public class GameManager : MonoBehaviour
         }
         
     }
-
     /* Method runs when the player load a quick save data. 
      * 
      * 
@@ -307,7 +310,6 @@ public class GameManager : MonoBehaviour
         quickLoad();
         generateStage(true);
         quickSpawnWorld();
-        FindObjectOfType<AudioManager>().Play("Stage_BG");
         uiControl.updateStage();
         RunStatistics.Instance.isQuick = false;
         setPause();
@@ -459,7 +461,7 @@ public class GameManager : MonoBehaviour
      * loseSequence method, used to show the player's final result of current run.
      * */
     private void loseSequence()
-    {
+    { 
         uiControl.updateLost();
         uiControl.showLost();
         
@@ -903,6 +905,9 @@ public class GameManager : MonoBehaviour
     // Method for Playerbehavior to change game state to Lose
     public void setLose()
     {
+        FindObjectOfType<AudioManager>().Play("Iris_Hit"); 
+        FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
+        FindObjectOfType<AudioManager>().Play("Stage_Lost");  
         pauseGame();
         clearEnemy();
         SaveSystem.deleteQuick();
@@ -911,11 +916,28 @@ public class GameManager : MonoBehaviour
     }
 
     public void setCleared()
-    {
+    {         
+        FindObjectOfType<AudioManager>().Stop("Stage_BG");
+        FindObjectOfType<AudioManager>().Play("Stage_Cleared");   
+        FindObjectOfType<AudioManager>().Play("Upgrading_BG");
         pauseGame();
         RunStatistics.Instance.stagesCleared++;
         SaveSystem.deleteQuick();
         currentState = gameState.CLEARED;
+    }
+
+    IEnumerator PlayStageBG(float seconds, string song)
+    {   
+        FindObjectOfType<AudioManager>().Play("Stage_Start");   
+        //Wait 1 second
+        yield return StartCoroutine(WaitIn(seconds));
+        //Do process stuff
+        FindObjectOfType<AudioManager>().Play(song);
+    }
+    
+    IEnumerator WaitIn(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
 
 
@@ -930,12 +952,14 @@ public class GameManager : MonoBehaviour
     // Method for button to change game state to NEXT
     public void setNextSequence()
     {
+        FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
         currentState = gameState.NEXT;
     }
 
     // Method for when the player is hit by an enemy bullet. Reduce 1 life and return to stage's original position
     public void playerHit()
     {
+        FindObjectOfType<AudioManager>().Play("Iris_Hit"); 
         RunStatistics.Instance.currentLife--;
         //mPlayer.transform.position = originalPos;
     }

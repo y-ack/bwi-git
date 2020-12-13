@@ -27,6 +27,7 @@ public class ButtonControl : MonoBehaviour
     // Function used to restarting the game in the current game scene
     public void gameToNewGame()
     {
+        FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         GameManager.theManager.saveGame();
         GameManager.theManager.restartLevel();
     }
@@ -34,6 +35,7 @@ public class ButtonControl : MonoBehaviour
     // Function used to continue the current game save
     public void continueGame()
     {
+        FindObjectOfType<AudioManager>().Stop("Stage_BG");
         GameManager.theManager.setUpgrade();
     }
 
@@ -49,7 +51,6 @@ public class ButtonControl : MonoBehaviour
     {
         GameManager.theManager.saveGame();
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
-        FindObjectOfType<AudioManager>().Play("Title_Theme");
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
     }
@@ -57,7 +58,6 @@ public class ButtonControl : MonoBehaviour
     public void menuToTitle()
     {      
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
-        FindObjectOfType<AudioManager>().Play("Title_Theme");
         SaveSystem.deleteQuick();
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
@@ -66,7 +66,6 @@ public class ButtonControl : MonoBehaviour
     // Function used to move the player to the title screen from statistic scene
     public void statisticToMenu()
     {
-        FindObjectOfType<AudioManager>().Play("Title_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
 
@@ -74,7 +73,6 @@ public class ButtonControl : MonoBehaviour
     {
         GameManager.theManager.quickSave();
         FindObjectOfType<AudioManager>().Stop("Stage_BG");
-        FindObjectOfType<AudioManager>().Play("Title_Theme");
         SceneManager.LoadScene("TitleScreen");
     }
 

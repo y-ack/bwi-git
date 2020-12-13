@@ -57,6 +57,8 @@ public class PlayerBehavior : MonoBehaviour
     public float spriteBlinkingTotalDuration = 1.5f;
     public bool startBlinking = false;
 
+    private float walkingTimer;
+    public float walkingDelay = 0.3f;
     public enum CaptureState
     {
         IDLE,
@@ -121,7 +123,8 @@ public class PlayerBehavior : MonoBehaviour
     {
         Vector2 lookDir = mousePos - rbody.position;
         angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-
+        //Timer for playing iris walking sound once every time.
+        walkingTimer += Time.deltaTime;
         if (trapCount > trapCountCap)
            setTrapCount(trapCountCap);
 
@@ -266,11 +269,24 @@ public class PlayerBehavior : MonoBehaviour
         yield return new WaitForSeconds(1);
     }
 
+    private void WalkingSound()
+    {
+
+        if (walkingTimer >= walkingDelay)
+        {
+            FindObjectOfType<AudioManager>().Play("Iris_Walk");
+            walkingTimer = 0f;
+        }
+    }
+
     private void playerMovementControls()
     {
-        movementVector = new Vector2(Input.GetAxis("Horizontal"),
-                                     Input.GetAxis("Vertical"));
+        movementVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
+        if (movementVector != Vector2.zero)
+        {
+            WalkingSound();
+        }
         float horizontalSpeed = Mathf.Abs(Input.GetAxis("Horizontal") * moveSpeed);
         float verticalSpeed = Mathf.Abs(Input.GetAxis("Vertical") * moveSpeed);
 

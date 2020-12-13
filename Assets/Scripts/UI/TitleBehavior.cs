@@ -46,9 +46,9 @@ public class TitleBehavior : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(PlayTitleTheme(0.5f));
         //PlayFabManager.thePlayFabManager.Login("bab");
-        Time.timeScale = 1;
-        FindObjectOfType<AudioManager>().Play("Title_Theme");
+        Time.timeScale = 1;       
         currentState = TitleState.MAIN;
         savedGamesCanvas = savedGamesUI.GetComponent<CanvasGroup>();
         mainMenuCanvas = mainMenuUI.GetComponent<CanvasGroup>();
@@ -63,6 +63,20 @@ public class TitleBehavior : MonoBehaviour
         hideSaves();
         hideContinue();
         findQuick();
+    }
+
+    IEnumerator PlayTitleTheme(float seconds)
+    {   
+        FindObjectOfType<AudioManager>().Play("Bubble_Matched");   
+        //Wait 1 second
+        yield return StartCoroutine(WaitIn(seconds));
+        //Do process stuff
+        FindObjectOfType<AudioManager>().Play("Title_Theme");
+    }
+    
+    IEnumerator WaitIn(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
 
     // Update is called once per frame
