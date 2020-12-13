@@ -8,17 +8,16 @@ public class AudioManager : MonoBehaviour
 	public static AudioManager instance;	
 	public AudioMixerGroup mixerGroup;
 	public Sound[] sounds;
-
+	private static bool created = false;
 	void Awake()
 	{
 		if (instance != null)
 		{
-			Destroy(gameObject);
+			instance = this;
 		}
 		else
 		{
-			instance = this;
-			DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(this.gameObject);
 		}
 		foreach (Sound s in sounds)
 		{

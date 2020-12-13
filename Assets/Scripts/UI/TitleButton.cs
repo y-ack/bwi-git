@@ -100,7 +100,6 @@ public class TitleButton : MonoBehaviour
     {
         FindObjectOfType<AudioManager>().Stop("Stage_BG");
         FindObjectOfType<AudioManager>().Stop("Title_Theme");
-        FindObjectOfType<AudioManager>().Play("Statistic_BG");
         SceneManager.LoadScene("Statistic");
     }
 

@@ -23,6 +23,7 @@ public class StatisticUI : MonoBehaviour
 
     void Start()
     {
+        FindObjectOfType<AudioManager>().Play("Statistic_BG");
         loaderFinder = GameObject.Find("Loader");
         loader = loaderFinder.GetComponent<Image>();
         loader.enabled = false;

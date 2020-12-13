@@ -54,6 +54,7 @@ public class ButtonControl : MonoBehaviour
         GameManager.theManager.saveGame();
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        FindObjectOfType<AudioManager>().Stop("Statistic_BG");
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
     }
@@ -62,6 +63,7 @@ public class ButtonControl : MonoBehaviour
     {      
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        FindObjectOfType<AudioManager>().Stop("Statistic_BG");
         SaveSystem.deleteQuick();
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
