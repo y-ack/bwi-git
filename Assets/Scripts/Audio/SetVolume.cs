@@ -18,25 +18,29 @@ public class SetVolume : MonoBehaviour
 
     public void setVolumeInput()
     { 
+        if(volumeInput.text != "")
+        {
+            int vInput = int.Parse(volumeInput.text);
+            Debug.Log("The value of vInput is " + vInput);
 
-        int vInput = int.Parse(volumeInput.text);
-
-        if (vInput > 100)
-        {
-            mixer.SetFloat("MusicVol", Mathf.Log10(100/100) * 20);
-            volumeSlider.value = 1;
-            volumeInput.text = 100.ToString();
-        } 
-        else if (vInput <= 0)
-        {
-            mixer.SetFloat("MusicVol", Mathf.Log10(0.0001f/100) * 20);
-            volumeSlider.value = 0;
-            volumeInput.text = 0.ToString();
-        }
-        else
-        {
-            mixer.SetFloat("MusicVol", Mathf.Log10(vInput/100) * 20);
-            volumeSlider.value = (vInput/100f);
+            if (vInput > 100)
+            {
+                mixer.SetFloat("MusicVol", Mathf.Log10(100 / 100) * 20);
+                volumeSlider.value = 1;
+                volumeInput.text = 100.ToString();
+            }
+            else if (vInput <= 0)
+            {
+                mixer.SetFloat("MusicVol", Mathf.Log10(0.01f) * 20);
+                volumeSlider.value = 0;
+                volumeInput.text = 0.ToString();
+            }
+            else
+            {
+                mixer.SetFloat("MusicVol", Mathf.Log10(vInput / 100) * 20);
+                float fInput = vInput/100f;
+                volumeSlider.value = (fInput);
+            }
         }
     }
 

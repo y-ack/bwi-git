@@ -168,7 +168,12 @@ public class TitleBehavior : MonoBehaviour
 
     public void creditSequence()
     {
-
+        showCredit();
+        if(Input.anyKey || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        {
+            hideCredit();
+            currentState = TitleState.MAIN;
+        }
     }
 
     public void newClicked()
@@ -189,6 +194,11 @@ public class TitleBehavior : MonoBehaviour
     public void optionClicked()
     {
         currentState = TitleState.OPTION;
+    }
+
+    public void creditClicked()
+    {
+        currentState = TitleState.CREDIT;
     }
 
     private void findSaves()

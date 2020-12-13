@@ -34,7 +34,7 @@ public class TitleMenuBehavior : MonoBehaviour
 
     public void creditButton()
     {
-
+        titleController.creditClicked();
     }
 
     public void statisticButton()
