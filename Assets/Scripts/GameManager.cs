@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     public bool isInvincible;
     public bool chainBonus;
     private float chainTime;
-    public int chainCount;
+    public int chainCount = 0;
     public int chainScore;
     private Vector3 originalPos;
 
@@ -55,9 +55,9 @@ public class GameManager : MonoBehaviour
         UPGRADE,
         NEXT
     }
-    void Start()
+
+    void Awake()
     {
-        
         if (!theManager)
         {
             theManager = this;
@@ -66,6 +66,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void Start()
+    {
  
         PlayerBulletBehavior.setParent(mPlayer);
         CaptureBulletBehavior.setParent(mPlayer);
