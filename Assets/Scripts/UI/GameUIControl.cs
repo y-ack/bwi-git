@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameUIControl : MonoBehaviour
 {
     public PlayerBehavior thePlayer;
+    public Image playerHUDUI;
     public Image mainMenuUI;
     public Image lostScreenUI;
     public Image resultScreenUI;
@@ -25,6 +26,8 @@ public class GameUIControl : MonoBehaviour
     public Text playerLifeUI;
     public Text scoreUI;
     public Text trapCountUI;
+    public Text chainTextUI;
+
 
     private CanvasGroup mainMenuGroup;
     private CanvasGroup lostScreenGroup;
@@ -32,11 +35,16 @@ public class GameUIControl : MonoBehaviour
     private CanvasGroup upgradeScreenGroup;
     private CanvasGroup helpScreenGroup;
     private CanvasGroup sendScoreGroup;
+    private CanvasGroup chainTextGroup;
 
     public float rollCooldown;
     public float trapCooldown;
     public float captureCooldown;
     public int trapCount;
+    public bool isChain;
+    public bool isChainScore;
+    public float chainTime;
+    public float scoreTime;
 
     public bool trapMax = false;
     public bool captureMax = false;
@@ -52,6 +60,9 @@ public class GameUIControl : MonoBehaviour
         upgradeScreenGroup = upgradeScreenUI.GetComponent<CanvasGroup>();
         helpScreenGroup = helpScreenUI.GetComponent<CanvasGroup>();
         sendScoreGroup = sendScoreUI.GetComponent<CanvasGroup>();
+        chainTextGroup = chainTextUI.GetComponent<CanvasGroup>();
+
+        defaultChainText();
 
         /*
         rollCooldown = thePlayer.dashCoolDown;
@@ -82,6 +93,9 @@ public class GameUIControl : MonoBehaviour
         updateTrapCount();
         updateCaptureIcon();
         updateUpgradeButton();
+        udpateChainText();
+
+
 
         if (trapUI.fillAmount < 1)
         {
@@ -491,6 +505,16 @@ public class GameUIControl : MonoBehaviour
         lifeButtonCanvas.blocksRaycasts = false;
     }
 
+    public void showChainText()
+    {
+        chainTextGroup.alpha = 1;   
+    }
+
+    public void hideChainText()
+    {
+        chainTextGroup.alpha = 0;
+    }
+
     public void setCost(int upgradeCost)
     {
         GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
@@ -628,4 +652,68 @@ public class GameUIControl : MonoBehaviour
         stageUI.text = "STAGE " + RunStatistics.Instance.currentStage;
     }
 
+    public void baseChainText()
+    {
+        chainTextUI.text = (GameManager.theManager.chainCount+1) + " CHAIN COMBO";
+    }
+
+    public void pointChainText()
+    {
+        chainTextUI.fontSize = 28;
+        chainTextUI.text = GameManager.theManager.chainScore + " POINTS!";
+    }
+
+    public void defaultChainText()
+    {
+        chainTextUI.text = (GameManager.theManager.chainCount+1) + " CHAIN COMBO";
+        chainTextUI.fontSize = 20;
+        GameManager.theManager.chainScore = 0;
+    }
+
+    public void udpateChainText()
+    {
+     if(isChain == true)
+        {
+            updateChainTime();
+            updateScoreTime();
+        }
+        else
+        {
+            hideChainText();
+            defaultChainText();
+        }
+    }
+
+    public void updateChainTime()
+    {
+        if(chainTime > 0f)
+        {
+            showChainText();
+            baseChainText();
+            chainTime -= Time.deltaTime;
+            if(chainTime <= 0)
+            {
+                scoreTime = 1f;
+            }
+        }
+    }
+
+    public void updateScoreTime()
+    {
+        if(scoreTime > 0f)
+        {
+            pointChainText();
+            scoreTime -= Time.deltaTime;
+            if(scoreTime <= 0)
+            {
+                isChain = false;
+            }
+        }
+    }
+
+    public void addClearIndicator()
+    {
+        GameObject e = Instantiate(Resources.Load("Prefabs/ClearPointIndicator")) as GameObject;
+        e.transform.SetParent(playerHUDUI.transform, false);
+    }
 }

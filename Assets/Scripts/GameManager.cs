@@ -31,7 +31,8 @@ public class GameManager : MonoBehaviour
     public bool isInvincible;
     public bool chainBonus;
     private float chainTime;
-    private int chainCount;
+    public int chainCount;
+    public int chainScore;
     private Vector3 originalPos;
 
     private int counter = 0;
@@ -817,6 +818,7 @@ public class GameManager : MonoBehaviour
 
     public void bubbleCleared()
     {
+        uiControl.addClearIndicator();
         bubbleCounter--;
     }
 
@@ -843,23 +845,34 @@ public class GameManager : MonoBehaviour
     {
         if(chainBonus == false)
         {
-            RunStatistics.Instance.totalScore += 15;
+            uiControl.isChain = true;
+            uiControl.chainTime = 0.5f;
+            uiControl.showChainText();
+            int theScore = 15;
+            RunStatistics.Instance.totalScore += theScore;
+            chainScore += theScore;
             chainBonus = true;
-            chainTime = 0.5f;
+            chainTime = 1f;
             chainCount = 0;
         }
         else
         {
             if(chainCount <= 5)
             {
-                RunStatistics.Instance.totalScore += (15 + (int)(15 * 0.25));
+                int theScore = (15 + (int)(15 * 0.25));
+                RunStatistics.Instance.totalScore += theScore;
+                chainScore += theScore;
                 chainTime = 0.5f;
+                uiControl.chainTime = 0.5f;
                 chainCount++;
             }
             else
             {
-                RunStatistics.Instance.totalScore += (15 + (int)(15 * 0.5));
+                int theScore = (15 + (int)(15 * 0.5)); ;
+                RunStatistics.Instance.totalScore += theScore;
+                chainScore += theScore;
                 chainTime = 0.5f;
+                uiControl.chainTime = 0.5f;
                 chainCount++;
             }
         }
