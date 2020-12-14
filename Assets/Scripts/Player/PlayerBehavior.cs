@@ -211,7 +211,7 @@ public class PlayerBehavior : MonoBehaviour
             //shootBeam = true;
             canMove = false;
             cutIn.enabled = true;
-            //showCutIn = true;
+            showCutIn = true;
             cutInDuration = 1.5f;
             GameManager.theManager.isInvincible = true; 
             attackChargeTimer = 0; 
@@ -293,10 +293,23 @@ public class PlayerBehavior : MonoBehaviour
         if(cutInDuration < 0f)
             {
                 cutIn.enabled = false;
+            resetCutIn();
                 shootBeam = true;
+            
             }
         if(showCutIn)
         {
+            if(cutInDuration > 1f)
+            {
+                cutInAnimation();
+            } else if (cutInDuration <= 0.5f)
+            {
+                cutOutAnimation();
+            }
+            
+
+
+            
             /*
             float step = 100f * Time.fixedDeltaTime;
             Vector3 checkPosition = new Vector3(480f, 300f, 0f);
@@ -655,6 +668,23 @@ public class PlayerBehavior : MonoBehaviour
     public void setDead()
     {
         movementState = PlayerState.DEAD;
+    }
+
+    private void cutInAnimation()
+    {
+        cutIn.fillAmount += (4f * Time.deltaTime);
+    }
+
+    private void cutOutAnimation()
+    {
+        cutIn.fillOrigin = (int)Image.OriginHorizontal.Left;
+        cutIn.fillAmount -= (4f * Time.deltaTime);
+    }
+
+    private void resetCutIn()
+    {
+        cutIn.fillOrigin = (int)Image.OriginHorizontal.Right;
+        cutIn.fillAmount = 0;
     }
 
 }
