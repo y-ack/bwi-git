@@ -50,6 +50,9 @@ public class BubbleBullet : MonoBehaviour
                 RunStatistics.Instance.grazeTime += Time.deltaTime;
                 // TODO[BETA] graze sound
                 break;
+            case "Beam":
+                destroyYoSelf();
+                break;
             default:
                 break;
         }
