@@ -150,19 +150,19 @@ public class ButtonControl : MonoBehaviour
 
     public void upgradeTrap()
     {
-        if (RunStatistics.Instance.totalScore >= 1000)
+        if (RunStatistics.Instance.totalScore >= 500)
         {
             if (thePlayer.trapCountCap < 10f)
             {
                 if ((thePlayer.trapCountCap += 3) >= 10f)
                 {
-                    thePlayer.shootCoolDown = 10f;
-                    RunStatistics.Instance.totalScore -= 1000;
+                    thePlayer.trapCountCap = 10;
+                    RunStatistics.Instance.totalScore -= 500;
                     theUI.trapMax = true;
                 }
                 else
                 {
-                    RunStatistics.Instance.totalScore -= 1000;
+                    RunStatistics.Instance.totalScore -= 500;
                 }
             }
             else
@@ -174,19 +174,19 @@ public class ButtonControl : MonoBehaviour
 
     public void upgradeCapture()
     {
-        if (RunStatistics.Instance.totalScore >= 1000)
+        if (RunStatistics.Instance.totalScore >= 500)
         {
             if (thePlayer.captureCoolDown > 1f)
             {
                 if((thePlayer.captureCoolDown -= 0.2f) <= 1f)
                 {
                     thePlayer.captureCoolDown = 1f;
-                    RunStatistics.Instance.totalScore -= 1000;
+                    RunStatistics.Instance.totalScore -= 500;
                     theUI.captureMax = true;
                 }
                 else
                 {
-                    RunStatistics.Instance.totalScore -= 1000;
+                    RunStatistics.Instance.totalScore -= 500;
                 }
             }
             else
@@ -257,6 +257,31 @@ public class ButtonControl : MonoBehaviour
     public void hoverTwo()
     {
         theUI.setCost(1000);
+    }
+
+    public void hoverTrap()
+    {
+        theUI.setUpgradeHelp("Increase Bubble Trap Cap");
+    }
+
+    public void hoverCapture()
+    {
+        theUI.setUpgradeHelp("Reduce Bubble Capture Cooldown");
+    }
+
+    public void hoverRoll()
+    {
+        theUI.setUpgradeHelp("Reduce Bubble Roll Cooldown");
+    }
+
+    public void hoverLife()
+    {
+        theUI.setUpgradeHelp("Add An Additional Life");
+    }
+
+    public void offHoverUpgrade()
+    {
+        theUI.hideUpgradeHelp();
     }
 
     public void offHoverCost()

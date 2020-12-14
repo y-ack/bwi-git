@@ -384,9 +384,24 @@ public class GameUIControl : MonoBehaviour
             hideLifeButton();
         } else if (RunStatistics.Instance.totalScore > 500 && RunStatistics.Instance.totalScore < 1000)
         {
-            hideTrapButton();
-            hideCaptureButton();
-            if(rollMax != true)
+            if (trapMax != true)
+            {
+                showTrapButton();
+            }
+            else
+            {
+                hideTrapButton();
+            }
+
+            if (captureMax != true)
+            {
+                showCaptureButton();
+            }
+            else
+            {
+                hideCaptureButton();
+            }
+            if (rollMax != true)
             {
                 showRollButton();
             }
@@ -543,6 +558,23 @@ public class GameUIControl : MonoBehaviour
         GameObject costText = upgradeBG.transform.Find("costText").gameObject;
         CanvasGroup costCanvas = costText.GetComponent<CanvasGroup>();
         costCanvas.alpha = 0;
+    }
+
+    public void setUpgradeHelp(string upgradeHelp)
+    {
+        GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
+        GameObject upgradeHelpText = upgradeBG.transform.Find("upgradeHelp").gameObject;
+        CanvasGroup upgradeHelpCanvas = upgradeHelpText.GetComponent<CanvasGroup>();
+        upgradeHelpCanvas.alpha = 1;
+        upgradeHelpText.GetComponent<Text>().text = upgradeHelp;
+    }
+
+    public void hideUpgradeHelp()
+    {
+        GameObject upgradeBG = upgradeScreenUI.transform.Find("Upgrade Background").gameObject;
+        GameObject upgradeHelpText = upgradeBG.transform.Find("upgradeHelp").gameObject;
+        CanvasGroup upgradeHelpCanvas = upgradeHelpText.GetComponent<CanvasGroup>();
+        upgradeHelpCanvas.alpha = 0;
     }
 
     public void activateRoll()
