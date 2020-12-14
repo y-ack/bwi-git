@@ -36,7 +36,7 @@ public class PlayerBehavior : MonoBehaviour
     public float shootCoolDown = 0.4f;
     public float shootAfterSec;
 
-    public float beamCoolDown = 0.1f;
+    public float beamCoolDown;
     public float beamAfterSec;
 
     public float beamDuration = 2f;
@@ -304,12 +304,20 @@ public class PlayerBehavior : MonoBehaviour
         {
             if(beamAfterSec <= 0f)
             {
-                Debug.Log("Making it into here");
-                GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
+                GameObject e = Instantiate(Resources.Load("Prefabs/Beam") as
                                 GameObject);
-                e.transform.localPosition = transform.localPosition;
-                e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                SinWaveBullet spawnedBullet = e.GetComponent<SinWaveBullet>();
+                spawnedBullet.transform.localPosition = transform.localPosition;
+                spawnedBullet.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 beamAfterSec = beamCoolDown;
+                if(counter % 2 == 0)
+                {
+                    spawnedBullet.SetEven();
+                }
+                else
+                {
+                    spawnedBullet.SetOdd();
+                }
                 ++counter;
                 if(counter > 20)
                 { 
@@ -433,7 +441,7 @@ public class PlayerBehavior : MonoBehaviour
         beamDuration = 10f;
         captureCoolDown = 1.2f;
         shootCoolDown = 0.4f;
-        beamCoolDown = 0.01f;
+        beamCoolDown = 0.05f;
         trapCountCap = 4;
         isCapturing = false;
         capturedBubble = null;
