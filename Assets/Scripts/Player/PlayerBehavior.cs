@@ -205,16 +205,17 @@ public class PlayerBehavior : MonoBehaviour
             attackChargeTimer += Time.deltaTime;
         }
 
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8)  && (trapCount >= 7)||
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8)||
                 Input.GetKeyUp(KeyCode.L) && (attackChargeTimer >= 0.8) && (trapCount >= 7))
         {
             //shootBeam = true;
+            StartCoroutine(PlayCutinSound());
             canMove = false;
             cutIn.enabled = true;
             showCutIn = true;
             cutInDuration = 1.5f;
             GameManager.theManager.isInvincible = true;
-            //SubTrapForBeam();
+            SubTrapForBeam();
             attackChargeTimer = 0; 
         }
         else if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.4) && (trapCount >= 4) ||
@@ -303,28 +304,10 @@ public class PlayerBehavior : MonoBehaviour
             if(cutInDuration > 1f)
             {
                 cutInAnimation();
-            } else if (cutInDuration <= 0.5f)
+            } else if (cutInDuration <= 0.3f)
             {
                 cutOutAnimation();
             }
-            
-
-
-            
-            /*
-            float step = 100f * Time.fixedDeltaTime;
-            Vector3 checkPosition = new Vector3(480f, 300f, 0f);
-            if(!(cutIn.transform.position == checkPosition) && flag == false)
-            {
-                cutIn.transform.position = Vector2.MoveTowards(cutIn.transform.position, checkPosition, step);
-            }
-            if(cutIn.transform.position == checkPosition)
-            {
-                //play sound
-                flag = true;
-                cutIn.transform.position = Vector2.MoveTowards(cutIn.transform.position, checkPosition, step);
-            }
-            */
         }
         
         if(shootBeam)
@@ -356,6 +339,13 @@ public class PlayerBehavior : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator PlayCutinSound()
+    {
+        FindObjectOfType<AudioManager>().Play("Iris_Beam_Cutin");
+        yield return new WaitForSeconds(0.5f);
+        FindObjectOfType<AudioManager>().Play("Iris_Beam_Voice");
     }
 
 
