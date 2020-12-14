@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class IntroSceneController : MonoBehaviour
 {
@@ -47,8 +48,15 @@ public class IntroSceneController : MonoBehaviour
         Slide3Text1.gameObject.SetActive(true);
         yield return new WaitForSeconds(7);
         Slide3Text2.gameObject.SetActive(true);
+        yield return new WaitForSeconds(7);
+        SceneManager.LoadScene("TitleScreen");
+    }
 
-
-
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            SceneManager.LoadScene("TitleScreen");
+        }
     }
 }

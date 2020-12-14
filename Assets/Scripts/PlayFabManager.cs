@@ -29,6 +29,9 @@ public class PlayFabManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        PlayFabSettings.TitleId = "82156";
+        PlayFabSettings.DeveloperSecretKey = "ASFSQ4MXISF6AWPIOM3PAFCTT1OP588WOFQOYP3WMPAYE3EJ53";
+
         TempLogin();
     }
     public void Login(string loginName)

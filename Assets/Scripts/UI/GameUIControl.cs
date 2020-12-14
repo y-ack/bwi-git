@@ -141,8 +141,7 @@ public class GameUIControl : MonoBehaviour
         }
         if(Input.GetKeyUp(KeyCode.Mouse1))
         {
-            currentCharge = 0;
-            trapBarChargeUI.fillAmount = 0;
+            resetTrapCharge();
         }
 
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K)) && captureUI.fillAmount == 1)
