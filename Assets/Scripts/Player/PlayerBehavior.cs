@@ -65,10 +65,10 @@ public class PlayerBehavior : MonoBehaviour
     public float attackChargeTimer = 0f;
 
     public Image cutIn = null;
-    private bool showCutIn = false;
-    private bool flag = false;
-    private float cutInDuration;
-    private bool canMove = true;
+    public bool showCutIn = false;
+    public bool flag = false;
+    public float cutInDuration;
+    public bool canMove = true;
 
     private float walkingTimer;
     public float walkingDelay = 0.3f;
@@ -297,23 +297,30 @@ public class PlayerBehavior : MonoBehaviour
         */
         if(cutInDuration < 0f)
             {
-            GameManager.theManager.unpauseControl();
+            GameManager.theManager.pauseControl();
             resetCutIn();
             cutIn.enabled = false;
             shootBeam = true;
-            
-            }
+
+        }
+        else
+        {
+            GameManager.theManager.unpauseControl();
+        }
+
         if(showCutIn)
         {
             GameManager.theManager.pauseControl();
-            if(cutInDuration > 1f)
+            if (cutInDuration > 1f)
             {
+                
                 cutInAnimation();
             } else if (cutInDuration <= 0.3f)
             {
                 cutOutAnimation();
             }
         }
+        
         
         if(shootBeam)
         {
@@ -338,7 +345,8 @@ public class PlayerBehavior : MonoBehaviour
                 { 
                     shootBeam = false; 
                     counter = 0; 
-                    GameManager.theManager.isInvincible = false; 
+                    GameManager.theManager.isInvincible = false;
+                    GameManager.theManager.pauseControl();
                     cutInDuration = 0f;
                     canMove = true;
                 }

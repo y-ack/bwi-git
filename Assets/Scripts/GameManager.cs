@@ -378,6 +378,20 @@ public class GameManager : MonoBehaviour
         mPlayer.shootCoolDown = theSaveData.shootCoolDown;
         mPlayer.shootAfterSec = theSaveData.shootAfterSec;
 
+        mPlayer.beamCoolDown = theSaveData.beamCoolDown;
+        mPlayer.beamAfterSec = theSaveData.beamAfterSec;
+
+        mPlayer.beamDuration = theSaveData.beamDuration;
+        mPlayer.beamDurationAfterSec = theSaveData.beamDurationAfterSec;
+
+        mPlayer.shootBeam = theSaveData.shootBeam;
+        mPlayer.counter = theSaveData.counter;
+
+        mPlayer.showCutIn = theSaveData.showCutIn;
+        mPlayer.flag = theSaveData.flag;
+        mPlayer.cutInDuration = theSaveData.cutInDuration;
+        mPlayer.canMove = theSaveData.canMove;
+
         mPlayer.isCapturing = theSaveData.isCapturing;
 
         if(theSaveData.isCapturing == true)
@@ -651,7 +665,21 @@ public class GameManager : MonoBehaviour
         quickSave.shootCoolDown = mPlayer.shootCoolDown;
         quickSave.shootAfterSec = mPlayer.shootAfterSec;
 
-        quickSave.isCapturing = mPlayer.isCapturing;
+        quickSave.beamCoolDown = mPlayer.beamCoolDown;
+        quickSave.beamAfterSec = mPlayer.beamAfterSec;
+
+        quickSave.beamDuration = mPlayer.beamDuration;
+        quickSave.beamDurationAfterSec = mPlayer.beamDurationAfterSec;
+
+        quickSave.shootBeam = mPlayer.shootBeam;
+        quickSave.counter = mPlayer.counter;
+
+        quickSave.showCutIn = mPlayer.showCutIn;
+        quickSave.flag = mPlayer.flag;
+        quickSave.cutInDuration = mPlayer.cutInDuration;
+        quickSave.canMove = mPlayer.canMove;
+
+    quickSave.isCapturing = mPlayer.isCapturing;
 
         if(mPlayer.capturedBubble != null)
         {

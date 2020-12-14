@@ -73,6 +73,20 @@ public class QuickSaveData
     public float extraTrap;
     public int trapCountCap;
 
+    public float beamCoolDown;
+    public float beamAfterSec;
+
+    public float beamDuration;
+    public float beamDurationAfterSec;
+
+    public bool shootBeam;
+    public int counter;
+
+    public bool showCutIn;
+    public bool flag;
+    public float cutInDuration;
+    public bool canMove;
+
     //Increase by 0.25f or 0.5f when upgrading 
     public float trapUpgrade;
 
