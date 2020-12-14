@@ -21,6 +21,7 @@ public class IntroSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        FindObjectOfType<AudioManager>().Play("Intro_Theme");  
         Slide1Text1.enabled = false;
         Slide1Picture.enabled = false;
 
@@ -49,6 +50,7 @@ public class IntroSceneController : MonoBehaviour
         yield return new WaitForSeconds(7);
         Slide3Text2.gameObject.SetActive(true);
         yield return new WaitForSeconds(7);
+        FindObjectOfType<AudioManager>().Stop("Intro_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
 
@@ -56,6 +58,7 @@ public class IntroSceneController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Z))
         {
+            FindObjectOfType<AudioManager>().Stop("Intro_Theme"); 
             SceneManager.LoadScene("TitleScreen");
         }
     }

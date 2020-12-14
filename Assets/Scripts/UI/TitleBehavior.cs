@@ -171,6 +171,8 @@ public class TitleBehavior : MonoBehaviour
         showCredit();
         if(Input.anyKey || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
+            FindObjectOfType<AudioManager>().Play("Title_Theme");
+            FindObjectOfType<AudioManager>().Stop("Credit_Theme"); 
             hideCredit();
             currentState = TitleState.MAIN;
         }

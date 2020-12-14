@@ -34,6 +34,8 @@ public class TitleMenuBehavior : MonoBehaviour
 
     public void creditButton()
     {
+        FindObjectOfType<AudioManager>().Stop("Title_Theme");
+        FindObjectOfType<AudioManager>().Play("Credit_Theme");
         titleController.creditClicked();
     }
 
@@ -43,7 +45,7 @@ public class TitleMenuBehavior : MonoBehaviour
     }
 
     public void optionButton()
-    {
+    { 
         titleController.optionClicked();
     }
 
