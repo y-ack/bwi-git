@@ -94,11 +94,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         sequenceControl();
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            //PlayFabManager.thePlayFabManager.GetLeaderboard();
-        }
     }
 
     // Method used to contain all the game's control.

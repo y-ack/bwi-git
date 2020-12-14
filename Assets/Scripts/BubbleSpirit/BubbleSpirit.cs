@@ -131,6 +131,22 @@ public class BubbleSpirit : MonoBehaviour
                     other.GetComponent<PlayerBulletBehavior>().disabled = true;
                     Clear();
                 }
+                if(other.gameObject.tag == "Beam"
+                   && !other.GetComponent<SinWaveBullet>().disabled)
+                {
+                    FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+                    FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
+                    other.GetComponent<SinWaveBullet>().disabled = true;
+                    Clear();
+                }
+                if(other.gameObject.tag == "Splash"
+                   && !other.GetComponent<SplashBullet>().disabled)
+                {
+                    FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 
+                    FindObjectOfType<AudioManager>().Play("Bubble_Cleared");
+                    other.GetComponent<SplashBullet>().disabled = true;
+                    Clear();
+                }
                 if(other.gameObject.tag == "SplashDamage")
                 {
                     FindObjectOfType<AudioManager>().Play("Bubble_Hit"); 

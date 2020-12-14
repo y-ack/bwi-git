@@ -205,7 +205,16 @@ public class PlayerBehavior : MonoBehaviour
             attackChargeTimer += Time.deltaTime;
         }
 
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 2) && (trapCount >= 4))
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 1.6))
+        {
+            //shootBeam = true;
+            canMove = false;
+            cutIn.enabled = true;
+            //showCutIn = true;
+            cutInDuration = 1.5f;
+            GameManager.theManager.isInvincible = true; 
+        }
+        else if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.4) && (trapCount >= 4))
         {
             GameObject e = Instantiate(Resources.Load("Prefabs/Splash") as
                                    GameObject);
@@ -215,8 +224,7 @@ public class PlayerBehavior : MonoBehaviour
             SubTrapForSplash();
             attackChargeTimer = 0;   
         }
-
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer < 2) && (trapCount > 0))
+        else if(Input.GetKeyUp(KeyCode.Mouse1) && trapCount > 0)
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
@@ -228,6 +236,20 @@ public class PlayerBehavior : MonoBehaviour
             subtrapCount();
             attackChargeTimer = 0;   
         }
+        /*
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer <= 1) && (trapCount > 0))
+        {
+            FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
+            FindObjectOfType<AudioManager>().Play("Iris_Trap2");
+            GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
+                                   GameObject);
+            e.transform.localPosition = transform.localPosition;
+            e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
+            shootAfterSec = shootCoolDown;
+            subtrapCount();
+            attackChargeTimer = 0;   
+        }
+        */
 
 
 

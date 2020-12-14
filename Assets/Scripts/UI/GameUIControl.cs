@@ -136,6 +136,12 @@ public class GameUIControl : MonoBehaviour
             activateTrap();
             trapBarChargeControl();
         }
+        if(Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            currentCharge = 0;
+            trapBarChargeUI.fillAmount = 0;
+        }
+
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K)) && captureUI.fillAmount == 1)
             activateCapture();
         if (Input.GetKeyDown(KeyCode.Space) && rollUI.fillAmount == 1)
@@ -739,14 +745,15 @@ public class GameUIControl : MonoBehaviour
      * */
     public void trapBarChargeControl()
     {
-        if(currentCharge < chargeCap)
+        if(currentCharge <= thePlayer.trapCountCap / 10f)
         {
-            currentCharge += Time.smoothDeltaTime;
+            Debug.Log("this is the trap count" + thePlayer.trapCountCap);
+            currentCharge +=  .2f;
             updateTrapBarCharge();
         }
         else
         {
-            currentCharge = chargeCap;
+            currentCharge = thePlayer.trapCountCap / 10f;
         }
     }
 
