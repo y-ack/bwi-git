@@ -200,12 +200,13 @@ public class PlayerBehavior : MonoBehaviour
 
         */
 
-        if(Input.GetKey(KeyCode.Mouse1))
+        if(Input.GetKey(KeyCode.Mouse1) || (Input.GetKey(KeyCode.L)))
         {
             attackChargeTimer += Time.deltaTime;
         }
 
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 1.6))
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8)  && (trapCount >= 7)||
+                Input.GetKeyUp(KeyCode.L) && (attackChargeTimer >= 0.8) && (trapCount >= 7))
         {
             //shootBeam = true;
             canMove = false;
@@ -213,8 +214,10 @@ public class PlayerBehavior : MonoBehaviour
             //showCutIn = true;
             cutInDuration = 1.5f;
             GameManager.theManager.isInvincible = true; 
+            attackChargeTimer = 0; 
         }
-        else if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.4) && (trapCount >= 4))
+        else if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.4) && (trapCount >= 4) ||
+                Input.GetKeyUp(KeyCode.L) && (attackChargeTimer >= 0.4) && (trapCount >= 4))
         {
             GameObject e = Instantiate(Resources.Load("Prefabs/Splash") as
                                    GameObject);
@@ -224,7 +227,8 @@ public class PlayerBehavior : MonoBehaviour
             SubTrapForSplash();
             attackChargeTimer = 0;   
         }
-        else if(Input.GetKeyUp(KeyCode.Mouse1) && trapCount > 0)
+        else if(Input.GetKeyUp(KeyCode.Mouse1) && trapCount > 0 || 
+                    Input.GetKeyUp(KeyCode.L) && trapCount > 0)
         {
             FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
             FindObjectOfType<AudioManager>().Play("Iris_Trap2");
@@ -236,21 +240,6 @@ public class PlayerBehavior : MonoBehaviour
             subtrapCount();
             attackChargeTimer = 0;   
         }
-        /*
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer <= 1) && (trapCount > 0))
-        {
-            FindObjectOfType<AudioManager>().Play("Iris_Trap"); 
-            FindObjectOfType<AudioManager>().Play("Iris_Trap2");
-            GameObject e = Instantiate(Resources.Load("Prefabs/Trap") as
-                                   GameObject);
-            e.transform.localPosition = transform.localPosition;
-            e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);//transform.localRotation;
-            shootAfterSec = shootCoolDown;
-            subtrapCount();
-            attackChargeTimer = 0;   
-        }
-        */
-
 
 
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K))
@@ -281,6 +270,7 @@ public class PlayerBehavior : MonoBehaviour
             }
         }
 
+        /*
         if (Input.GetKeyDown(KeyCode.F) && trapCount >= 4)
         {
             GameObject e = Instantiate(Resources.Load("Prefabs/Egg") as
@@ -299,6 +289,7 @@ public class PlayerBehavior : MonoBehaviour
             cutInDuration = 1.5f;
             GameManager.theManager.isInvincible = true;
         }
+        */
         if(cutInDuration < 0f)
             {
                 cutIn.enabled = false;
@@ -621,6 +612,13 @@ public class PlayerBehavior : MonoBehaviour
         trapCount -=4;
         RunStatistics.Instance.trapCount = trapCount;
     }
+
+    public void SubTrapForBeam()
+    {
+        trapCount -=7;
+        RunStatistics.Instance.trapCount = trapCount;
+    }
+
 
     public void setCaptureBubble(BubbleSpirit cBubble)
     {

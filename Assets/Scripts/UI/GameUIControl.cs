@@ -781,12 +781,17 @@ public class GameUIControl : MonoBehaviour
         {
             Debug.Log("this is the trap count" + thePlayer.trapCountCap);
             currentCharge +=  .2f;
+            if(currentCharge > thePlayer.trapCountCap / 10f)
+            {
+                currentCharge = thePlayer.trapCountCap / 10f;
+            }
             updateTrapBarCharge();
         }
         else
         {
             currentCharge = thePlayer.trapCountCap / 10f;
         }
+
     }
 
     public void updateTrapBarCharge()
