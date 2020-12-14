@@ -205,7 +205,7 @@ public class PlayerBehavior : MonoBehaviour
             attackChargeTimer += Time.deltaTime;
         }
 
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8)||
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8) && (trapCount >= 4) ||
                 Input.GetKeyUp(KeyCode.L) && (attackChargeTimer >= 0.8) && (trapCount >= 7))
         {
             //shootBeam = true;
@@ -244,30 +244,33 @@ public class PlayerBehavior : MonoBehaviour
         }
 
 
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K))
+        if(!shootBeam)
         {
-            if (captureAfterSec <= 0 && !isCapturing)
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K))
             {
-                FindObjectOfType<AudioManager>().Play("Iris_CaptureA");
-                FindObjectOfType<AudioManager>().Play("Iris_CaptureB");
-                GameObject e = Instantiate(Resources.Load("Prefabs/Capture") as
-                                   GameObject);
-                e.transform.localPosition = transform.localPosition;
-                e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-                captureAfterSec = captureCoolDown;
-            }
-            else if (isCapturing == true)
-            {
-                bool launchSuccess = capturedBubble.tryLaunch(
-                    ((Vector3)mousePos - transform.position).normalized);
-
-                if (launchSuccess)
+                if (captureAfterSec <= 0 && !isCapturing)
                 {
-                    Debug.Log("launch success");
+                    FindObjectOfType<AudioManager>().Play("Iris_CaptureA");
+                    FindObjectOfType<AudioManager>().Play("Iris_CaptureB");
+                    GameObject e = Instantiate(Resources.Load("Prefabs/Capture") as
+                                    GameObject);
+                    e.transform.localPosition = transform.localPosition;
+                    e.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                     captureAfterSec = captureCoolDown;
-                    captureState = CaptureState.IDLE;
-                    isCapturing = false;
-                    capturedBubble = null;
+                }
+                else if (isCapturing == true)
+                {
+                    bool launchSuccess = capturedBubble.tryLaunch(
+                        ((Vector3)mousePos - transform.position).normalized);
+
+                    if (launchSuccess)
+                    {
+                        Debug.Log("launch success");
+                        captureAfterSec = captureCoolDown;
+                        captureState = CaptureState.IDLE;
+                        isCapturing = false;
+                        capturedBubble = null;
+                    }
                 }
             }
         }
