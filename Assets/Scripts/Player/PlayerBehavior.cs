@@ -42,8 +42,8 @@ public class PlayerBehavior : MonoBehaviour
     public float beamDuration = 2f;
     public float beamDurationAfterSec;
 
-    private bool shootBeam = false;
-    private int counter = 0;
+    public bool shootBeam = false;
+    public int counter = 0;
 
     public bool isCapturing { get; set; } = false;
     public BubbleSpirit capturedBubble { get; set; }
@@ -294,6 +294,7 @@ public class PlayerBehavior : MonoBehaviour
         */
         if(cutInDuration < 0f)
             {
+            GameManager.theManager.unpauseControl();
             resetCutIn();
             cutIn.enabled = false;
             shootBeam = true;
@@ -301,6 +302,7 @@ public class PlayerBehavior : MonoBehaviour
             }
         if(showCutIn)
         {
+            GameManager.theManager.pauseControl();
             if(cutInDuration > 1f)
             {
                 cutInAnimation();

@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     private bool isHelp;
     public bool isInvincible;
     public bool chainBonus;
+    public bool controlPause;
     private float chainTime;
     public int chainCount = 0;
     public int chainScore;
@@ -99,18 +100,20 @@ public class GameManager : MonoBehaviour
     // Method used to contain all the game's control.
     private void runButtonControl()
     {
+        if(controlPause == false)
+        {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 setPause();
             }
 
-        if (Input.GetKeyDown(KeyCode.K))
+            if (Input.GetKeyDown(KeyCode.K))
                 //playerHit();
 
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                setLose();
-            }
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    setLose();
+                }
 
             if (Input.GetKeyDown(KeyCode.O))
             {
@@ -127,11 +130,12 @@ public class GameManager : MonoBehaviour
                     //isInvincible = false;
                 }
             }
-        
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            setHelp();
+
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                setHelp();
+            }
         }
     }
 
@@ -571,6 +575,16 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         canMove = true;
+    }
+
+    public void pauseControl()
+    {
+        controlPause = true;
+    }
+
+    public void unpauseControl()
+    {
+        controlPause = false;
     }
 
     #region Data Control

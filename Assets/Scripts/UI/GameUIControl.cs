@@ -80,7 +80,7 @@ public class GameUIControl : MonoBehaviour
     }
 
 
-     void Update()
+    void Update()
     {
         if (thePlayer.isCapturing == true)
         {
@@ -116,7 +116,7 @@ public class GameUIControl : MonoBehaviour
         if (captureUI.fillAmount < 1)
         {
             updateCapture();
-        } 
+        }
         else
         {
             colorCapture();
@@ -139,7 +139,7 @@ public class GameUIControl : MonoBehaviour
             activateTrap();
             trapBarChargeControl();
         }
-        if(Input.GetKeyUp(KeyCode.Mouse1))
+        if (Input.GetKeyUp(KeyCode.Mouse1) || (Input.GetKeyUp(KeyCode.L)))
         {
             resetTrapCharge();
         }
@@ -182,7 +182,7 @@ public class GameUIControl : MonoBehaviour
 
     // Method used to show the lose screen
     public void showLost()
-    {    
+    {
         lostScreenGroup.alpha = 1f;
         lostScreenGroup.blocksRaycasts = true;
         lostScreenGroup.interactable = true;
@@ -199,20 +199,20 @@ public class GameUIControl : MonoBehaviour
     // Method used to show the result screen
     public void showResult()
     {
-        
+
         resultScreenGroup.alpha = 1f;
         resultScreenGroup.blocksRaycasts = true;
         resultScreenGroup.interactable = true;
     }
 
     IEnumerator Play(float seconds, string song)
-    { 
+    {
         //Wait a bit
         yield return StartCoroutine(WaitIn(seconds));
         //Do stuff
         FindObjectOfType<AudioManager>().Play(song);
     }
-    
+
     IEnumerator WaitIn(float seconds)
     {
         yield return new WaitForSeconds(seconds);
@@ -349,7 +349,7 @@ public class GameUIControl : MonoBehaviour
 
         scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
         stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
-        timeText.GetComponent<Text>().text = "Session Time: " + System.Math.Round(RunStatistics.Instance.time,2);
+        timeText.GetComponent<Text>().text = "Session Time: " + System.Math.Round(RunStatistics.Instance.time, 2);
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
         int chainCleard = 0;
         for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)
@@ -372,7 +372,7 @@ public class GameUIControl : MonoBehaviour
 
         scoreText.GetComponent<Text>().text = "Current Score: " + RunStatistics.Instance.totalScore;
         stageText.GetComponent<Text>().text = "Stage Cleared: " + RunStatistics.Instance.stagesCleared;
-        timeText.GetComponent<Text>().text = "Session Time: " + System.Math.Round(RunStatistics.Instance.time,2);
+        timeText.GetComponent<Text>().text = "Session Time: " + System.Math.Round(RunStatistics.Instance.time, 2);
         clearText.GetComponent<Text>().text = "Bubble Cleared: " + RunStatistics.Instance.bubblesCleared;
         int chainCleard = 0;
         for (int i = 0; i < RunStatistics.Instance.bubblesChainCleared.Length; i++)
@@ -400,13 +400,14 @@ public class GameUIControl : MonoBehaviour
 
     public void updateUpgradeButton()
     {
-       if(RunStatistics.Instance.totalScore < 500)
+        if (RunStatistics.Instance.totalScore < 500)
         {
             hideTrapButton();
             hideCaptureButton();
             hideRollButton();
             hideLifeButton();
-        } else if (RunStatistics.Instance.totalScore > 500 && RunStatistics.Instance.totalScore < 1000)
+        }
+        else if (RunStatistics.Instance.totalScore > 500 && RunStatistics.Instance.totalScore < 1000)
         {
             if (trapMax != true)
             {
@@ -434,9 +435,10 @@ public class GameUIControl : MonoBehaviour
                 hideRollButton();
             }
             hideLifeButton();
-        } else if (RunStatistics.Instance.totalScore > 1000)
+        }
+        else if (RunStatistics.Instance.totalScore > 1000)
         {
-            if(trapMax != true)
+            if (trapMax != true)
             {
                 showTrapButton();
             }
@@ -463,7 +465,7 @@ public class GameUIControl : MonoBehaviour
                 hideRollButton();
             }
 
-            if(RunStatistics.Instance.currentLife < 3)
+            if (RunStatistics.Instance.currentLife < 3)
             {
                 lifeMax = false;
             }
@@ -481,7 +483,7 @@ public class GameUIControl : MonoBehaviour
                 hideLifeButton();
             }
         }
-        
+
     }
 
     public void showTrapButton()
@@ -559,7 +561,7 @@ public class GameUIControl : MonoBehaviour
 
     public void showChainText()
     {
-        chainTextGroup.alpha = 1;   
+        chainTextGroup.alpha = 1;
     }
 
     public void hideChainText()
@@ -633,7 +635,7 @@ public class GameUIControl : MonoBehaviour
         iconImage.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
-    public void updateTrap() 
+    public void updateTrap()
     {
         trapUI.fillAmount += 1 / trapCooldown * Time.smoothDeltaTime;
         GameObject iconHUD = trapUI.transform.Find("trapHUD").gameObject;
@@ -723,7 +725,7 @@ public class GameUIControl : MonoBehaviour
 
     public void baseChainText()
     {
-        chainTextUI.text = (GameManager.theManager.chainCount+1) + " CHAIN COMBO";
+        chainTextUI.text = (GameManager.theManager.chainCount + 1) + " CHAIN COMBO";
     }
 
     public void pointChainText()
@@ -734,14 +736,14 @@ public class GameUIControl : MonoBehaviour
 
     public void defaultChainText()
     {
-        chainTextUI.text = GameManager.theManager.chainCount+1 + " CHAIN COMBO";
+        chainTextUI.text = GameManager.theManager.chainCount + 1 + " CHAIN COMBO";
         chainTextUI.fontSize = 20;
         GameManager.theManager.chainScore = 0;
     }
 
     public void udpateChainText()
     {
-     if(isChain == true)
+        if (isChain == true)
         {
             updateChainTime();
             updateScoreTime();
@@ -755,12 +757,12 @@ public class GameUIControl : MonoBehaviour
 
     public void updateChainTime()
     {
-        if(chainTime > 0f)
+        if (chainTime > 0f)
         {
             showChainText();
             baseChainText();
             chainTime -= Time.deltaTime;
-            if(chainTime <= 0)
+            if (chainTime <= 0)
             {
                 scoreTime = 1f;
             }
@@ -769,11 +771,11 @@ public class GameUIControl : MonoBehaviour
 
     public void updateScoreTime()
     {
-        if(scoreTime > 0f)
+        if (scoreTime > 0f)
         {
             pointChainText();
             scoreTime -= Time.deltaTime;
-            if(scoreTime <= 0)
+            if (scoreTime <= 0)
             {
                 isChain = false;
             }
@@ -801,11 +803,11 @@ public class GameUIControl : MonoBehaviour
      * */
     public void trapBarChargeControl()
     {
-        if(currentCharge <= thePlayer.trapCountCap / 10f)
+        if (currentCharge <= thePlayer.trapCountCap / 10f)
         {
             Debug.Log("this is the trap count" + thePlayer.trapCountCap);
-            currentCharge +=  .2f;
-            if(currentCharge > thePlayer.trapCountCap / 10f)
+            currentCharge += .2f;
+            if (currentCharge > thePlayer.trapCountCap / 10f)
             {
                 currentCharge = thePlayer.trapCountCap / 10f;
             }
@@ -829,5 +831,5 @@ public class GameUIControl : MonoBehaviour
         trapBarChargeUI.fillAmount = 0;
     }
 
-    
+
 }
