@@ -6,6 +6,7 @@ using System.IO;
 
 public class TitleBehavior : MonoBehaviour
 {
+    public Animator creditAnim;
     public Image titleScreenUI;
     public Image savedGamesUI;
     public Image mainMenuUI;
@@ -168,9 +169,11 @@ public class TitleBehavior : MonoBehaviour
 
     public void creditSequence()
     {
+        creditAnim.SetBool("creditClicked",true);
         showCredit();
         if(Input.anyKey || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
+            creditAnim.SetBool("creditClicked",false);
             FindObjectOfType<AudioManager>().Play("Title_Theme");
             FindObjectOfType<AudioManager>().Stop("Credit_Theme"); 
             hideCredit();
@@ -284,6 +287,7 @@ public class TitleBehavior : MonoBehaviour
 
     private void showCredit()
     {
+        
         creditCanvas.alpha = 1f;
         creditCanvas.interactable = true;
         creditCanvas.blocksRaycasts = true;
@@ -292,6 +296,7 @@ public class TitleBehavior : MonoBehaviour
 
     private void hideCredit()
     {
+        //creditAnim.SetBool("creditClicked",false);
         creditCanvas.alpha = 0f;
         creditCanvas.interactable = false;
         creditCanvas.blocksRaycasts = false;
