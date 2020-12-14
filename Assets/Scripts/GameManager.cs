@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     public GameObject[] currentBubbleSpirit;
     public GameObject[] currentBubbleProjectile;
     public GameObject[] currentProjectile;
+    public GameObject[] currentSplash;
+    public GameObject[] currentWhirlwind;
+    public GameObject[] currentBeam;
     public float difficulty;
     public int unitCounter = 0;
     public int bubbleCounter = 0;
@@ -849,6 +852,43 @@ public class GameManager : MonoBehaviour
             quickSave.currentPlayerProjectile[i] = thePlayerProjectile;
         }
 
+        currentSplash = GameObject.FindGameObjectsWithTag("Splash");
+        quickSave.currentSplash = new SerializablePlayerProjectile[currentSplash.Length];
+        for( int i = 0; i < currentSplash.Length; i++)
+        {
+            SerializablePlayerProjectile splashProjectile = new SerializablePlayerProjectile();
+            splashProjectile.bulletDirection = new SerializableVector(currentSplash[i].transform.position);
+            splashProjectile.bulletRotation = new SerializableVector(currentSplash[i].transform.localRotation);
+            splashProjectile.lifeSpan = currentSplash[i].GetComponent<SplashBullet>().lifeSpan;
+            splashProjectile.disabled = currentSplash[i].GetComponent<SplashBullet>().disabled;
+            quickSave.currentSplash[i] = splashProjectile;
+        }
+
+        currentWhirlwind = GameObject.FindGameObjectsWithTag("SplashDamage");
+        quickSave.currentWhirlwind = new SerializablePlayerProjectile[currentWhirlwind.Length];
+        for (int i = 0; i < currentWhirlwind.Length; i++)
+        {
+            SerializablePlayerProjectile whirldwindProjectile = new SerializablePlayerProjectile();
+            whirldwindProjectile.bulletDirection = new SerializableVector(currentWhirlwind[i].transform.position);
+            whirldwindProjectile.bulletRotation = new SerializableVector(currentWhirlwind[i].transform.localRotation);
+            quickSave.currentWhirlwind[i] = whirldwindProjectile;
+        }
+
+        currentBeam = GameObject.FindGameObjectsWithTag("Beam");
+        quickSave.currentBeam = new SerializablePlayerProjectile[currentBeam.Length];
+        for( int i = 0; i < currentBeam.Length; i++)
+        {
+            SerializablePlayerProjectile beamProjectile = new SerializablePlayerProjectile();
+            beamProjectile.bulletDirection = new SerializableVector(currentBeam[i].transform.position);
+            beamProjectile.bulletRotation = new SerializableVector(currentBeam[i].transform.localRotation);
+            beamProjectile.axis = new SerializableVector(currentBeam[i].GetComponent<SinWaveBullet>().axis);
+            beamProjectile.input = new SerializableVector(currentBeam[i].GetComponent<SinWaveBullet>().input);
+            beamProjectile.pos = new SerializableVector(currentBeam[i].GetComponent<SinWaveBullet>().pos);
+            beamProjectile.MoveSpeed = currentBeam[i].GetComponent<SinWaveBullet>().MoveSpeed;
+            beamProjectile.frequency = currentBeam[i].GetComponent<SinWaveBullet>().frequency;
+            beamProjectile.magnitude = currentBeam[i].GetComponent<SinWaveBullet>().magnitude;
+            beamProjectile.disabled = currentBeam[i].GetComponent<SinWaveBullet>().disabled;
+        }
 
         SaveSystem.quickSave(quickSave);
     }

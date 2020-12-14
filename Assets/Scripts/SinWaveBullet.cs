@@ -8,10 +8,10 @@ public class SinWaveBullet : MonoBehaviour
  
      public float frequency;  // Speed of sine movement
      public float magnitude;   // Size of sine movement
-     private Vector3 axis;
-     private Vector3 input;
+     public Vector3 axis;
+     public Vector3 input;
  
-     private Vector3 pos;
+     public Vector3 pos;
      public bool disabled = false;
  
      void Start () {

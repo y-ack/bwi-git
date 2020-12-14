@@ -25,6 +25,9 @@ public class QuickSaveData
     public SerializableBubbleProjectile[] currentBubbleProjectile;
     public SerializablePlayerProjectile[] currentPlayerProjectile;
     public SerializablePlayerProjectile[] capturePlayerProjectile;
+    public SerializablePlayerProjectile[] currentSplash;
+    public SerializablePlayerProjectile[] currentWhirlwind;
+    public SerializablePlayerProjectile[] currentBeam;
 
     // Map Generator Section
     public double seedValue;

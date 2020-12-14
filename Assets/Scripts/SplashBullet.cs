@@ -7,7 +7,7 @@ public class SplashBullet : MonoBehaviour
     public bool disabled = false;
     private const float bulletSpeed = 20f;
     Vector2 bulletDirection;
-    private float lifeSpan;
+    public float lifeSpan;
     // Start is called before the first frame update
     void Start()
     {

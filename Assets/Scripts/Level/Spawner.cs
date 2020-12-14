@@ -33,23 +33,23 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         unitsSize = new List<int>();
-        minNormal = Random.Range(15,20);
-        minBoss = Random.Range(25,30);
+        minNormal = Random.Range(15, 20);
+        minBoss = Random.Range(25, 30);
     }
-    
+
 
     public void spawnNormal(float difficulty)
     {
-        Debug.Log("unitCount before reset: "+ unitCount);  
+        Debug.Log("unitCount before reset: " + unitCount);
         unitCount = 0;
-        
+
         currentLevel = mGrid.GetComponent<MapGenerator>();
-        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);  
+        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);
         if (spawnPool == null)
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
-        } 
-         
+        }
+
         normalCap = getNormalCap(difficulty);
         if (currentLevel.canSpawn() == true)
         {
@@ -71,7 +71,7 @@ public class Spawner : MonoBehaviour
     {
         int x = coords.x - (coords.y - (coords.y & 1)) / 2;
         int z = coords.y;
-        return new List<int>{ x, -x - z, z };
+        return new List<int> { x, -x - z, z };
     }
 
     Vector2Int[] oddr_ringdir = new Vector2Int[] {
@@ -84,7 +84,7 @@ public class Spawner : MonoBehaviour
     {
         int runlen = (ring == 0) ? 1 : ring * 6 / segs; int shift = 0;
         Vector2Int cell = new Vector2Int(ring, 0);
-        
+
         bubbles = new GameObject[6 * ring];
         bubbleChild = new BubbleSpirit[6 * ring];
         for (int i = 0; i < 6; ++i)
@@ -130,46 +130,46 @@ public class Spawner : MonoBehaviour
         {
             // delta shift enables noncontig
             // but idk what this value should actually be
-            int dshift = difficulty > 20 ? 1: 0; 
+            int dshift = difficulty > 20 ? 1 : 0;
             quota = spawnUnitRingSeg(bubbleParent, difficulty, dshift,
                                      ring++, segs, colors, quota);
         }
     }
 
     void Clear(int i)
-    {   
+    {
     }
     public IEnumerator setNormal(float difficulty)
-    {   
-        
-        Vector2 p = player.transform.position;    
+    {
+
+        Vector2 p = player.transform.position;
         int ring = 1;
-        foreach(int unit in unitsSize) 
-        { 
+        foreach (int unit in unitsSize)
+        {
             unitCount++;
             //Debug.Log("unitsSize["+ unit +"] = " + unitsSize[unit]);
             //Trying to get a spawnable location
             while (spawnPosFound == false)
             {
-                ranX = Random.Range(2,currentLevel.width);
-                ranY = Random.Range(2,currentLevel.height);
-                if (currentLevel.cavePoints[ranX,ranY] == 0 &&
-                    currentLevel.cavePoints[ranX + ring,ranY] == 0 &&
-                    currentLevel.cavePoints[ranX - ring,ranY] == 0 &&
-                    currentLevel.cavePoints[ranX,ranY + ring] == 0 &&
-                    currentLevel.cavePoints[ranX,ranY - ring] == 0 &&
-                    currentLevel.cavePoints[ranX + ring,ranY + ring] == 0 &&
-                    currentLevel.cavePoints[ranX - ring,ranY - ring] == 0 &&
-                    currentLevel.cavePoints[ranX + ring,ranY - ring] == 0 &&
-                    currentLevel.cavePoints[ranX - ring,ranY + ring] == 0)
+                ranX = Random.Range(2, currentLevel.width);
+                ranY = Random.Range(2, currentLevel.height);
+                if (currentLevel.cavePoints[ranX, ranY] == 0 &&
+                    currentLevel.cavePoints[ranX + ring, ranY] == 0 &&
+                    currentLevel.cavePoints[ranX - ring, ranY] == 0 &&
+                    currentLevel.cavePoints[ranX, ranY + ring] == 0 &&
+                    currentLevel.cavePoints[ranX, ranY - ring] == 0 &&
+                    currentLevel.cavePoints[ranX + ring, ranY + ring] == 0 &&
+                    currentLevel.cavePoints[ranX - ring, ranY - ring] == 0 &&
+                    currentLevel.cavePoints[ranX + ring, ranY - ring] == 0 &&
+                    currentLevel.cavePoints[ranX - ring, ranY + ring] == 0)
                 {
-                    if((Mathf.Pow(ranX - p.x, 2f)/(15*15) + Mathf.Pow(ranY - p.y, 2f)/(10*10)) > Mathf.Pow(spawnRadius, 2f))
-                    { 
+                    if ((Mathf.Pow(ranX - p.x, 2f) / (15 * 15) + Mathf.Pow(ranY - p.y, 2f) / (10 * 10)) > Mathf.Pow(spawnRadius, 2f))
+                    {
                         spawnPosFound = true;
                     }
-                }               
-            }  
-            spawnPosFound = false; 
+                }
+            }
+            spawnPosFound = false;
             GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
             BubbleUnit bubbleParent = e.GetComponent<BubbleUnit>();
             bubbleParent.transform.localPosition = new Vector3(ranX, ranY, 0);
@@ -177,13 +177,13 @@ public class Spawner : MonoBehaviour
             bubbleChild = new BubbleSpirit[unit];
             int bx = 0;
             int by = 0;
-            for(int i = 0; i < unit;i++)
-            {              
+            for (int i = 0; i < unit; i++)
+            {
                 bubbles[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
                 bubbleChild[i] = bubbles[i].GetComponent<BubbleSpirit>();
                 //Don't be mad with those magic numbers, I calculated the total cells each ring
                 //and got those but i'm too lazy to formular them :(
-                if(i == 0)
+                if (i == 0)
                 {
                     ring = 1;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
@@ -196,17 +196,17 @@ public class Spawner : MonoBehaviour
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-ring + 1,ring);
-                        by = Random.Range(-ring + 1,ring);
-                        Vector2Int tmp = new Vector2Int(bx,by);
+                        bx = Random.Range(-ring + 1, ring);
+                        by = Random.Range(-ring + 1, ring);
+                        Vector2Int tmp = new Vector2Int(bx, by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
-                            spawnPosFound = true;                        
-                        }                       
+                            spawnPosFound = true;
+                        }
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 22)
@@ -215,17 +215,17 @@ public class Spawner : MonoBehaviour
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-ring + 1,ring);
-                        by = Random.Range(-ring + 1,ring);
-                        Vector2Int tmp = new Vector2Int(bx,by);
+                        bx = Random.Range(-ring + 1, ring);
+                        by = Random.Range(-ring + 1, ring);
+                        Vector2Int tmp = new Vector2Int(bx, by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
-                            spawnPosFound = true;                        
-                        }                       
+                            spawnPosFound = true;
+                        }
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 43)
@@ -234,17 +234,17 @@ public class Spawner : MonoBehaviour
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-ring + 1,ring);
-                        by = Random.Range(-ring + 1,ring);
-                        Vector2Int tmp = new Vector2Int(bx,by);
+                        bx = Random.Range(-ring + 1, ring);
+                        by = Random.Range(-ring + 1, ring);
+                        Vector2Int tmp = new Vector2Int(bx, by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
-                            spawnPosFound = true;                        
-                        }                       
+                            spawnPosFound = true;
+                        }
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else if (i < 79)
@@ -253,17 +253,17 @@ public class Spawner : MonoBehaviour
                     //Try to spawn a bubble if the cell is not occupied
                     while (spawnPosFound == false)
                     {
-                        bx = Random.Range(-ring + 1,ring);
-                        by = Random.Range(-ring + 1,ring);
-                        Vector2Int tmp = new Vector2Int(bx,by);
+                        bx = Random.Range(-ring + 1, ring);
+                        by = Random.Range(-ring + 1, ring);
+                        Vector2Int tmp = new Vector2Int(bx, by);
                         if (bubbleParent.cellOrNull(tmp) == null)
                         {
-                            spawnPosFound = true;                        
-                        }                       
+                            spawnPosFound = true;
+                        }
                     }
                     spawnPosFound = false;
                     bubbleChild[i].setParent(bubbleParent, new Vector2Int(bx, by));
-                    bubbleChild[i].SetColor(Random.Range(0, totalColor));  
+                    bubbleChild[i].SetColor(Random.Range(0, totalColor));
                     BulletPatternGenerator.instance.addToBubble(bubbleChild[i], 0, difficulty);
                 }
                 else
@@ -271,23 +271,23 @@ public class Spawner : MonoBehaviour
                     //For spawning bigger units 
                 }
                 GameManager.theManager.addBubble();
-            }  
+            }
         }
-    yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(0);
     }
-    
+
     public void spawnBoss(float difficulty)
     {
         currentLevel = mGrid.GetComponent<MapGenerator>();
-        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);  
+        spawnPool = mGrid.GetComponent<MapGenerator>().GetRegions(0);
         if (spawnPool == null)
         {
             Debug.Log("Unable to find spawnable tile for enemy!");
-        } 
+        }
         bossCap = getBossCap(difficulty);
         if (currentLevel.canSpawn() == true)
         {
-            
+
             StartCoroutine(setPlayerBoss());
             StartCoroutine(setBoss(bossCap, difficulty));
             unitsSize.RemoveAll(unit => unit > 0);
@@ -299,46 +299,46 @@ public class Spawner : MonoBehaviour
 
 
     public IEnumerator setBoss(int bossCap, float difficulty)
-    {     
+    {
         int ring = 1;
         while (spawnPosFound == false)
         {
             //Spawn in the middle of the map
-            ranX = Random.Range(Mathf.RoundToInt(currentLevel.width/2f - currentLevel.width/4f), Mathf.RoundToInt(currentLevel.width/2f + currentLevel.width/4f));
-            ranY = Random.Range(Mathf.RoundToInt(currentLevel.height/2f - currentLevel.height/4f), Mathf.RoundToInt(currentLevel.height/2f + currentLevel.height/4f));  
+            ranX = Random.Range(Mathf.RoundToInt(currentLevel.width / 2f - currentLevel.width / 4f), Mathf.RoundToInt(currentLevel.width / 2f + currentLevel.width / 4f));
+            ranY = Random.Range(Mathf.RoundToInt(currentLevel.height / 2f - currentLevel.height / 4f), Mathf.RoundToInt(currentLevel.height / 2f + currentLevel.height / 4f));
             //Spawn 6 units away from a wall in all directions             
-            if (currentLevel.cavePoints[ranX,ranY] == 0 &&
-                currentLevel.cavePoints[ranX + ring,ranY] == 0 &&
-                currentLevel.cavePoints[ranX - ring,ranY] == 0 &&
-                currentLevel.cavePoints[ranX,ranY + ring] == 0 &&
-                currentLevel.cavePoints[ranX,ranY - ring] == 0 &&
-                currentLevel.cavePoints[ranX + ring,ranY + ring] == 0 &&
-                currentLevel.cavePoints[ranX - ring,ranY - ring] == 0 &&
-                currentLevel.cavePoints[ranX + ring,ranY - ring] == 0 &&
-                currentLevel.cavePoints[ranX - ring,ranY + ring] == 0
+            if (currentLevel.cavePoints[ranX, ranY] == 0 &&
+                currentLevel.cavePoints[ranX + ring, ranY] == 0 &&
+                currentLevel.cavePoints[ranX - ring, ranY] == 0 &&
+                currentLevel.cavePoints[ranX, ranY + ring] == 0 &&
+                currentLevel.cavePoints[ranX, ranY - ring] == 0 &&
+                currentLevel.cavePoints[ranX + ring, ranY + ring] == 0 &&
+                currentLevel.cavePoints[ranX - ring, ranY - ring] == 0 &&
+                currentLevel.cavePoints[ranX + ring, ranY - ring] == 0 &&
+                currentLevel.cavePoints[ranX - ring, ranY + ring] == 0
                 )
             {
                 spawnPosFound = true;
-            }              
-        }   
+            }
+        }
         spawnPosFound = false;
         GameObject e = Instantiate(Resources.Load("Prefabs/BubbleUnit")) as GameObject;
         BubbleUnit bossParent = e.GetComponent<BubbleUnit>();
-        bossParent.transform.localPosition = new Vector3(ranX, ranY, 0);     
-        boss = new GameObject[bossCap];    
+        bossParent.transform.localPosition = new Vector3(ranX, ranY, 0);
+        boss = new GameObject[bossCap];
         bossChild = new BubbleSpirit[bossCap];
         int bx = 0;
         int by = 0;
-        for(int i = 0; i < bossCap;i++)
-        {     
-            
-            boss[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;    
+        for (int i = 0; i < bossCap; i++)
+        {
+
+            boss[i] = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
             bossChild[i] = boss[i].GetComponent<BubbleSpirit>();
             //Don't be mad with those magic numbers, I calculated the total cells for each ring
             //and got those but i'm too lazy to formular them :(
-            if(i == 0)
-            {    
-                ring = 1;         
+            if (i == 0)
+            {
+                ring = 1;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
                 bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
@@ -349,17 +349,17 @@ public class Spawner : MonoBehaviour
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-ring + 1,ring);
-                    by = Random.Range(-ring + 1,ring);
-                    Vector2Int tmp = new Vector2Int(bx,by);
+                    bx = Random.Range(-ring + 1, ring);
+                    by = Random.Range(-ring + 1, ring);
+                    Vector2Int tmp = new Vector2Int(bx, by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
-                        spawnPosFound = true;                        
+                        spawnPosFound = true;
                     }
                 }
                 spawnPosFound = false;
                 bossChild[i].setParent(bossParent, new Vector2Int(bx, by));
-                bossChild[i].SetColor(Random.Range(0, totalColor));  
+                bossChild[i].SetColor(Random.Range(0, totalColor));
                 BulletPatternGenerator.instance.addToBubble(bossChild[i], 1, difficulty);
             }
             else if (i < 22)
@@ -368,12 +368,12 @@ public class Spawner : MonoBehaviour
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-ring + 1,ring);
-                    by = Random.Range(-ring + 1,ring);
-                    Vector2Int tmp = new Vector2Int(bx,by);
+                    bx = Random.Range(-ring + 1, ring);
+                    by = Random.Range(-ring + 1, ring);
+                    Vector2Int tmp = new Vector2Int(bx, by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
-                        spawnPosFound = true;                         
+                        spawnPosFound = true;
                     }
                 }
                 spawnPosFound = false;
@@ -387,12 +387,12 @@ public class Spawner : MonoBehaviour
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-ring + 1,ring);
-                    by = Random.Range(-ring + 1,ring);
-                    Vector2Int tmp = new Vector2Int(bx,by);
+                    bx = Random.Range(-ring + 1, ring);
+                    by = Random.Range(-ring + 1, ring);
+                    Vector2Int tmp = new Vector2Int(bx, by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
-                        spawnPosFound = true;                         
+                        spawnPosFound = true;
                     }
                 }
                 spawnPosFound = false;
@@ -406,12 +406,12 @@ public class Spawner : MonoBehaviour
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-ring + 1,ring);
-                    by = Random.Range(-ring + 1,ring);
-                    Vector2Int tmp = new Vector2Int(bx,by);
+                    bx = Random.Range(-ring + 1, ring);
+                    by = Random.Range(-ring + 1, ring);
+                    Vector2Int tmp = new Vector2Int(bx, by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
-                        spawnPosFound = true;                         
+                        spawnPosFound = true;
                     }
                 }
                 spawnPosFound = false;
@@ -425,12 +425,12 @@ public class Spawner : MonoBehaviour
                 //Try to spawn a bubble if the cell is not occupied
                 while (spawnPosFound == false)
                 {
-                    bx = Random.Range(-ring + 1,ring);
-                    by = Random.Range(-ring + 1,ring);
-                    Vector2Int tmp = new Vector2Int(bx,by);
+                    bx = Random.Range(-ring + 1, ring);
+                    by = Random.Range(-ring + 1, ring);
+                    Vector2Int tmp = new Vector2Int(bx, by);
                     if (bossParent.cellOrNull(tmp) == null)
                     {
-                        spawnPosFound = true;                         
+                        spawnPosFound = true;
                     }
                 }
                 spawnPosFound = false;
@@ -442,28 +442,28 @@ public class Spawner : MonoBehaviour
             {
                 //For spawning bigger units 
                 //To find the next hexagon ring area: 
-            }            
-            GameManager.theManager.addBubble();         
+            }
+            GameManager.theManager.addBubble();
         }
-    yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(0);
     }
 
 
-    
+
     public IEnumerator setPlayerNormal()
-    { 
+    {
         while (spawnPosFound == false)
-        {           
-            ranX = Random.Range(2,currentLevel.width - 2);
-            ranY = Random.Range(2,currentLevel.height - 2);
-            if (currentLevel.cavePoints[ranX,ranY] == 0 &&
-                currentLevel.cavePoints[ranX + 1,ranY] == 0 &&
-                currentLevel.cavePoints[ranX - 1,ranY] == 0 &&
-                currentLevel.cavePoints[ranX,ranY + 1] == 0 &&
-                currentLevel.cavePoints[ranX,ranY - 1] == 0)
-            {             
+        {
+            ranX = Random.Range(2, currentLevel.width - 2);
+            ranY = Random.Range(2, currentLevel.height - 2);
+            if (currentLevel.cavePoints[ranX, ranY] == 0 &&
+                currentLevel.cavePoints[ranX + 1, ranY] == 0 &&
+                currentLevel.cavePoints[ranX - 1, ranY] == 0 &&
+                currentLevel.cavePoints[ranX, ranY + 1] == 0 &&
+                currentLevel.cavePoints[ranX, ranY - 1] == 0)
+            {
                 player.transform.localPosition = new Vector3(ranX, ranY, 0);
-                spawnPosFound = true;    
+                spawnPosFound = true;
             }
         }
         spawnPosFound = false;
@@ -471,7 +471,7 @@ public class Spawner : MonoBehaviour
     }
 
     public IEnumerator setPlayerBoss()
-    { 
+    {
         /* Trying to get spawnable location Xs
         -----------------------------
         |            3          x   |
@@ -483,33 +483,33 @@ public class Spawner : MonoBehaviour
         |            3     x        |
         -----------------------------  */
         while (spawnPosFound == false)
-        {           
-            ranX = Random.Range(0,2);
+        {
+            ranX = Random.Range(0, 2);
             if (ranX == 0)
             {
-                ranX = Random.Range(2,Mathf.RoundToInt(currentLevel.width/10f) + 2);
+                ranX = Random.Range(2, Mathf.RoundToInt(currentLevel.width / 10f) + 2);
             }
             else
             {
-                ranX = Random.Range(Mathf.RoundToInt(currentLevel.width - (currentLevel.width/10f)) - 2, currentLevel.width - 2);
+                ranX = Random.Range(Mathf.RoundToInt(currentLevel.width - (currentLevel.width / 10f)) - 2, currentLevel.width - 2);
             }
-            ranY = Random.Range(0,2);
+            ranY = Random.Range(0, 2);
             if (ranY == 0)
             {
-                ranY = Random.Range(2,Mathf.RoundToInt(currentLevel.height/10f) + 2);          
+                ranY = Random.Range(2, Mathf.RoundToInt(currentLevel.height / 10f) + 2);
             }
             else
             {
-                ranY = Random.Range(Mathf.RoundToInt(currentLevel.height - (currentLevel.height/5f)) - 2, currentLevel.height - 2);
+                ranY = Random.Range(Mathf.RoundToInt(currentLevel.height - (currentLevel.height / 5f)) - 2, currentLevel.height - 2);
             }
-            if (currentLevel.cavePoints[ranX,ranY] == 0 &&
-                currentLevel.cavePoints[ranX + 1,ranY] == 0 &&
-                currentLevel.cavePoints[ranX - 1,ranY] == 0 &&
-                currentLevel.cavePoints[ranX,ranY + 1] == 0 &&
-                currentLevel.cavePoints[ranX,ranY - 1] == 0)
-            {             
+            if (currentLevel.cavePoints[ranX, ranY] == 0 &&
+                currentLevel.cavePoints[ranX + 1, ranY] == 0 &&
+                currentLevel.cavePoints[ranX - 1, ranY] == 0 &&
+                currentLevel.cavePoints[ranX, ranY + 1] == 0 &&
+                currentLevel.cavePoints[ranX, ranY - 1] == 0)
+            {
                 player.transform.localPosition = new Vector3(ranX, ranY, 0);
-                spawnPosFound = true;    
+                spawnPosFound = true;
             }
         }
         spawnPosFound = false;
@@ -543,7 +543,7 @@ public class Spawner : MonoBehaviour
             minUnitSize = 2;
             maxUnitSize = 4;
         }
-         //Equivalent to level 7 if curve is 2
+        //Equivalent to level 7 if curve is 2
         else if (difficulty < 25)
         {
             minUnitSize = 3;
@@ -556,10 +556,10 @@ public class Spawner : MonoBehaviour
         }
     }
     //Set total units from the number of bubbles
-    public void setTotalUnit( int totalBubble,float difficulty)
+    public void setTotalUnit(int totalBubble, float difficulty)
     {
-        int bubbleLeft = totalBubble;  
-        setUnitSize(difficulty);    
+        int bubbleLeft = totalBubble;
+        setUnitSize(difficulty);
         while (bubbleLeft > 0)
         {
             if (bubbleLeft <= 0)
@@ -572,19 +572,19 @@ public class Spawner : MonoBehaviour
                 unitsSize.Add(1);
                 break;
             }
-            int ranUnitSize = Random.Range(minUnitSize,maxUnitSize + 1);
+            int ranUnitSize = Random.Range(minUnitSize, maxUnitSize + 1);
             if (ranUnitSize > bubbleLeft)
             {
-                ranUnitSize = Random.Range(minUnitSize,bubbleLeft + 1);
-            } 
+                ranUnitSize = Random.Range(minUnitSize, bubbleLeft + 1);
+            }
             unitsSize.Add(ranUnitSize);
             bubbleLeft -= ranUnitSize;
         }
     }
-   
+
     public void setTotalColor(float difficulty)
     {
-        
+
         //Equivalent to level 2 if curve is 2
         if (difficulty < 4)
         {
@@ -647,9 +647,9 @@ public class Spawner : MonoBehaviour
                 f.GetComponent<BubbleSpirit>().isChain = unitChildren[j].isChain;
                 f.GetComponent<BubbleSpirit>().SetColor(unitChildren[j].color);
                 f.GetComponent<BubbleSpirit>().setParent(e.GetComponent<BubbleUnit>(), unitChildren[j].gridPosition.getVectorTwoInt());
-                
+
                 BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), unitChildren[j].pattern);
-                 
+
             }
 
             e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;
@@ -698,6 +698,40 @@ public class Spawner : MonoBehaviour
             e.transform.localRotation = theSaveData.currentPlayerProjectile[i].bulletRotation.getQuaternion();
             e.GetComponent<PlayerBulletBehavior>().lifeSpan = theSaveData.currentPlayerProjectile[i].lifeSpan;
             e.GetComponent<PlayerBulletBehavior>().disabled = theSaveData.currentPlayerProjectile[i].disabled;
+        }
+
+        for (int i = 0; i < theSaveData.currentSplash.Length; i++)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Splash") as
+                                   GameObject);
+
+            e.transform.localPosition = theSaveData.currentSplash[i].bulletDirection.getVectorThree();
+            e.transform.localRotation = theSaveData.currentSplash[i].bulletRotation.getQuaternion();
+            e.GetComponent<SplashBullet>().lifeSpan = theSaveData.currentSplash[i].lifeSpan;
+            e.GetComponent<SplashBullet>().disabled = theSaveData.currentSplash[i].disabled;
+        }
+
+        for (int i = 0; i < theSaveData.currentWhirlwind.Length; i++){
+            GameObject e = Instantiate(Resources.Load("Prefabs/Whirlwind") as
+                                   GameObject);
+
+            e.transform.localPosition = theSaveData.currentWhirlwind[i].bulletDirection.getVectorThree();
+        }
+
+        for (int i = 0; i < theSaveData.currentBeam.Length; i++)
+        {
+            GameObject e = Instantiate(Resources.Load("Prefabs/Beam") as
+                                   GameObject);
+
+            e.transform.localPosition = theSaveData.currentBeam[i].bulletDirection.getVectorThree();
+            e.transform.localRotation = theSaveData.currentBeam[i].bulletRotation.getQuaternion();
+            e.GetComponent<SinWaveBullet>().axis = theSaveData.currentBeam[i].axis.getVectorThree();
+            e.GetComponent<SinWaveBullet>().input = theSaveData.currentBeam[i].input.getVectorThree();
+            e.GetComponent<SinWaveBullet>().pos = theSaveData.currentBeam[i].pos.getVectorThree();
+            e.GetComponent<SinWaveBullet>().MoveSpeed = theSaveData.currentBeam[i].MoveSpeed;
+            e.GetComponent<SinWaveBullet>().frequency = theSaveData.currentBeam[i].frequency;
+            e.GetComponent<SinWaveBullet>().magnitude = theSaveData.currentBeam[i].magnitude;
+            e.GetComponent<SinWaveBullet>().disabled = theSaveData.currentBeam[i].disabled;
         }
     }
 }
