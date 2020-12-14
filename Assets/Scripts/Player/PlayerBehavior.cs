@@ -205,7 +205,7 @@ public class PlayerBehavior : MonoBehaviour
             attackChargeTimer += Time.deltaTime;
         }
 
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8) && (trapCount >= 4) ||
+        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8) && (trapCount >= 7) ||
                 Input.GetKeyUp(KeyCode.L) && (attackChargeTimer >= 0.8) && (trapCount >= 7))
         {
             //shootBeam = true;
