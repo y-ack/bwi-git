@@ -213,7 +213,8 @@ public class PlayerBehavior : MonoBehaviour
             cutIn.enabled = true;
             showCutIn = true;
             cutInDuration = 1.5f;
-            GameManager.theManager.isInvincible = true; 
+            GameManager.theManager.isInvincible = true;
+            //SubTrapForBeam();
             attackChargeTimer = 0; 
         }
         else if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.4) && (trapCount >= 4) ||
@@ -292,9 +293,9 @@ public class PlayerBehavior : MonoBehaviour
         */
         if(cutInDuration < 0f)
             {
-                cutIn.enabled = false;
             resetCutIn();
-                shootBeam = true;
+            cutIn.enabled = false;
+            shootBeam = true;
             
             }
         if(showCutIn)
@@ -672,6 +673,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private void cutInAnimation()
     {
+        cutIn.fillOrigin = (int)Image.OriginHorizontal.Right;
         cutIn.fillAmount += (4f * Time.deltaTime);
     }
 
@@ -683,7 +685,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private void resetCutIn()
     {
-        cutIn.fillOrigin = (int)Image.OriginHorizontal.Right;
+        //cutIn.fillOrigin = (int)Image.OriginHorizontal.Right;
         cutIn.fillAmount = 0;
     }
 
