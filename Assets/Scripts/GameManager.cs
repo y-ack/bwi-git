@@ -820,9 +820,13 @@ public class GameManager : MonoBehaviour
         bubbleCounter++;
     }
 
-    public void bubbleCleared()
+    public void bubbleCleared(bool normalClear)
     {
-        uiControl.addClearIndicator();
+        if (normalClear)
+        {
+            uiControl.addClearIndicator();
+        }
+
         bubbleCounter--;
     }
 

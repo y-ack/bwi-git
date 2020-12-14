@@ -448,7 +448,7 @@ public class BubbleSpirit : MonoBehaviour
     {       
         RunStatistics.Instance.bubblesCleared++;
         RunStatistics.Instance.totalScore += 15;
-        GameManager.theManager.bubbleCleared();
+        GameManager.theManager.bubbleCleared(true);
         Destroy(gameObject);
     }
 
@@ -456,7 +456,7 @@ public class BubbleSpirit : MonoBehaviour
     {
         RunStatistics.Instance.bubblesCleared++;
         RunStatistics.Instance.bubblesChainCleared[color]++;
-        GameManager.theManager.bubbleCleared();
+        GameManager.theManager.bubbleCleared(false);
         playerTarget.addtrapCount();
         GameManager.theManager.addChain();
         Destroy(gameObject);

@@ -22,6 +22,8 @@ public class GameUIControl : MonoBehaviour
     public Image tutorialOne;
     public Image tutorialTwo;
     public Image sendScoreUI;
+    public Image trapBarCurrentUI;
+    public Image trapBarChargeUI;
     public Text stageUI;
     public Text playerLifeUI;
     public Text scoreUI;
@@ -45,6 +47,8 @@ public class GameUIControl : MonoBehaviour
     public bool isChainScore;
     public float chainTime;
     public float scoreTime;
+    public float currentCharge = 0f; // the trapBarCharge current charge
+    public float chargeCap = 0.4f; // the trapBarCharge cap
 
     public bool trapMax = false;
     public bool captureMax = false;
@@ -63,6 +67,7 @@ public class GameUIControl : MonoBehaviour
         chainTextGroup = chainTextUI.GetComponent<CanvasGroup>();
 
         defaultChainText();
+        resetTrapCharge();
 
         /*
         rollCooldown = thePlayer.dashCoolDown;
@@ -94,8 +99,7 @@ public class GameUIControl : MonoBehaviour
         updateCaptureIcon();
         updateUpgradeButton();
         udpateChainText();
-
-
+        updateTrapBarCurrent();
 
         if (trapUI.fillAmount < 1)
         {
@@ -128,7 +132,10 @@ public class GameUIControl : MonoBehaviour
     private void buttonControl()
     {
         if ((Input.GetMouseButton(1) || Input.GetKey(KeyCode.L)) && trapUI.fillAmount == 1 && trapCount > 0)
+        {
             activateTrap();
+            trapBarChargeControl();
+        }
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.K)) && captureUI.fillAmount == 1)
             activateCapture();
         if (Input.GetKeyDown(KeyCode.Space) && rollUI.fillAmount == 1)
@@ -665,7 +672,7 @@ public class GameUIControl : MonoBehaviour
 
     public void defaultChainText()
     {
-        chainTextUI.text = (GameManager.theManager.chainCount+1) + " CHAIN COMBO";
+        chainTextUI.text = GameManager.theManager.chainCount+1 + " CHAIN COMBO";
         chainTextUI.fontSize = 20;
         GameManager.theManager.chainScore = 0;
     }
@@ -716,4 +723,43 @@ public class GameUIControl : MonoBehaviour
         GameObject e = Instantiate(Resources.Load("Prefabs/ClearPointIndicator")) as GameObject;
         e.transform.SetParent(playerHUDUI.transform, false);
     }
+
+    public void updateTrapBarCurrent()
+    {
+        trapBarCurrentUI.fillAmount = thePlayer.trapCount / 10f;
+    }
+
+    /* Control Method For the trapBarCharge
+     * 
+     * Control the trapBarCharge color indicator
+     * As the player held onto RMB or the L key, the bar will charge
+     * The fill amount does not go past thePlayer.trapCount/10
+     * The fill amount will stop at 0.4 if splash has not been unlocked
+     * The fill amount will stop at 0.7 if the beam has not been unlocked
+     * */
+    public void trapBarChargeControl()
+    {
+        if(currentCharge < chargeCap)
+        {
+            currentCharge += Time.smoothDeltaTime;
+            updateTrapBarCharge();
+        }
+        else
+        {
+            currentCharge = chargeCap;
+        }
+    }
+
+    public void updateTrapBarCharge()
+    {
+        trapBarChargeUI.fillAmount = currentCharge;
+    }
+
+    public void resetTrapCharge()
+    {
+        currentCharge = 0;
+        trapBarChargeUI.fillAmount = 0;
+    }
+
+    
 }
