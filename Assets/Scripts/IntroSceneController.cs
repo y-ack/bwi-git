@@ -12,6 +12,7 @@ public class IntroSceneController : MonoBehaviour
     public Text Slide2Text1 = null;
     public Text Slide2Text2 = null;
     public Image Slide2Picture = null;
+    public Image Slide2Picture2 = null;
 
     public Text Slide3Text1 = null;
     public Text Slide3Text2 = null;
@@ -28,6 +29,7 @@ public class IntroSceneController : MonoBehaviour
         Slide2Text1.gameObject.SetActive(false);
         Slide2Text2.gameObject.SetActive(false);
         Slide2Picture.gameObject.SetActive(false);
+        Slide2Picture2.gameObject.SetActive(false);
 
         Slide3Text1.gameObject.SetActive(false);
         Slide3Text2.gameObject.SetActive(false);
@@ -43,6 +45,7 @@ public class IntroSceneController : MonoBehaviour
         Slide2Text1.gameObject.SetActive(true);
         Slide2Picture.gameObject.SetActive(true);
         yield return new WaitForSeconds(7);
+        Slide2Picture2.gameObject.SetActive(true);
         Slide2Text2.gameObject.SetActive(true);
         yield return new WaitForSeconds(8);
         Slide3Picture.gameObject.SetActive(true);
