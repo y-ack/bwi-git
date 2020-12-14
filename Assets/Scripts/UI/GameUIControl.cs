@@ -8,6 +8,7 @@ public class GameUIControl : MonoBehaviour
     public PlayerBehavior thePlayer;
     public Image playerHUDUI;
     public Image mainMenuUI;
+    public Image optionUI;
     public Image lostScreenUI;
     public Image resultScreenUI;
     public Image upgradeScreenUI;
@@ -32,6 +33,7 @@ public class GameUIControl : MonoBehaviour
 
 
     private CanvasGroup mainMenuGroup;
+    private CanvasGroup optionGroup;
     private CanvasGroup lostScreenGroup;
     private CanvasGroup resultScreenGroup;
     private CanvasGroup upgradeScreenGroup;
@@ -59,6 +61,7 @@ public class GameUIControl : MonoBehaviour
     void Start()
     {
         mainMenuGroup = mainMenuUI.GetComponent<CanvasGroup>();
+        optionGroup = optionUI.GetComponent<CanvasGroup>();
         lostScreenGroup = lostScreenUI.GetComponent<CanvasGroup>();
         resultScreenGroup = resultScreenUI.GetComponent<CanvasGroup>();
         upgradeScreenGroup = upgradeScreenUI.GetComponent<CanvasGroup>();
@@ -164,6 +167,20 @@ public class GameUIControl : MonoBehaviour
         mainMenuGroup.interactable = false;
     }
 
+    public void showOption()
+    {
+        optionGroup.alpha = 1f;
+        optionGroup.blocksRaycasts = true;
+        optionGroup.interactable = true;
+    }
+
+    public void hideOption()
+    {
+        optionGroup.alpha = 0f;
+        optionGroup.blocksRaycasts = false;
+        optionGroup.interactable = false;
+    }
+
     // Method used to show the lose screen
     public void showLost()
     {    
@@ -209,6 +226,14 @@ public class GameUIControl : MonoBehaviour
         resultScreenGroup.alpha = 0f;
         resultScreenGroup.blocksRaycasts = false;
         resultScreenGroup.interactable = false;
+    }
+
+    public void defaultUpgrade()
+    {
+        trapMax = false;
+        captureMax = false;
+        rollMax = false;
+        lifeMax = false;
     }
 
     // Method used to show the upgrade screen

@@ -228,6 +228,7 @@ public class GameManager : MonoBehaviour
         RunStatistics.Instance.currentLife = 3;
         RunStatistics.Instance.trapCount = 0;
         mPlayer.setDefaultState();
+        uiControl.defaultUpgrade();
         //Debug.Log("Diff: " + difficulty);
         generateStage(false);
         originalPos = mPlayer.transform.position;

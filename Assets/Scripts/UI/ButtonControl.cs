@@ -84,6 +84,18 @@ public class ButtonControl : MonoBehaviour
         SceneManager.LoadScene("TitleScreen");
     }
 
+    public void pauseToOption()
+    {
+        theUI.hideMenu();
+        theUI.showOption();
+    }
+
+    public void optionBackButton()
+    {
+        theUI.hideOption();
+        theUI.showMenu();
+    }
+
     public void lostToSendButton()
     {
         loaderFinder = GameObject.Find("SendScoreUI/SendBackground/Loader");
