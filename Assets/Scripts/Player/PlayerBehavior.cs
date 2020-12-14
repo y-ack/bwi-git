@@ -131,6 +131,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (GameManager.theManager.canMove == true)
             buttonControl();
+        Debug.Log("The Game Manager State is " + GameManager.theManager.controlPause);
     }
 
     void FixedUpdate()
@@ -205,7 +206,7 @@ public class PlayerBehavior : MonoBehaviour
             attackChargeTimer += Time.deltaTime;
         }
 
-        if(Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8) && (trapCount >= 7) ||
+        if (Input.GetKeyUp(KeyCode.Mouse1) && (attackChargeTimer >= 0.8) && (trapCount >= 7) ||
                 Input.GetKeyUp(KeyCode.L) && (attackChargeTimer >= 0.8) && (trapCount >= 7))
         {
             //shootBeam = true;
@@ -297,15 +298,11 @@ public class PlayerBehavior : MonoBehaviour
         */
         if(cutInDuration < 0f)
             {
-            GameManager.theManager.pauseControl();
+            
             resetCutIn();
             cutIn.enabled = false;
             shootBeam = true;
 
-        }
-        else
-        {
-            GameManager.theManager.unpauseControl();
         }
 
         if(showCutIn)
@@ -320,8 +317,7 @@ public class PlayerBehavior : MonoBehaviour
                 cutOutAnimation();
             }
         }
-        
-        
+              
         if(shootBeam)
         {
             if(beamAfterSec <= 0f)
@@ -341,12 +337,12 @@ public class PlayerBehavior : MonoBehaviour
                     spawnedBullet.SetOdd();
                 }
                 ++counter;
-                if(counter > 20)
+                if(counter >= 20)
                 { 
                     shootBeam = false; 
-                    counter = 0; 
+                    counter = 0;
+                    GameManager.theManager.unpauseControl();
                     GameManager.theManager.isInvincible = false;
-                    GameManager.theManager.pauseControl();
                     cutInDuration = 0f;
                     canMove = true;
                 }
@@ -684,6 +680,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         cutIn.fillOrigin = (int)Image.OriginHorizontal.Left;
         cutIn.fillAmount -= (4f * Time.deltaTime);
+        if(cutIn.fillAmount <= 0)
+        {
+            showCutIn = false;
+        }
     }
 
     private void resetCutIn()
