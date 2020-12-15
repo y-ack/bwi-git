@@ -131,7 +131,6 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (GameManager.theManager.canMove == true)
             buttonControl();
-        Debug.Log("The Game Manager State is " + GameManager.theManager.controlPause);
     }
 
     void FixedUpdate()

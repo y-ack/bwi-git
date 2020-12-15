@@ -19,7 +19,12 @@ public class StatisticUI : MonoBehaviour
     private bool stillLoading = true;
     public GameObject textFinder;
     public Text loadingText;
+    private bool loggedInFlag = false;
 
+    public void setLoginFlag()
+    {
+        loggedInFlag = true;
+    }
 
     void Start()
     {
@@ -42,8 +47,9 @@ public class StatisticUI : MonoBehaviour
 
     IEnumerator updateGlobalWithSleeps()
     {
-        PlayFabManager.thePlayFabManager.Login("ccb");
-        yield return new WaitForSecondsRealtime(3);
+        //PlayFabManager.thePlayFabManager.Login("ccb");
+        //PlayFabManager.thePlayFabManager.Login("ccb");
+        //yield return new WaitForSecondsRealtime(3);
         int currentPosition = 1;
         GameObject statisticBG = globalStatistic.transform.Find("Global Statistic View").gameObject;
 

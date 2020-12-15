@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PlayFab;
+using PlayFab.ClientModels;
 using UnityEngine.SceneManagement;
 
 public class IntroSceneController : MonoBehaviour
@@ -23,6 +25,7 @@ public class IntroSceneController : MonoBehaviour
     void Start()
     {
         FindObjectOfType<AudioManager>().Play("Intro_Theme");  
+        PlayFabManager.thePlayFabManager.Login("ccb");
         Slide1Text1.enabled = false;
         Slide1Picture.enabled = false;
 
