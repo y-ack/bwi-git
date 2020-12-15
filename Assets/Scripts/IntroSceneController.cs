@@ -55,7 +55,7 @@ public class IntroSceneController : MonoBehaviour
         Slide3Text1.gameObject.SetActive(true);
         yield return new WaitForSeconds(7);
         Slide3Text2.gameObject.SetActive(true);
-        yield return new WaitForSeconds(7);
+        yield return new WaitForSeconds(8);
         FindObjectOfType<AudioManager>().Stop("Intro_Theme"); 
         SceneManager.LoadScene("TitleScreen");
     }
