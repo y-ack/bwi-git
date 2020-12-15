@@ -136,30 +136,34 @@ public class StatisticUI : MonoBehaviour
             GameObject maxScoreText = statisticBG.transform.Find("Max Score").gameObject;
             GameObject maxBubbleText = statisticBG.transform.Find("Max Bubble Cleared").gameObject;
             GameObject maxMatchText = statisticBG.transform.Find("Max Bubble Matched").gameObject;
-            GameObject maxBossText = statisticBG.transform.Find("Max Boss Cleared").gameObject;
             GameObject lastTimeText = statisticBG.transform.Find("Last Play Time").gameObject;
             GameObject pStageText = statisticBG.transform.Find("Previous Stage Cleared").gameObject;
             GameObject pScoreText = statisticBG.transform.Find("Previous Score").gameObject;
             GameObject pBubbleText = statisticBG.transform.Find("Previous Bubble Cleared").gameObject;
             GameObject pMatchText = statisticBG.transform.Find("Previous Bubble Matched").gameObject;
-            GameObject pBossText = statisticBG.transform.Find("Previous Boss Cleared").gameObject;
 
             PlayerData saveData = SaveSystem.loadPlayer();
 
-            playerText.GetComponent<Text>().text = "Player Name: " + saveData.playerName;
+            if(saveData.playerName == "")
+            {
+                playerText.GetComponent<Text>().text = "Player Name: Iris";
+            }
+            else
+            {
+                playerText.GetComponent<Text>().text = "Player Name: " + saveData.playerName;
+            }
+            
             totalPlayText.GetComponent<Text>().text = "Total Play Time: " + System.Math.Round(saveData.totalPlayTime,2);
             averagePlayText.GetComponent<Text>().text = "Average Stage Time: " + System.Math.Round(saveData.averageStageTime, 2);
             stageClearText.GetComponent<Text>().text = "Stage Cleared: " + saveData.stageCleared;
             maxScoreText.GetComponent<Text>().text = "Max Score: " + saveData.maxScore;
             maxBubbleText.GetComponent<Text>().text = "Max Bubble Cleared: " + saveData.maxBubbleCleared;
             maxMatchText.GetComponent<Text>().text = "Max Bubble Matched: " + saveData.maxBubbleMatched;
-            maxBossText.GetComponent<Text>().text = "Max Boss Cleared: " + saveData.maxBossCleared;
             lastTimeText.GetComponent<Text>().text = "Last Session Time: " + System.Math.Round(saveData.lastSessionTime, 2);
             pStageText.GetComponent<Text>().text = "Previous Stage Cleared: " + saveData.lastStageCleared;
             pScoreText.GetComponent<Text>().text = "Previous Score: " + saveData.lastScore;
             pBubbleText.GetComponent<Text>().text = "Previous Bubble Cleared: " + saveData.lastBubbleCleared;
             pMatchText.GetComponent<Text>().text = "Previous Bubble Matched: " + saveData.lastBubbleMatched;
-            pBossText.GetComponent<Text>().text = "Previous Boss Cleared: " + saveData.lastBossCleared;
         }
     }
 }
