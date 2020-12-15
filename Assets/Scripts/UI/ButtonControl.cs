@@ -166,20 +166,14 @@ public class ButtonControl : MonoBehaviour
         {
             if (thePlayer.trapCountCap < 10f)
             {
-                if ((thePlayer.trapCountCap += 3) >= 10f)
+
+                thePlayer.trapCountCap = thePlayer.trapCountCap + 3;
+                RunStatistics.Instance.totalScore -= 500;
+
+                if (thePlayer.trapCountCap >= 10)
                 {
-                    thePlayer.trapCountCap = 10;
-                    RunStatistics.Instance.totalScore -= 500;
                     theUI.trapMax = true;
                 }
-                else
-                {
-                    RunStatistics.Instance.totalScore -= 500;
-                }
-            }
-            else
-            {
-
             }
         }
     }
@@ -190,20 +184,14 @@ public class ButtonControl : MonoBehaviour
         {
             if (thePlayer.captureCoolDown > 1f)
             {
-                if((thePlayer.captureCoolDown -= 0.2f) <= 1f)
+                thePlayer.captureCoolDown = thePlayer.captureCoolDown - 0.2f;
+                theUI.captureCooldown = thePlayer.captureCoolDown;
+                RunStatistics.Instance.totalScore -= 500;
+
+                if (thePlayer.captureCoolDown <= 1f)
                 {
-                    thePlayer.captureCoolDown = 1f;
-                    RunStatistics.Instance.totalScore -= 500;
                     theUI.captureMax = true;
                 }
-                else
-                {
-                    RunStatistics.Instance.totalScore -= 500;
-                }
-            }
-            else
-            {
-
             }
         }
     }
@@ -214,20 +202,13 @@ public class ButtonControl : MonoBehaviour
         {
             if (thePlayer.dashCoolDown > 4f)
             {
-                if((thePlayer.dashCoolDown -= 0.5f) <= 4f)
+                thePlayer.dashCoolDown = thePlayer.dashCoolDown - 0.5f;
+                RunStatistics.Instance.totalScore -= 500;
+
+                if (thePlayer.dashCoolDown <= 4f)
                 {
-                    thePlayer.dashCoolDown = 4f;
-                    RunStatistics.Instance.totalScore -= 500;
                     theUI.rollMax = true;
                 }
-                else
-                {
-                    RunStatistics.Instance.totalScore -= 500;
-                }
-            }
-            else
-            {
-                // hide button
             }
         }
     }
@@ -240,10 +221,6 @@ public class ButtonControl : MonoBehaviour
             {
                 RunStatistics.Instance.currentLife += 1;
                 RunStatistics.Instance.totalScore -= 1000;
-            }
-            else
-            {
-
             }
         }
     }
