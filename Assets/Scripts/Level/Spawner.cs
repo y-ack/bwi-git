@@ -648,12 +648,46 @@ public class Spawner : MonoBehaviour
                 f.GetComponent<BubbleSpirit>().SetColor(unitChildren[j].color);
                 f.GetComponent<BubbleSpirit>().setParent(e.GetComponent<BubbleUnit>(), unitChildren[j].gridPosition.getVectorTwoInt());
 
-                BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), unitChildren[j].pattern);
 
+                BulletPatternGenerator.instance.addSavedPattern(f.GetComponent<BubbleSpirit>(), unitChildren[j].pattern);
             }
 
             e.GetComponent<BubbleUnit>().radius = theSaveData.currentBubbleUnit[i].radius;
             e.GetComponent<BubbleUnit>().bubbleCount = theSaveData.currentBubbleUnit[i].bubbleCount;
+        }
+
+
+        SerializableBubbleSpirit[] savedBubbleSpirit = theSaveData.currentBubbleSpirit;
+
+        for (int i = 0; i < savedBubbleSpirit.Length; i++)
+        {
+
+            if(savedBubbleSpirit[i].state == SerializableBubbleSpirit.State.LAUNCHED || savedBubbleSpirit[i].state == SerializableBubbleSpirit.State.CLEARED)
+            {
+                GameObject f = Instantiate(Resources.Load("Prefabs/BubbleSpirit")) as GameObject;
+                f.transform.position = savedBubbleSpirit[i].bubblePosition.getVectorThree();
+
+                switch (savedBubbleSpirit[i].state)
+                {
+                    case SerializableBubbleSpirit.State.LAUNCHED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.LAUNCHED;
+                        break;
+
+                    case SerializableBubbleSpirit.State.CLEARED:
+                        f.GetComponent<BubbleSpirit>().state = BubbleSpirit.State.CLEARED;
+                        break;
+
+                    default:
+
+                        break;
+                }
+                f.transform.localScale = savedBubbleSpirit[i].bubbleSize.getVectorThree();
+                f.GetComponent<BubbleSpirit>().rebounds = savedBubbleSpirit[i].rebounds;
+                f.GetComponent<BubbleSpirit>().launchDirection = savedBubbleSpirit[i].launchDirection.getVectorThree();
+                f.GetComponent<BubbleSpirit>().cleared = savedBubbleSpirit[i].cleared;
+                f.GetComponent<BubbleSpirit>().isChain = savedBubbleSpirit[i].isChain;
+                f.GetComponent<BubbleSpirit>().SetColor(savedBubbleSpirit[i].color);
+            } 
         }
     }
 
@@ -714,7 +748,6 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < theSaveData.currentWhirlwind.Length; i++){
             GameObject e = Instantiate(Resources.Load("Prefabs/Whirlwind") as
                                    GameObject);
-
             e.transform.localPosition = theSaveData.currentWhirlwind[i].bulletDirection.getVectorThree();
         }
 

@@ -108,6 +108,14 @@ public class PlayerBehavior : MonoBehaviour
     public void RestoreDefaultState()
     {
         captureState = CaptureState.IDLE;
+        showCutIn = false;
+        flag = false;
+        canMove = true;
+        shootBeam = false;
+        counter = 0;
+        GameManager.theManager.isInvincible = false;
+        cutInDuration = 0f;
+        canMove = true;
     }
 
 

@@ -88,8 +88,8 @@ public class GameUIControl : MonoBehaviour
         }
         rollCooldown = thePlayer.dashCoolDown;
         trapCooldown = thePlayer.shootCoolDown - 0.0825f;
-        captureCooldown = thePlayer.captureAfterSec + .825f;
-        //captureCooldown = thePlayer.captureCoolDown;
+        //captureCooldown = thePlayer.captureAfterSec + .825f;
+        captureCooldown = thePlayer.captureCoolDown;
         trapCount = thePlayer.getTrapCount();
         if (GameManager.theManager.canMove == true)
         {

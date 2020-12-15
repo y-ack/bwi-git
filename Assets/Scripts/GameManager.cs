@@ -888,6 +888,7 @@ public class GameManager : MonoBehaviour
             beamProjectile.frequency = currentBeam[i].GetComponent<SinWaveBullet>().frequency;
             beamProjectile.magnitude = currentBeam[i].GetComponent<SinWaveBullet>().magnitude;
             beamProjectile.disabled = currentBeam[i].GetComponent<SinWaveBullet>().disabled;
+            quickSave.currentBeam[i] = beamProjectile;
         }
 
         SaveSystem.quickSave(quickSave);

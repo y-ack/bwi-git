@@ -69,7 +69,10 @@ public class BubbleSpirit : MonoBehaviour
     {
         myLight = GetComponent<Light2D>();
         playerTarget = (PlayerBehavior)FindObjectOfType(typeof(PlayerBehavior));
-        updateNeighborCountActual();
+        if(state == State.NORMAL)
+        {
+            updateNeighborCountActual();
+        }
     }
 
     [SerializeField] private float orbit_x = 0.9f;
@@ -330,6 +333,7 @@ public class BubbleSpirit : MonoBehaviour
         Invoke("updateNeighborCountActual", 0.04f); 
         isUpdatePending = true;
     }
+
     private void updateNeighborCountActual()
     {
         if (cleared) return;
