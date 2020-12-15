@@ -22,6 +22,7 @@ public class GameUIControl : MonoBehaviour
     public Image lifeButtonUI;
     public Image tutorialOne;
     public Image tutorialTwo;
+    public Image tutorialThree;
     public Image sendScoreUI;
     public Image trapBarCurrentUI;
     public Image trapBarChargeUI;
@@ -275,19 +276,28 @@ public class GameUIControl : MonoBehaviour
     {
         showFirstHelp();
         hideSecondHelp();
+        hideThirdHelp();
     }
 
     public void helpPageTwo()
     {
         showSecondHelp();
         hideFirstHelp();
+        hideThirdHelp();
+    }
+
+    public void helpPageThree()
+    {
+        hideFirstHelp();
+        hideSecondHelp();
+        showThirdHelp();
     }
 
     public void showFirstHelp()
     {
         GameObject pageHelp = helpScreenUI.transform.Find("Page Help").gameObject;
         CanvasGroup firstTutorialGroup = tutorialOne.GetComponent<CanvasGroup>();
-        pageHelp.GetComponent<Text>().text = "1/2";
+        pageHelp.GetComponent<Text>().text = "1/3";
 
         firstTutorialGroup.alpha = 1;
         firstTutorialGroup.interactable = true;
@@ -307,7 +317,7 @@ public class GameUIControl : MonoBehaviour
     {
         GameObject pageHelp = helpScreenUI.transform.Find("Page Help").gameObject;
         CanvasGroup secondTutorialGroup = tutorialTwo.GetComponent<CanvasGroup>();
-        pageHelp.GetComponent<Text>().text = "2/2";
+        pageHelp.GetComponent<Text>().text = "2/3";
 
         secondTutorialGroup.alpha = 1;
         secondTutorialGroup.interactable = true;
@@ -321,6 +331,26 @@ public class GameUIControl : MonoBehaviour
         secondTutorialGroup.alpha = 0;
         secondTutorialGroup.interactable = false;
         secondTutorialGroup.blocksRaycasts = false;
+    }
+
+    public void showThirdHelp()
+    {
+        GameObject pageHelp = helpScreenUI.transform.Find("Page Help").gameObject;
+        CanvasGroup thirdTutorialGroup = tutorialThree.GetComponent<CanvasGroup>();
+        pageHelp.GetComponent<Text>().text = "3/3";
+
+        thirdTutorialGroup.alpha = 1;
+        thirdTutorialGroup.interactable = true;
+        thirdTutorialGroup.blocksRaycasts = true;
+    }
+
+    public void hideThirdHelp()
+    {
+        CanvasGroup thirdTutorialGroup = tutorialThree.GetComponent<CanvasGroup>();
+
+        thirdTutorialGroup.alpha = 0;
+        thirdTutorialGroup.interactable = false;
+        thirdTutorialGroup.blocksRaycasts = false;
     }
 
     public void showSendScore()

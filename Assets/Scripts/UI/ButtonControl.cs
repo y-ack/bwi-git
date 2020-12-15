@@ -283,6 +283,11 @@ public class ButtonControl : MonoBehaviour
         theUI.helpPageTwo();
     }
 
+    public void secondNextHelp()
+    {
+        theUI.helpPageThree();
+    }
+
     public void previousHelp()
     {
         theUI.helpPageOne();
