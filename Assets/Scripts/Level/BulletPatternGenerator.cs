@@ -129,8 +129,7 @@ public class BulletPatternGenerator : MonoBehaviour
         // HARD //
         //todo: ???
         
-        // LUNATIC //
-        
+        // LUNATIC //        
         // lemniscate velocity pattern
         patterns[4][0] = new PatternInfo
         { bcnt = 32, θ = 0, σ = 0, Δθ = 2 * 0.09817477f, ω = 0, a = 0, at = 0,
@@ -138,7 +137,7 @@ public class BulletPatternGenerator : MonoBehaviour
           bulletPrefab = bulletPrefab1, patternType = PatternType.Petal };
 
         // gengetsu right /before/ timeout phase
-        patterns[0][1] = new PatternInfo
+        patterns[4][1] = new PatternInfo
         { bcnt = 8, θ = 0, σ = 0, Δθ = PI - PI/48, ω = 0, a = 0, at = 0,
           d = 0, cd = 0.25f, ΔΣΘ = PI/18, v = new double[] { 5.5 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
