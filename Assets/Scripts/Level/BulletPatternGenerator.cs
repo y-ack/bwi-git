@@ -127,7 +127,24 @@ public class BulletPatternGenerator : MonoBehaviour
         // single bullet? lol
 
         // HARD //
-        //todo: ???
+        // fast random shots
+        patterns[3][0] = new PatternInfo
+        { bcnt = 6, θ = 0, σ = 2*PI, Δθ = 0, ω = 0, a = 0, at = 0,
+          d = 0.1f, cd = 0.25f, ΔΣΘ = 0, v = new double[] { 6.2 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        // double fans
+        patterns[3][1] = new PatternInfo
+        { bcnt = 14, θ = -PI/32f, σ = 0, Δθ = PI - PI/20f, ω = 0, a = 0, at = 0,
+          d = 0, cd = 0.350f, ΔΣΘ = PI/138f, v = new double[] { 1.6 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        // single bullet with noise
+        patterns[3][2] = new PatternInfo
+        { bcnt = 1, θ = 0, σ = PI/12, Δθ = 0, ω = 0, a = 0, at = 0,
+          d = 0, cd = 4.5f, ΔΣΘ = 0, v = new double[] { 2.0 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
         
         // LUNATIC //        
         // lemniscate velocity pattern
@@ -141,6 +158,12 @@ public class BulletPatternGenerator : MonoBehaviour
         { bcnt = 8, θ = 0, σ = 0, Δθ = PI - PI/48, ω = 0, a = 0, at = 0,
           d = 0, cd = 0.25f, ΔΣΘ = PI/18, v = new double[] { 5.5 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        //patterns[0][0] = new PatternInfo
+        //{ bcnt = 22, θ = -PI/32f, σ = 0, Δθ = PI - PI/28f, ω = 0, a = 0, at = 0,
+        //  d = 0, cd = 0.350f, ΔΣΘ = PI/48f, v = new double[] { 1.8 },
+        //  bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
         
         instance = this;
     }
