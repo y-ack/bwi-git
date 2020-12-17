@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
-using UnityEngine.UI;
 
 public class StatisticUI : MonoBehaviour
 {

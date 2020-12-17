@@ -541,7 +541,6 @@ public class GameManager : MonoBehaviour
         int curve = 2;
         difficulty = 100/(1 + Mathf.Exp(-((stage/curve) - (1.7f * Mathf.Exp(1)))));
         return difficulty;
-        Debug.Log("Current State difficulty: " + difficulty);
     }
 
     // Method used to clear all the bubblet spirits and their projectile for a new game

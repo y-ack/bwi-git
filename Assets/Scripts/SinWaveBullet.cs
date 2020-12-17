@@ -16,7 +16,7 @@ public class SinWaveBullet : MonoBehaviour
  
      void Start () {
          pos = transform.position;
-         DestroyObject(gameObject, 3.0f);
+         Destroy(gameObject, 3.0f);
          MoveSpeed = 20f;
          frequency = 10f;
          magnitude = .8f;

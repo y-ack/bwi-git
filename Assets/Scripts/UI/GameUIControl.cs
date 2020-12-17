@@ -92,6 +92,7 @@ public class GameUIControl : MonoBehaviour
         //captureCooldown = thePlayer.captureAfterSec + .825f;
         captureCooldown = thePlayer.captureCoolDown;
         trapCount = thePlayer.getTrapCount();
+
         if (GameManager.theManager.canMove == true)
         {
             buttonControl();
