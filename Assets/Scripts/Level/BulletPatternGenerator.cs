@@ -73,6 +73,7 @@ public class BulletPatternGenerator : MonoBehaviour
         } 
         // 15deg = 0.2617994 = PI/12
         const float PI = Mathf.PI;
+        // EASY //
         // shoot 1 bullet every 5 seconds
         patterns[0][0] = new PatternInfo
         { bcnt = 1, θ = 0, σ = 0, Δθ = 0, ω = 0, a = 0, at = 0,
@@ -91,17 +92,56 @@ public class BulletPatternGenerator : MonoBehaviour
           d = 0, cd = 5f, ΔΣΘ = PI/12f, v = new double[] { 2.4 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
 
+        // NORMAL //
         // shoot a 3-bullet spread shot every 7 seconds
         patterns[1][0] = new PatternInfo
         { bcnt = 3, θ = -PI/12f, σ = 0, Δθ = PI/12f, ω = 0, a = 0, at = 0,
           d = 0, cd = 7f, ΔΣΘ = 0, v = new double[] { 2.5 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
 
+        // bewitching lotus 2 
+        patterns[1][1] = new PatternInfo
+        { bcnt = 4, θ = 0, σ = 0, Δθ = PI/2f, ω = 0.2f, a = -2.25f, at = 2,
+          d = 0, cd = 3.75f, ΔΣΘ = PI/12f, v = new double[] { 2.4 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        // slow spiral
+        patterns[1][2] = new PatternInfo
+        { bcnt = 1, θ = -PI/6f, σ = 0, Δθ = PI/6f, ω = 0, a = 0, at = 0,
+          d = 0, cd = 0.25f, ΔΣΘ = PI/6f, v = new double[] { 1.75 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };        
+
+        // ADVANCED //
+        // two-armed spiral
+        patterns[2][0] = new PatternInfo
+        { bcnt = 2, θ = -PI/6f, σ = 0, Δθ = PI, ω = 0, a = 0, at = 0,
+          d = 0, cd = 0.225f, ΔΣΘ = PI/6f, v = new double[] { 2 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };        
+
+        // spread 2 (back, then accelerate forwards to pretty fast speed)
+        patterns[2][1] = new PatternInfo
+        { bcnt = 3, θ = -PI/16f, σ = 0, Δθ = PI/16f, ω = 0, a = -4.5f, at = 1.5f,
+          d = 0, cd = 5f, ΔΣΘ = 0, v = new double[] { -3.0 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
+
+        // single bullet? lol
+
+        // HARD //
+        //todo: ???
+        
+        // LUNATIC //
+        
         // lemniscate velocity pattern
         patterns[4][0] = new PatternInfo
         { bcnt = 32, θ = 0, σ = 0, Δθ = 2 * 0.09817477f, ω = 0, a = 0, at = 0,
           d = 0, cd = 2.5f, ΔΣΘ = 0, v = new double[] { 2.08, 0.0, 4.0, 1.5, 2.0, 0.5 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Petal };
+
+        // gengetsu right /before/ timeout phase
+        patterns[0][1] = new PatternInfo
+        { bcnt = 8, θ = 0, σ = 0, Δθ = PI - PI/48, ω = 0, a = 0, at = 0,
+          d = 0, cd = 0.25f, ΔΣΘ = PI/18, v = new double[] { 5.5 },
+          bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
         
         instance = this;
     }
