@@ -24,11 +24,19 @@ public class ButtonControl : MonoBehaviour
         GameManager.theManager.setRun();
     }
 
+    // your upgrade music sequence is broken.
+    // hack to fix an annoying bug that nathan refuses to fix
+    public void delayedUpgradeMusicStop()
+    {
+        FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+    }
+
     // Function used to restarting the game in the current game scene
     public void gameToNewGame()
     {
         FindObjectOfType<AudioManager>().Stop("Stage_BG");
-        FindObjectOfType<AudioManager>().Stop("Upgrading_BG"); 
+        FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        Invoke("delayedUpgradeMusicStop", 1.5f);
         GameManager.theManager.saveGame();
         GameManager.theManager.restartLevel();
     }
@@ -44,6 +52,7 @@ public class ButtonControl : MonoBehaviour
     {
         FindObjectOfType<AudioManager>().Stop("Stage_BG");
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        Invoke("delayedUpgradeMusicStop", 1.5f);
         GameManager.theManager.saveGame();
         GameManager.theManager.setNextSequence();
     }
@@ -54,6 +63,7 @@ public class ButtonControl : MonoBehaviour
         GameManager.theManager.saveGame();
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        Invoke("delayedUpgradeMusicStop", 1.5f);
         FindObjectOfType<AudioManager>().Stop("Statistic_BG");
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
         SceneManager.LoadScene("TitleScreen");
@@ -63,6 +73,7 @@ public class ButtonControl : MonoBehaviour
     {      
         FindObjectOfType<AudioManager>().Stop("Stage_BG"); 
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        Invoke("delayedUpgradeMusicStop", 1.5f);
         FindObjectOfType<AudioManager>().Stop("Statistic_BG");
         SaveSystem.deleteQuick();
         RunStatistics.Instance.bubblesChainCleared = new int[BubbleColor.count];
@@ -81,6 +92,7 @@ public class ButtonControl : MonoBehaviour
         GameManager.theManager.quickSave();
         FindObjectOfType<AudioManager>().Stop("Stage_BG");
         FindObjectOfType<AudioManager>().Stop("Upgrading_BG");
+        Invoke("delayedUpgradeMusicStop", 1.5f);
         SceneManager.LoadScene("TitleScreen");
     }
 

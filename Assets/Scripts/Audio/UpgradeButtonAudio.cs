@@ -14,7 +14,7 @@ public class UpgradeButtonAudio : MonoBehaviour, IPointerEnterHandler, IPointerU
     public void OnPointerUp(PointerEventData eventData)
     {
         //Text newPlayButton = transform.FindChild("Text").GetComponent<Text>();
-        //Debug.Log(gameObject.name + " clicked."); 
+        Debug.Log(gameObject.name + " clicked."); 
         FindObjectOfType<AudioManager>().Play("Upgrade_Clicked");               
     }
 
