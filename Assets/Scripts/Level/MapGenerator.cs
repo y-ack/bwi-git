@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -120,7 +121,7 @@ public class MapGenerator : MonoBehaviour
         float maxDifficulty = 100f;
         if (difficulty < 0)
         {
-            Debug.Log("Difficulty is negative.");           
+            UnityEngine.Debug.Log("Difficulty is negative.");           
         }
         else if (difficulty > maxDifficulty)
         {
@@ -134,7 +135,7 @@ public class MapGenerator : MonoBehaviour
             yscale = minYScale + difficulty * scaleStep; 
             threshold = maxThreshold - difficulty * thresholdStep;
         }
-        Debug.Log("Boss level: " + difficulty);
+        UnityEngine.Debug.Log("Boss level: " + difficulty);
     }
     
     public void normalGeneration(float difficulty)
@@ -152,7 +153,7 @@ public class MapGenerator : MonoBehaviour
         float maxDifficulty = 100f;
         if (difficulty < 0)
         {
-            Debug.Log("Difficulty is negative");           
+            UnityEngine.Debug.Log("Difficulty is negative");           
         }
         else if (difficulty > maxDifficulty)
         {
@@ -167,7 +168,7 @@ public class MapGenerator : MonoBehaviour
             threshold = maxThreshold - difficulty * thresholdStep; 
         }
 
-        Debug.Log("Normal level: " + difficulty);
+        UnityEngine.Debug.Log("Normal level: " + difficulty);
     }
 
     public void generateNewGrid()
@@ -187,7 +188,7 @@ public class MapGenerator : MonoBehaviour
         
         //normalGeneration(1); 
 
-        Debug.Log("xscale: "+ xscale+", yscale: "+ yscale+ ", threshold: " + threshold);
+        UnityEngine.Debug.Log("xscale: "+ xscale+", yscale: "+ yscale+ ", threshold: " + threshold);
 
         for (int y = 0; y < height; ++y)
         {
@@ -213,9 +214,10 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+		UnityEngine.Debug.Log("Smoothcycle: " + smoothCycles );
         for (int i = 0; i < smoothCycles; i++)
             {
-                //Debug.Log("Smoothcycle: " + smoothCycles );
+                //UnityEngine.Debug.Log("Smoothcycle: " + smoothCycles );
                 for (int x = 0; x < width; x++)
                 {
                     for (int y = 0; y < height; y++)
@@ -233,7 +235,9 @@ public class MapGenerator : MonoBehaviour
                 }
             }  
         ProcessMap();
+        UnityEngine.Debug.Log("before generateTile()");
         generateTile(); 
+        UnityEngine.Debug.Log("after generateTile()");
         generationDone = true;  
     }
 
@@ -255,6 +259,7 @@ public class MapGenerator : MonoBehaviour
                 for (int y = 0; y < height; y ++) {
                     if ((mapFlags[x,y] == 0) && (cavePoints[x,y] == tileType)) 
                     {
+                        UnityEngine.Debug.Log("region at " + x + "," + y);
                         List<Coord> newRegion = GetRegionTiles(x,y);
                         regions.Add(newRegion);
 
@@ -266,7 +271,7 @@ public class MapGenerator : MonoBehaviour
             }
             if (regions == null)
             {
-                Debug.Log("Unable to find tileType: " + tileType);
+                UnityEngine.Debug.Log("Unable to find tileType: " + tileType);
             } 
             return regions;
         }
@@ -280,6 +285,7 @@ public class MapGenerator : MonoBehaviour
             queue.Enqueue (new Coord (startX, startY));
             mapFlags [startX, startY] = 1;
 
+            UnityEngine.Debug.Log("start get regiontiles");
             while (queue.Count > 0) {
                 Coord tile = queue.Dequeue();
                 tiles.Add(tile);
@@ -295,8 +301,10 @@ public class MapGenerator : MonoBehaviour
                     }
                 }
             }
+        UnityEngine.Debug.Log("end get regiontiles");
 
-            return tiles;
+
+        return tiles;
         }
 
     public bool IsInMapRange(int x, int y) {
@@ -346,6 +354,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+        UnityEngine.Debug.Log("flora...");
         //Generating flora and obstacle
         //starting count for flora and obstacle
         int floraCount = Random.Range(floraMin, floraMax);
@@ -393,8 +402,9 @@ public class MapGenerator : MonoBehaviour
                 
             }
         }
-        //Debug.Log("floraMin: "+ floraMin + ", obstacleMin: " + obstacleMin);
-        Debug.Log("floraCount: " + floraCount + ", obstacleCount: " + obstacleCount);
+        //UnityEngine.Debug.Log("floraMin: "+ floraMin + ", obstacleMin: " + obstacleMin);
+        UnityEngine.Debug.Log("floraCount: " + floraCount + ", obstacleCount: "
+        + obstacleCount);
     }
     public void setFloor(int x, int y)
     {
