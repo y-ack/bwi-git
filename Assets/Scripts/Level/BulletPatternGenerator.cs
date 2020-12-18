@@ -190,7 +190,7 @@ public class BulletPatternGenerator : MonoBehaviour
 
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)
     {
-        float patternChance = 100.0f - difficulty / 4f;
+        float patternChance = 100.0f - difficulty / 3f;
         float noneShooter = Random.Range(-1.0f, 2.0f);
         //TODO[FINAL] research grid position, color, number in unit to
         // modulate the params of patterns
@@ -201,7 +201,7 @@ public class BulletPatternGenerator : MonoBehaviour
                 b.pattern = instantiatePatternInfo(patterns[4][0], b);
             }
         }
-        float dist = generateNormalRandom(difficulty - 5, 1.5f);
+        float dist = generateNormalRandom(difficulty - 2, 1.75f);
         int bucket_num = Mathf.Min(Mathf.Max(Mathf.FloorToInt(dist / 20), 0), 4);
         if (unit_type >= 0) // add patterns to boss bubbles too now
         {

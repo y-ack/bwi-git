@@ -537,14 +537,14 @@ public class Spawner : MonoBehaviour
     //Set unit size min and max based on difficulty
     public void setUnitSize(float difficulty)
     {
-        //Equivalent to level 2 if curve is 2
-        if (difficulty < 4)
+        //around level 2?
+        if (difficulty < 9)
         {
             minUnitSize = 2;
             maxUnitSize = 4;
         }
-        //Equivalent to level 7 if curve is 2
-        else if (difficulty < 25)
+        //up to level 17?
+        else if (difficulty < 66)
         {
             minUnitSize = 3;
             maxUnitSize = 5;
@@ -585,13 +585,14 @@ public class Spawner : MonoBehaviour
     public void setTotalColor(float difficulty)
     {
 
-        //Equivalent to level 2 if curve is 2
-        if (difficulty < 4)
+        //up to level 5-ish?
+        if (difficulty < 18)
         {
             totalColor = 2;
         }
-        //Equivalent to level 7 if curve is 2
-        else if (difficulty < 10)
+        // past lunatic bucket, to keep it easier to
+        // match while dodging?
+        else if (difficulty < 84)
         {
             totalColor = 3;
         }
