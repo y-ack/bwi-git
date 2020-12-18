@@ -115,7 +115,7 @@ public class BulletPatternGenerator : MonoBehaviour
         // two-armed spiral
         patterns[2][0] = new PatternInfo
         { bcnt = 2, θ = -PI/6f, σ = 0, Δθ = PI, ω = 0, a = 0, at = 0,
-          d = 0, cd = 0.225f, ΔΣΘ = PI/6f, v = new double[] { 2 },
+          d = 0, cd = 0.425f, ΔΣΘ = PI/6f, v = new double[] { 2 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };        
 
         // spread 2 (back, then accelerate forwards to pretty fast speed)
@@ -130,13 +130,13 @@ public class BulletPatternGenerator : MonoBehaviour
         // fast random shots
         patterns[3][0] = new PatternInfo
         { bcnt = 6, θ = 0, σ = 2*PI, Δθ = 0, ω = 0, a = 0, at = 0,
-          d = 0.1f, cd = 0.25f, ΔΣΘ = 0, v = new double[] { 6.2 },
+          d = 0.1f, cd = 0.75f, ΔΣΘ = 0, v = new double[] { 5.8 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
 
         // double fans
         patterns[3][1] = new PatternInfo
         { bcnt = 14, θ = -PI/32f, σ = 0, Δθ = PI - PI/20f, ω = 0, a = 0, at = 0,
-          d = 0, cd = 0.350f, ΔΣΘ = PI/138f, v = new double[] { 1.6 },
+          d = 0, cd = 0.350f, ΔΣΘ = PI/138f, v = new double[] { 1.2 },
           bulletPrefab = bulletPrefab1, patternType = PatternType.Linear };
 
         // single bullet with noise
@@ -176,11 +176,21 @@ public class BulletPatternGenerator : MonoBehaviour
         b.pattern = pattern;
     }
 
-    
+
+    public float generateNormalRandom(float mu, float sigma)
+    {
+        float rand1 = Random.Range(0.0f, 1.0f);
+        float rand2 = Random.Range(0.0f, 1.0f);
+
+        float n = Mathf.Sqrt(-2.0f * Mathf.Log(rand1))
+            * Mathf.Cos((2.0f * Mathf.PI) * rand2);
+
+        return (mu + sigma * n);
+    }
+
     public void addToBubble(BubbleSpirit b, int unit_type, float difficulty)
     {
-        const float patternChance = 1.0f;
-        const float miniBoss = 1.966f;
+        float patternChance = 100.0f - difficulty / 4f;
         float noneShooter = Random.Range(-1.0f, 2.0f);
         //TODO[FINAL] research grid position, color, number in unit to
         // modulate the params of patterns
@@ -191,34 +201,16 @@ public class BulletPatternGenerator : MonoBehaviour
                 b.pattern = instantiatePatternInfo(patterns[4][0], b);
             }
         }
-        /*
-        if (unit_type == 0 && b.gridPosition == Vector2Int.zero)
-        {            
-            if (noneShooter > miniBoss) //chance to be a mini boss
-            {
-                Debug.Log("Yo! we've got a miniboss! It's only 1% chance!");
-                b.pattern = instantiatePatternInfo(patterns[4][0], b);
-                return;
-            }
-            }*/
+        float dist = generateNormalRandom(difficulty - 5, 1.5f);
+        int bucket_num = Mathf.Min(Mathf.Max(Mathf.FloorToInt(dist / 20), 0), 4);
         if (unit_type >= 0) // add patterns to boss bubbles too now
         {
             //chance to not use pattern
             if (Random.value <= patternChance)
             {
-                
-                if (difficulty >= 99f)
-                {
-                    var bucket = patterns[3];
-                    var choice = bucket[Random.Range(0, bucket.Length)];
-                    b.pattern = instantiatePatternInfo(choice, b);
-                }
-                else
-                {
-                    var bucket = patterns[Mathf.FloorToInt((difficulty) / (100 / 5))];
-                    var choice = bucket[Random.Range(0, bucket.Length)];
-                    b.pattern = instantiatePatternInfo(choice, b);
-                }
+                var bucket = patterns[bucket_num];
+                var choice = bucket[Random.Range(0, bucket.Length)];
+                b.pattern = instantiatePatternInfo(choice, b);
             }
         }
     }

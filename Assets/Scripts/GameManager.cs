@@ -110,29 +110,29 @@ public class GameManager : MonoBehaviour
                 setPause();
             }
 
-            if (Input.GetKeyDown(KeyCode.K))
-                //playerHit();
+            // if (Input.GetKeyDown(KeyCode.K))
+            //     //playerHit();
 
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    setLose();
-                }
+            //     if (Input.GetKeyDown(KeyCode.P))
+            //     {
+            //         setLose();
+            //     }
 
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                setCleared();
-            }
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                if (isInvincible == false)
-                {
-                    //isInvincible = true;
-                }
-                else
-                {
-                    //isInvincible = false;
-                }
-            }
+            // if (Input.GetKeyDown(KeyCode.O))
+            // {
+            //     setCleared();
+            // }
+            // if (Input.GetKeyDown(KeyCode.I))
+            // {
+            //     if (isInvincible == false)
+            //     {
+            //         //isInvincible = true;
+            //     }
+            //     else
+            //     {
+            //         //isInvincible = false;
+            //     }
+            // }
 
 
             if (Input.GetKeyDown(KeyCode.H))
@@ -539,7 +539,11 @@ public class GameManager : MonoBehaviour
         //curve is the stage scale, set to 2 for quick demo of the curve,
         //change to something like 12 for full game.
         int curve = 2;
-        difficulty = 100/(1 + Mathf.Exp(-((stage/curve) - (1.7f * Mathf.Exp(1)))));
+        //difficulty = 100/(1 + Mathf.Exp(-((stage/curve) - (1.7f *
+        //Mathf.Exp(1)))));
+        
+        // using linear difficulty now ...
+        difficulty = Mathf.Min(4.0f * stage, 99.9f);
         return difficulty;
     }
 

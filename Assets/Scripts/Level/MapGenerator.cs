@@ -364,9 +364,13 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
  
-
-                while (floraCount <= floraCap)
-                {           
+                // this was a while because you wanted ...
+                // a random for loop.  i opted to not eliminate
+                // the 2d grid traversal just in case this while
+                // was causing the infinite loop.
+                if (floraCount <= floraCap)
+                {
+                    UnityEngine.Debug.Log("floraCount: " + floraCount);
                     int randX = Random.Range(2,width - 2);
                     int randY = Random.Range(2,height - 2);        
                     if (cavePoints[randX,randY] == 0)
@@ -381,6 +385,7 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
+                UnityEngine.Debug.Log("escaped flora loop");
                 /* Turn off for Demo.
                 while (obstacleCount <= obstacleCap)
                 {
